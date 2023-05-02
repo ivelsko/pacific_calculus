@@ -1,0 +1,2249 @@
+#Datasets	NMU001.A0101.SG1.1.unmapped	NMU009.A0101.SG1.1.unmapped	NMU014.A0101.SG1.1.unmapped	NMU020.A0101.SG1.1.unmapped	NMU021.A0101.SG1.1.unmapped	NMU047.A0101.SG1.1.unmapped	NMU059.A0101.SG1.1.unmapped	NMU065.A0101.SG1.1.unmapped	NMU067.A0101.SG1.1.unmapped	NMU089.A0101.SG1.1.unmapped	SIG001.A0101.SG1.1.unmapped	SIG002.A0101.SG1.1.unmapped	SIG004.A0101.SG1.1.unmapped	SIG005.A0101.SG1.1.unmapped	SIG010.A0101.SG1.1.unmapped	SIG018.A0101.SG1.1.unmapped	SIG021.A0101.SG1.1.unmapped	SIG024.A0101.SG1.1.unmapped	SIG025.A0101.SG1.1.unmapped	SIG026.A0101.SG1.1.unmapped
+Kordiimonas lacus	0	0	0	0	0	0	0	0	0	0	0	0	0	17	0	0	0	0	0	0
+Acidovorax sp. JHL-9	0	0	0	0	0	0	0	0	0	0	0	0	0	17	0	0	0	0	0	0
+Marinobacter persicus	0	0	0	0	0	0	0	0	0	0	0	0	0	17	0	0	0	0	0	0
+Stenotrophomonas sp. LM091	0	0	0	0	0	0	0	0	0	0	0	0	0	17	0	0	0	0	0	0
+Deinococcus marmoris	0	0	0	0	0	0	0	0	0	0	0	0	0	17	0	0	0	0	0	0
+Fulvimarina pelagi	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0
+Paracoccus jeotgali	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0
+Sulfitobacter sp. AM1-D1	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Diaphorobacter polyhydroxybutyrativorans	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Ottowia oryzae	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Chitinilyticum aquatile	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Desulfobulbus oralis	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Desulfovibrio legallii	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Desulfobacca acetoxidans	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Stenotrophomonas sp. SKA14	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Rhodopirellula baltica	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Agrococcus baldri	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0
+Leucobacter chromiiresistens	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0
+Streptomyces populi	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0
+Dehalogenimonas alkenigignens	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0
+Leptolyngbya sp. O-77	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0
+Paenibacillus ginsengarvi	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Intestinimonas massiliensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0
+Ethanoligenens harbinense	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0
+Chlorobaculum parvum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0
+Hyphomonas neptunium	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	0	0
+Citromicrobium sp. JL477	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Achromobacter sp. MYb9	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Achromobacter sp. NFACC18-2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0
+Curvibacter gracilis	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	0	0
+Rhodoferax antarcticus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Desulfomicrobium orale	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Thalassomonas viridans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Microbulbifer aggregans	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	0	0
+Nitrosococcus watsonii	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Cronobacter malonaticus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Legionella birminghamensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Legionella oakridgensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Legionella maceachernii	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Methylobacter marinus	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	0	0
+Methylomicrobium alcaliphilum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Methylomonas sp. 11b	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Pasteurella multocida	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Pseudomonas bauzanensis	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	0	0
+Pseudomonas sp. Snoq117.2	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	0	0
+Methylophaga sulfidovorans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Methylophaga thiooxydans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Chlamydia trachomatis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Actinotignum timonense	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Mycobacterium intermedium	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Nocardia jinanensis	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	0	0
+Micrococcus luteus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0
+Granulicoccus phenolivorans	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	0	0
+Saccharomonospora paurometabolica	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0
+Streptomyces kanamyceticus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0
+Streptomyces sp. SPB074	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	0	0
+Collinsella intestinalis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0
+Hydrocoleum sp. CS-953	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0
+Hymenobacter actinosclerus	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0	0	0	0
+Phaeobacter inhibens	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0	0	0	0
+Pacificimonas flava	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0
+Sphingobium japonicum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0
+Desulfofustis glycolicus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Aeromonas salmonicida	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0	0	0	0
+Cellvibrio sp. pealriver	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0
+Legionella quinlivanii	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0
+Legionella sainthelensi	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0
+Lysinimicrobium luteum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Brachybacterium phenoliresistens	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Agromyces sp. Root81	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0
+Microbacterium sp. cf046	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Streptomyces qinglanensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Streptomyces sp. TSRI0107	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Thermus arciformis	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0	0	0	0
+Tumebacillus algifaecis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Paenibacillus sp. 32O-W	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Faecalibacterium prausnitzii	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0	0	0	0
+Mitsuokella jalaludinii	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Halobacterium hubeiense	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	0	0	0	0
+Halorussus litoreus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Altererythrobacter marensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0	0
+Sphingopyxis sp. 113P3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0	0
+Methylobacillus flagellatus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0	0
+Pseudoalteromonas luteoviolacea	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0	0
+Legionella erythra	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0	0
+Methylomonas methanica	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0	0
+Pseudomonas saudimassiliensis	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0	0	0	0	0
+Methylophaga frappieri	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0	0
+Bifidobacterium longum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0
+Mycobacterium terramassiliense	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0
+Pseudonocardia autotrophica	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0
+Geitlerinema sp. PCC 7407	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0
+Haloarchaeobius iranensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	21	0	0
+Methylobacterium sp. Leaf93	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+Neomegalonema perideroedes	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+Rhizobium grahamii	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+Paucibacter sp. KCTC 42545	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0	0	0	0
+Janthinobacterium sp. TND4EL3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+Methylophilus sp. Leaf459	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+Nitrosomonas sp. Nm166	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+Dickeya solani	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+Serratia ficaria	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+Gynuella sunshinyii	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+gamma proteobacterium HdN1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+Olsenella provencensis	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0	0	0	0
+Fischerella sp. PCC 9431	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0
+Halobacterium sp. DL1	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	0	0	0	0
+Phaeobacter gallaeciensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23
+Altererythrobacter mangrovi	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23	0	0	0
+Acidovorax valerianellae	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23
+Desulfovermiculus halophilus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23	0	0	0
+Desulfonatronum thioautotrophicum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23	0	0
+Alteromonadales bacterium BS08	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23	0	0	0
+Chromatium okenii	0	0	0	0	0	0	0	0	0	0	0	0	0	23	0	0	0	0	0	0
+Buchnera aphidicola	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23	0	0	0
+Pleionea mediterranea	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23	0	0	0
+Thiofilum flexile	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23	0	0	0
+Thiothrix caldifontis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23	0	0	0
+Mycobacterium interjectum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23
+Mycobacterium parascrofulaceum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	23
+Aquamicrobium aerolatum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0	0	0
+Mesorhizobium erdmanii	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Novispirillum itersonii	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Porphyrobacter neustonensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24
+Burkholderia sp. Ch1-1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0	0	0
+Ferriphaselus amnicola	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0	0	0
+Aeromonas enteropelogenes	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24
+Cellvibrio mixtus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0	0	0
+Microbulbifer agarilyticus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0	0	0
+Beggiatoa alba	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0	0	0
+Estrella lausannensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0	0	0
+Thermanaerovibrio acidaminovorans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0
+Varibaculum timonense	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2.40E+01	0	0
+Gordonia phthalatica	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Mycobacterium rhizamassiliense	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Tsukamurella sp. 1534	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Cellulomonas sp. PSBB021	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Gryllotalpicola ginsengisoli	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0	0
+Rathayibacter sp. Leaf296	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Isoptericola dokdonensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0
+Promicromonosporaceae bacterium W15	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+[Actinopolyspora] iraqiensis	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Streptomyces durhamensis	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Streptomyces sp. MspMP-M5	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0
+Streptomyces sp. WMMB 714	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Brevundimonas bullata	0	0	0	0	0	0	0	0	0	0	25	0	0	0	0	0	0	0	0	0
+Bradyrhizobium sp. SUTN9-2	0	0	0	0	0	0	0	0	0	0	0	0	0	25	0	0	0	0	0	0
+Bradyrhizobium sp. URHA0013	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	25
+Xenorhabdus bovienii	0	0	0	0	0	0	0	0	0	0	0	0	0	25	0	0	0	0	0	0
+Oleiphilus messinensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	25	0	0	0
+Thioploca ingrica	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	25	0	0	0
+Streptomyces sp. CB02009	0	0	0	0	0	0	0	0	0	0	25	0	0	0	0	0	0	0	0	0
+Sphingobium sp. YG1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	26	0	0	0
+Desulfuromonas thiophila	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	26	0	0	0
+Cellvibrio japonicus	0	0	0	0	0	0	0	0	0	0	26	0	0	0	0	0	0	0	0	0
+Ketobacter alkanivorans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	26	0	0	0
+Pseudomonas protegens	0	0	0	0	0	0	0	0	0	0	0	0	0	26	0	0	0	0	0	0
+Paraoerskovia marina	0	0	0	0	0	0	0	0	0	0	26	0	0	0	0	0	0	0	0	0
+Microbacterium hominis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	26	0
+Micromonospora zamorensis	0	0	0	0	0	0	0	0	0	0	26	0	0	0	0	0	0	0	0	0
+Streptomyces sp. CNQ329	0	0	0	0	0	0	0	0	0	0	26	0	0	0	0	0	0	0	0	0
+Streptomyces sp. PsTaAH-130	0	0	0	0	0	0	0	0	0	0	26	0	0	0	0	0	0	0	0	0
+Streptomyces sp. WM6386	0	0	0	0	0	0	0	0	0	0	26	0	0	0	0	0	0	0	0	0
+Brevundimonas sp. Leaf168	0	0	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	0
+Brevirhabdus pacifica	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	27
+Cupriavidus sp. UYPR2.512	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	27	0	0
+Marinobacterium lutimaris	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	27	0	0	0
+Moraxella osloensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	27	0	0	0
+Pseudomonas corrugata	0	0	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	0
+Stenotrophomonas sp. HMSC10F06	0	0	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	0
+Rhodococcus sp. MTM3W5.2	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	0	0	0
+Microbacterium sediminis	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	0	0	0
+Nocardioides sp. Root140	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	0	0	0
+Halobellus limi	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	27	0
+Spirosoma luteum	0	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0	0
+Methylobacterium sp. Leaf125	0	0	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0
+Rhizobium tropici	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0	0	0
+Maritimibacter sp. HL-12	0	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0	0
+Magnetospira sp. QH-2	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0	0	0
+Variovorax sp. CF313	0	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0	0
+Desulfatibacillum alkenivorans	0	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0	0
+Xanthomonas sp. GPE 39	0	0	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0
+Pelolinea submarina	0	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0	0
+Chloroflexus aggregans	0	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0	0
+Larkinella arboricola	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0
+Rufibacter tibetensis	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0
+Cucumibacter marinus	0	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0
+Rickettsia felis	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0
+Halioglobus japonicus	0	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0
+Xylella fastidiosa	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0
+Demequina pelophila	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0
+Nocardioides sp. Soil796	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0	0
+Streptomyces sp. NBRC 110027	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0
+Streptomyces sp. TP-A0356	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0
+Olsenella timonensis	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0
+Dyadobacter soli	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0	0	0	0	0
+Acidiphilium multivorum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0	0
+Novosphingobium mathurense	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0	0	0	0
+Sphingopyxis bauzanensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0
+Burkholderia sp. MSMB0856	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0	0
+Pandoraea sp. SD6-2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0	0
+Thioalkalivibrio sp. AKL7	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0	0
+Pseudomonas argentinensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0	0
+Pseudomonas sp. SCPG-7	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0
+Waddlia chondrophila	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0
+Plantactinospora sp. BC1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0
+Actinoalloteichus hymeniacidonis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0
+Streptomyces hirsutus	0	0	0	0	0	0	0	0	0	0.00E+00	30	0	0	0	0	0	0	0	0	0
+Caulobacter sp. D5	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0
+Sedimentitalea nanhaiensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0
+Sphingobium baderi	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0	0	0
+Burkholderia diffusa	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0
+Comamonas composti	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0
+Marinobacter nanhaiticus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0
+Thioalkalivibrio sp. ARh5	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0
+Cedecea neteri	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0
+Xanthomonas vesicatoria	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0
+Hydrogenophilus thermoluteolus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0
+Chlamydia pneumoniae	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0
+Corynebacterium otitidis	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0	0	0	0	0
+Rhodococcus rhodochrous	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0	0	0	0	0
+Lechevalieria atacamensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0
+Pseudonocardia sp. AL041005-10	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0	0	0	0	0
+Lyngbya confervoides	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0
+Spirosoma montaniterrae	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0	0
+Spirosoma pollinicola	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0	0
+Pontibacter korlensis	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0	0
+Mucilaginibacter gotjawali	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0	0
+Pedobacter steynii	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0	0
+Ensifer sp. WSM1721	0	0	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0
+Blastomonas natatoria	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0
+Novosphingobium sp. B-7	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0
+Achromobacter sp. Root565	0	0	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0
+Shewanella decolorationis	0	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0
+Halomonas elongata	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0
+Pseudomonas entomophila	0	0	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0
+Xanthomonas gardneri	0	0	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0
+Oscillatoria sp. PCC 10802	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0	0
+Pontibacter lucknowensis	0	0	0	0	0	0	0	0	0	0	0	33	0	0	0	0	0	0	0	0
+Rhodobacter vinaykumarii	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	33	0	0	0	0
+Achromobacter sp. MFA1 R4	0	0	0	0	0	0	0	0	0	0	0	0	0	0	33	0	0	0	0	0
+Salinicola lusitanus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	33	0	0	0	0	0
+Demequina sp. NBRC 110056	0	0	0	0	0	0	0	0	0	0	33	0	0	0	0	0	0	0	0	0
+Janibacter melonis	0	0	0	0	0	0	0	0	0	0	33	0	0	0	0	0	0	0	0	0
+Lechevalieria deserti	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	33	0	0	0	0
+Gordonibacter pamelaeae	0	0	0	0	0	0	0	0	0	0	0	33	0	0	0	0	0	0	0	0
+Chitinophaga sancti	0	0	0	0	0	0	0	0	0	0	0	34	0	0	0	0	0	0	0	0
+Spirosoma fluviale	0	0	0	0	0	0	0	0	0	0	0	34	0	0	0	0	0	0	0	0
+Spirosoma rigui	0	0	0	0	0	0	0	0	0	0	0	34	0	0	0	0	0	0	0	0
+Ignavibacterium album	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	34	0	0	0	0
+Achromobacter sp. 2789STDY5608607	0	0	0	0	0	0	0	0	0	0	0	0	0	0	34	0	0	0	0	0
+Pseudarcicella hirudinis	0	0	0	0	0	0	0	0	0	0	0	35	0	0	0	0	0	0	0	0
+Afipia clevelandensis	0	0	0	0	0	0	0	0	0	0	0	0	35	0	0	0	0	0	0	0
+Sphingomonas sp. Leaf28	0	0	0	0	0	0	0	0	0	0	0	0	0	0	35	0	0	0	0	0
+Microvirgula aerodenitrificans	0	0	0	0	0	0	0	0	0	0	0	0	35	0	0	0	0	0	0	0
+Cellulomonas sp. URHD0024	0	0	0	0	0	0	0	0	0	0	0	35	0	0	0	0	0	0	0	0
+Sanguibacter keddieii	0	0	0.00E+00	0	0	0	0	0	0	0	35	0	0	0	0	0	0	0.00E+00	0	0
+Algoriphagus terrigena	0	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	0	0	0
+Cytophaga hutchinsonii	0	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	0	0	0
+Dyadobacter beijingensis	0	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	0	0	0
+Dyadobacter psychrophilus	0	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	0	0	0
+Pontibacter actiniarum	0	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	0	0	0
+Paraburkholderia aromaticivorans	0	0	0	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	0
+Tetrasphaera elongata	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	0	0	0	0
+Micromonospora lupini	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	0	0	0	0
+Brockia lithotrophica	0	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	0	0	0
+Chitinophaga pinensis	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	0	0	0	0	0
+Dyadobacter koreensis	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	0	0	0	0	0
+Fibrella sp. ES10-3-2-2	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	0	0	0	0	0
+Pontibacter akesuensis	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	0	0	0	0	0
+Sinomicrobium oceani	0	0	37	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Massilia sp. Root133	0	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	0	0	0	0
+Sulfuricella denitrificans	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	18	0	0
+Methylovulum psychrotolerans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0
+Pseudomonas syringae group genomosp. 3	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	18	0	0
+Lysobacter sp. Root916	0	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	0	0	0	0
+Micromonospora rifamycinica	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	0	0	0	0	0
+Deinococcus wulumuqiensis	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	0	0	0	0	0
+Sphingomonas sp. Leaf29	0	0	0	0	0	0	0	0	0	0	0	0	38	0	0	0	0	0	0	0
+Desulfatirhabdium butyrativorans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	19	0	0
+Marinobacter gudaonensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	38	0	0	0	0	0
+Halomonas salina	0	0	0	0	0	0	0	0	0	0	0	0	0	0	38	0	0	0	0	0
+Streptomyces graminilatus	0	0	38	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Dyadobacter sp. SG02	0	0	0	0	0	0	0	0	0	0	0	39	0	0	0	0	0	0	0	0
+Pectobacterium carotovorum	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	21	0	0	0
+Nocardioides sp. JS614	0	0	0	0	0	0	0	0	0	0	39	0	0	0	0	0	0	0	0	0
+Streptomyces vietnamensis	0	0	0	0	0	0	0	39	0	0	0	0	0	0	0	0	0	0	0	0
+actinobacterium LLX17	0	0	0	0	0	0	0	0	0	0	39	0	0	0	0	0	0	0	0	0
+Desmospora sp. 8437	0	0	0	0	0	0	0	39	0	0	0	0	0	0	0	0	0	0	0	0
+Thermacetogenium phaeum	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	20	0	0	0
+Sphingomonas sp. Root720	0	0	0	0	0	0	0	0	0	0	0	0	0	0	40	0	0	0	0	0
+Marinobacter daqiaonensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	40	0	0	0	0	0
+Candidatus Protochlamydia naegleriophila	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	40	0	0	0
+Mycolicibacter sinensis	0	0	0	0	0	0	0	0	0	0	0	0	40	0	0	0	0	0	0	0
+Nocardioides sp. Root151	0	0	0	0	0	0	0	0	0	0	40	0	0	0	0	0	0	0	0	0
+Synechococcus sp. WH 5701	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	20	0	0
+Acinetobacter junii	0	0	0	0	0	0	0	0	0	0	41	0	0	0	0	0	0	0	0	0
+Chitinophaga dinghuensis	0	0	0	0	0	0	0	0	0	0	0	42	0	0	0	0	0	0	0	0
+Bradyrhizobium sp. CCGE-LA001	0	0	0	0	0	42	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Rhizobium sp. Root482	0	0	0	0	0	42	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Streptomyces sp. CB01883	0	0	0	0	0	42	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Bacillus cereus	0	0	42	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Bacillus sp. FJAT-14578	0	0	42	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Fabibacter pacificus	0	0	0	0	0	0	0	0	0	0	0	43	0	0	0	0	0	0	0	0
+Martelella sp. AD-3	0	0	0	0	0	43	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Methylobacterium sp. Leaf123	0	0	0	0	0	43	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Saccharomonospora viridis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	43	0	0	0	0
+Cyanobium sp. NIES-981	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0	0	0	19	0	0
+Marinoscillum furvescens	0	0	0	0	0	0	0	0	0	0	0	44	0	0	0	0	0	0	0	0
+Pseudomonas guariconensis	0	0	0	0	0	0	0	0	0	0	0	0	0	44	0	0	0	0	0	0
+gamma proteobacterium HTCC5015	0	0	0	0	0	0	0	0	0	0	26	0	0	18	0	0	0	0	0	0
+Xanthomonas sp. Leaf131	0	0	0	0	0	0	0	0	0	0	0	0	44	0	0	0	0	0	0	0
+Mycobacterium sp. UNC267MFSha1.1M11	0	44	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Lentzea albidocapillata	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	44	0	0	0	0
+Arsenicibacter rosenii	0	0	0	0	0	0	0	0	0	0	0	45	0	0	0	0	0	0	0	0
+Rhizobium sp. NXC24	0	0	0	0	0	45	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Lysobacter sp. Root983	0	0	0	0	0	0	0	0	0	0	0	0	45	0	0	0	0	0	0	0
+Streptomyces erythrochromogenes	0	0	0	0	0	0	0	0	0	0	0	0	0	0	45	0	0	0	0	0
+Deinococcus geothermalis	0	0	0	0	0	0	0	0	0	0	0	28	0	17	0	0	0	0	0	0
+Chitinophaga sp. MD30	0	0	0	0	0	46	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Xanthomonas hortorum	0	0	0	0	0	0	0	0	0	0	0	0	29	17	0	0	0	0	0	0
+Agrococcus jejuensis	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	27	0
+Micromonospora sp. WMMA2032	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	19	0	0
+Bellilinea caldifistulae	0	0	0	0	0	0	0	0	0	0	26	0	0	20	0	0	0	0	0	0
+Fischerella thermalis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	46	0	0	0	0	0
+Methanosaeta harundinacea	0	0	0	0	0	0	0	0	0	0	25	0	0	21	0	0	0	0	0	0
+Chitinophaga filiformis	0	0	0	0	0	0	0	0	0	0	0	47	0	0	0	0	0	0	0	0
+Pseudomonas xanthomarina	0	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	18	0	0
+Xanthomonas cucurbitae	0	0	0	0	0	0	0	0	0	0	0	0	30	17	0	0	0	0	0	0
+Micromonospora coriariae	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	23
+Tessaracoccus flavus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	25
+Streptomyces exfoliatus	0	0	0	0	0	0	0	0	0	47	0	0	0	0	0	0	0	0	0	0
+Streptomyces gilvosporeus	0	0	0	0	47	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Pelagibaca abyssi	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	24
+Herbaspirillum sp. XFZ15	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	30	0	0	0	0
+Nitrosococcus halophilus	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	30	0	0	0
+Bdellovibrio bacteriovorus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	28	0	0
+Arsenicicoccus sp. oral taxon 190	0	0	0	0	0	0	0	0	0	0	26	0	0	0	0	0	0	22	0	0
+Kocuria sp. UCD-OTCP	0	0	0	0	0	0	0	0	0	0	25	0	0	0	0	0	0	0	0	23
+Anaerolinea thermolimosa	0	0	0	0	0	0	0	0	0	0	29	0	0	19	0	0	0	0	0	0
+Selenomonas ruminantium	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	24	0	0
+Phenylobacterium sp. Root1290	0	0	0	0	0	49	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Phenylobacterium sp. Root77	0	0	0	0	0	49	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Ensifer sp. Root278	0	0	0	0	0	49	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Salipiger bermudensis	0	0	0	0	0	0	0	0	0	0	25	0	0	0	0	0	0	24	0	0
+Burkholderia sp. WSM2232	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	18	0	0
+Nitrosospira sp. Nsp2	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	30	0	0	0
+Mycolicibacter icosiumassiliensis	0	49	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Sediminibacterium salmoneum	0	0	0	0	0	50	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Rhizobium jaguaris	0	0	0	0	0	0	0	0	0	0	0	0	30	20	0	0	0	0	0	0
+Sagittula sp. P11	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	19	0	0	0
+Duganella sacchari	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	20	0	0	0
+Rubinisphaera brasiliensis	0	0	0	0	0	0	0	0	0	0	0	0	0	27	0	0	0	23	0	0
+Janibacter sp. HTCC2649	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	23	0	0
+Plantactinospora sp. BB1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	20	0	0
+Cutibacterium acnes	0	0	0	0	0	0	0	50	0	0	0	0	0	0	0	0	0	0	0	0
+Streptomyces lavendulae	0	0	0	0	0	0	0	0	0	0	26	0	0	0	0	0	0	0	0	24
+Streptomyces resistomycificus	0	0	0	0	0	0	50	0	0	0	0	0	0	0	0	0	0	0	0	0
+Streptomyces sp. NBRC 109706	0	0	0	0	0	0	50	0	0	0	0	0	0	0	0	0	0	0	0	0
+Streptomyces sp. TAA040	0	0	0	0	50	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Dyadobacter fermentans	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	33	0	0	0	0
+Ochrobactrum intermedium	0	0	0	0	0	51	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Pseudoroseicyclus aestuarii	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	24	0	0
+Roseivivax pacificus	0	0	0	0	0	0	0	0	0	0	0	34	0	17	0	0	0	0	0	0
+Acidocella sp. MX-AZ02	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0	20	0	0	0
+Ferrimonas marina	0	0	0	0	0	0	0	0	0	0	0	0	0	18	33	0	0	0	0	0
+Marinobacterium aestuarii	0	0	0	0	0	0	0	0	0	0	0	0	29	22	0	0	0	0	0	0
+Pseudomonas sp. EpS/L25	0	0	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	23	0	0
+Xanthomonas cassavae	0	0	0	0	0	0	0	0	0	0	0	0	0	19	32	0	0	0	0	0
+Mycobacterium sp. 4858	0	0	0	0	0	0	0	0	0	0	25	0	0	0	0	0	0	0	26	0
+Mycobacterium sp. M26	0	51	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Mycolicibacterium litorale	0	51	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Agrococcus carbonis	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	19	0	0	0
+Micromonospora halophytica	0	0	0	0	0	0	0	0	0	0.00E+00	26	0	0	0	0	0	0	0	25	0
+Micropruina glycogenica	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	19	0	0
+Streptomyces pathocidini	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	0	0	24
+Streptomyces ruber	0	0	0	0	0	0	51	0	0	0	0	0	0	0	0	0	0	0	0	0
+Streptomyces sp. 3214.6	0	0	0	51	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Sporocytophaga myxococcoides	0	0	0	0	0	0	0	0	0	0	0	52	0	0	0	0	0	0	0	0
+Methylobacterium sp. DM1	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0	0	22	0	0
+Rhizobium giardinii	0	0	0	0	0	52	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Rhizobium sp. Root1212	0	0	0	0	0	52	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Novosphingobium fuchskuhlense	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0	0	28
+Desulfovibrio termitidis	0	0	0	0	0	0	0	0	0	0	0	29	0	23	0	0	0	0	0	0
+Pseudomonas panipatensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	33	0	0	19	0	0
+Mycobacterium bohemicum	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0	21	0	0	0
+Aeromicrobium marinum	0	0	0	0	0	0	0	0	0	0	52	0	0	0	0	0	0	0	0	0
+Nocardioides sp. XL1	0	0	0	0	0	0	0	0	0	0	52	0	0	0	0	0	0	0	0	0
+Saccharomonospora halophila	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	0	0	25	0	0
+Eggerthellaceae bacterium AT8	0	0	0	0	0	0	0	0	0	0	52	0	0	0	0	0	0	0	0	0
+Methylocystis sp. SC2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	23	0	0	0
+Rhizobium rhizosphaerae	0	0	0	0	0	53	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Acidovorax cattleyae	0	0	0	0	0	0	0	0	0	0	0	0	33	0	0	0	0	20	0	0
+Sterolibacterium denitrificans	0	0	0	0	0	0	0	0	0	0	0	0	28	25	0	0	0	0	0	0
+Pelobacter acetylenicus	0	0	0	0	0	0	0	0	0	0	0	34	0	19	0	0	0	0	0	0
+Marinobacter pelagius	0	0	0	0	0	0	0	0	0	0	0	0	0	18	35	0	0	0	0	0
+Leptonema illini	0	0	53	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Cellulomonas gilvus	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	21	0	0
+Propionibacterium acidifaciens	0	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	24	0	0	0
+Tessaracoccus sp. T2.5-30	0	0	0	0	0	0	0	0	0	0	53	0	0	0	0	0	0	0	0	0
+Flammeovirgaceae bacterium 311	0	0	0	0	0	0	0	0	0	0	0	54	0	0	0	0	0	0	0	0
+Chelativorans sp. BNC1	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0	0	23
+Jannaschia rubra	0	0	0	0	0	0	0	0	0	0	24	0	0	0	30	0	0	0	0	0
+Jhaorihella thermophila	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0	0	23
+Roseovarius nanhaiticus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	23
+Variovorax sp. YR750	0	0	0	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	26	0
+Syntrophus gentianae	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	23	0	0
+Microbulbifer thermotolerans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	23
+Rubrobacter indicoceani	0	0	0	0	0	0	0	0	0	0	0	0	0	23	0	31	0	0	0	0
+Segetibacter koreensis	0	0	0	0	0	55	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Bradyrhizobium sp. WSM4349	0	0	0	0	0	55	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Insolitispirillum peregrinum	0	0	0	0	0	0	0	0	0	0	27	0	28	0	0	0	0	0	0	0
+Pandoraea oxalativorans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	37	0	0	18	0	0
+Aeromonas dhakensis	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	23
+Thiothrix eikelboomii	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	31	0	0	0
+Luteipulveratus mongoliensis	0	0	0	0	0	0	0	0	0	0	34	0	0	0	0	0	21	0	0	0
+Rhizobium sp. YS-1r	0	0	0	0	0	0	0	38	0	0	0	0	0	0	0	0	0	18	0	0
+Paraburkholderia phytofirmans	0	0	0	0	0	0	0	0	0	0	0	0	35	21	0	0	0	0	0	0
+Variovorax sp. Root434	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	24
+Allochromatium warmingii	0	0	0	0	0	0	0	0	0	0	0	0	0	0	37	0	19	0	0	0
+Serinicoccus hydrothermalis	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0	0	24
+Aeromicrobium sp. Root495	0	0	0	0	0	0	0	0	0	0	27	29	0	0	0	0	0	0	0	0
+Streptomyces sp. CNQ-509	0	0	0	0	0	0	56	0	0	0	0	0	0	0	0	0	0	0	0	0
+Streptomyces sp. SA15	0	0	0	0	0	0	0	0	0	0	38	0	0	0	0	0	0	18	0	0
+Nitrosomonas sp. AL212	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	28	0	0	0
+Pseudomonas flavescens	0	0	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	25
+Serinicoccus chungangensis	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	0	0	0	26	0
+Streptomyces sp. CB02923	0	0	0	0	0	0	0	0	0	0	26	31	0	0	0	0	0	0	0	0
+Streptomyces sp. cf386	57	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Kerstersia gyiorum	0	0	0	0	0	58	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Burkholderia sp. OLGA172	0	0	0	0	0	0	0	0	0	0	0	0	0	0	37	0	21	0	0	0
+Aquitalea magnusonii	0	0	0	0	0	0	0	0	0	0	0	0	0	25	33	0	0	0	0	0
+Cronobacter dublinensis	0	0	0	0	0	0	0	0	0	0	0	0	0	17	41	0	0	0	0	0
+Legionella spiritensis	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	34	0	0	0
+Hahella chejuensis	0	0	0	0	0	0	0	0	0	0	0	0	0	17	0	0	23	18	0	0
+Dyella marensis	0	0	0	0	0	0	0	0	0	0	0	0	28	0	0	30	0	0	0	0
+Candidatus Protochlamydia amoebophila	0	0	0	0	0	0	0	58	0	0	0	0	0	0	0	0	0	0	0	0
+Mycobacterium sp. Root265	0	58	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Micromonospora matsumotoense	0	0	0	0	0	0	0	0	0	0	0	0	0	0	34	0	0	0	24	0
+Janthinobacterium sp. 1_2014MBL_MicDiv	0	0	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	0	23
+Thioalkalivibrio sp. ALJ1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	33	0	0	0	26	0
+Salinicola acroporae	0	0	0	0	0	0	0	0	0	0	0	0	0	0	35	0	0	0	0	24
+Streptomyces sp. CC53	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0	0	0	27	0
+Rhodopseudomonas faecalis	0	0	0	60	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Verrucosispora sediminis	0	41	0	0	0	0	0	0	0	0	0	0	0	19	0	0	0	0	0	0
+Lentzea violacea	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	36	0	0	0	0
+Streptomyces sp. TAA204	60	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Paenibacillus ginsengihumi	0	0	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	28
+Chlorobaculum tepidum	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	21	21	0	0
+Sphingopyxis terrae	0	0	0	0	0	0	0	0	0	0	0	0	27	0	34	0	0	0	0	0
+Methylophilales bacterium LSUCC0135	0	0	0	0	0	0	0	0	0	0	0	0	0	17	0	0	0	21	0	23
+Streptomyces sp. WAC00288	0	0	0	0	0	0	0	61	0	0	0	0	0	0	0	0	0	0	0	0
+Deinococcus radiodurans	0	0	0	0	0	0	0	0	0	0	0	34	0	27	0	0	0	0	0	0
+Oceanicaulis sp. HTCC2633	0	0	0	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	0	25
+Variovorax sp. Root411	0	0	0	0	0	0	0	0	0	0	0	0	0	21	41	0	0	0	0	0
+Sedimenticola thiotaurini	0	0	0	0	0	0	0	0	0	0	0	0	0	0	33	0	0	0	0	29
+Actinopolyspora alba	62	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Xylanimonas cellulosilytica	0	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	26	0	0
+Methylobacterium sp. Leaf86	0	0	0	0	0	43	0	0	0	0	0	0	0	0	0	0	20	0	0	0
+Acidimangrovimonas indica	0	0	0	0	0	0	0	0	0	0	25	0	0	0	38	0	0	0	0	0
+Frankia coriariae	0	0	0	0	0	0	0	0	0	0	27	0	0	0	36	0	0	0	0	0
+Microcystis aeruginosa	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	29	34	0	0
+Sphingomonas sp. PAMC 26617	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	34	0	0	0	0
+Nocardioides sp. 78	0	0	0	0	0	0	0	0	0	0	64	0	0	0	0	0	0	0	0	0
+Streptomyces pristinaespiralis	0	0	0	0	0	0	0	0	47	0	0	0	0	17	0	0	0	0	0	0
+Streptomyces sp. RV15	0	0	0	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	27	0
+Paraburkholderia sp. BL18I3N2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	41	0	0	0	0	24
+Streptomyces sp. PsTaAH-137	0	0	41	0	0	0	0	0	0	0	24	0	0	0	0	0	0	0	0	0
+Anaerolinea thermophila	0	0	0	0	0	0	0	0	0	0	36	29	0	0	0	0	0	0	0	0
+Burkholderia sp. BDU8	0	0	0	0	0	0	0	0	0	0	0	0	32	0	34	0	0	0.00E+00	0	0
+Thiolapillus brandeum	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	23	0	0	25
+Fibrella aestuarina	0	0	0	0	0	0	0	0	0	0	0	47	0	20	0	0	0	0	0	0
+Sutterella parvirubra	0	0	0	0	0	0	0	0	0	0	0	32	35	0	0	0	0	0	0	0
+Rubellimicrobium thermophilum	0	0	0	0	0	0	0	0	0	0	25	0	0	19	0	0	24	0	0	0
+Geobacter sp. DSM 9736	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	0	23	0	0	27
+Frankineae bacterium MT45	0	0	0	0	0	0	0	0	0	0	39	0	0	0	0	0	0	0	29	0
+Burkholderia sp. KK1	0	0	0	0	0	0	0	0	0	0	0	0	0	25	0	0	0	19	0	25
+Marinobacterium rhizophilum	0	0	0	0	0	0	0	0	0	0	0	0	34	17	0	0	0	18	0	0
+Mycobacterium sp. djl-10	0	41	0	0	0	0	0	0	0	0	28	0	0	0	0	0	0	0	0	0
+Propionibacterium freudenreichii	0	0	0	0	0	0	0	0	0	0	34	35	0	0	0	0	0	0	0	0
+Methylocapsa acidiphila	0	0	0	0	0	0	0	0	0	0	0	0	0	0	43	0	0	0	0	27
+Chelatococcus sambhunathii	0	0	0	0	0	52	0	0	0	0	0	0	0	18	0	0	0	0	0	0
+Novosphingobium sp. THN1	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	30	22	0	0	0
+Victivallis vadensis	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	30	0	18	0	0
+Cellulomonas sp. Leaf395	0	0	0	0	0	0	0	0	0	0	36	35	0	0	0	0	0	0	0	0
+Asticcacaulis biprosthecium	0	0	0	0	0	0	0	0	0	0	0	0	40	0	32	0	0	0	0	0
+Methylobacterium sp. 77	0	0	0	0	0	46	0	0	0	0	26	0	0	0	0	0	0	0	0	0
+Pseudomonas sp. LFM046	0	0	0	0	0	0	0	0	0	0	0	0	0	0	44	0	0	0	0	28
+Xanthomonas fragariae	0	0	0	0	0	0	0	0	0	0	0	0	0	0	53	0	0	19	0	0
+Gordonia iterans	0	0	0	0	0	0	0	0	0	48	24	0	0	0	0	0	0	0	0	0
+Candidatus Blastococcus massiliensis	0	0	0	0	0	0	0	0	0	0	43	0	0	0	0	0	0	29	0	0
+Microbacterium sp. No. 7	0	0	0	0	0	0	0	0	0	0	39	33	0	0	0	0	0	0	0	0
+Microlunatus phosphovorus	0	0	0	0	0	0	0	0	0	0	47	0	0	0	0	0	0	0	25	0
+Cohnella sp. 6021052837	0	0	0	0	0	0	0	0	0	0	0	30	0	21	0	0	0	21	0	0
+Phyllobacterium zundukense	0	0	0	0	0	0	0	0	0	0	0	0	0	0	38	0	0	0	0	35
+Halomonas halodenitrificans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	46	0	0	0	27	0
+Halomonas subglaciescola	0	0	0	0	0	0	0	0	0	0	0	0	0	0	48	0	0	0	0	25
+Actinopolyspora mzabensis	73	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Bradyrhizobium neotropicale	0	0	0	0	0	0	0	0	0	0	27	0	0	17	0	0	0	0	0	30
+Thioalkalivibrio sp. ALJ6	0	0	0	0	0	0	0	0	0	0	0	0	0	0	47	0	0	0	0	27
+Streptomyces longwoodensis	0	0	0	0	0	0	46	0	0	0	0	28	0	0	0	0	0	0	0	0
+Pontibacter roseus	0	0	0	0	0	0	0	0	0	0	0	34	0	0	0	41	0	0	0	0
+Sphingopyxis alaskensis	0	0	0	0	0	0	0	0	0	0	0	0	42	0	0	33	0	0	0	0
+Burkholderia latens	0	0	0	0	0	0	0	0	0	0	0	0	35	0	40	0	0	0	0	0
+Krasilnikoviella flava	0	0	0	0	0	0	0	0	0	0	24	33	0	0	0	0	0	18	0	0
+Limimaricola cinnabarinus	0	0	0	0	0	0	0	0	0	0	30	0	0	27	0	0	19	0	0	0
+Halioglobus pacificus	0	0	0	0	0	0	0	0	0	0	0	0	27	19	30	0	0	0	0	0
+Halomonas pantelleriensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	33	0	0	19	0	24
+Pseudomonas sp. ATCC 13867	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	20	0	26	0
+Pseudomonas sp. TCU-HL1	0	0	0	0	0	0	0	0	0	0	0	0	0	17	31	0	0	0	0	28
+Lysobacter sp. Root667	0	0	0	0	0	0	0	0	0	0	0	0	45	0	0	31	0	0	0	0
+Cellulomonas flavigena	0	0	0	0	0	0	0	0	0	0	34	0	0	0	0	0	19	0	0	23
+Hymenobacter psychrophilus	0	0	0	0	0	0	0	0	0	0	0	0	0	22	32	0	0	0	0	23
+Fuerstia marisgermanicae	0	0	0	0	0	0	0	0	0	0	0	28	0	28	0	0	21	0	0	0
+Nocardiopsis sp. L17-MgMaSL7	57	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0
+Deinococcus sp. Leaf326	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	33	0	0	0	26
+Pontibacter ummariensis	0	0	0	0	0	0	0	0	0	0	0	48	0	0	0	30	0	0	0	0
+Achromobacter sp. RTa	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	33	25	0	0	0
+Methylovulum miyakonense	0	0	0	0	0	0	0	0	0	0	28	0	0	28	0	0	22	0	0	0
+Thiotrichales bacterium HS_08	0	0	0	0	0	0	0	0	0	0	37	0	0	0	0	0	41	0	0	0
+Xanthomonas phaseoli	0	0	0	0	0	0	0	0	0	0	0	0	39	18	0	0	0	21	0	0
+Aeromicrobium erythreum	0	0	0	0	0	0	0	0	0	0	48	0	0	0	0	0	0	0	30	0
+Thermus sp. CCB_US3_UF1	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	32	0	0	0	24
+Taibaiella chishuiensis	0	0	0	0	0	50	0	0	0	0	0	29	0	0	0	0	0	0	0	0
+Chitinophagaceae bacterium IBVUCB1	0	0	0	0	0	79	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Hymenobacter nivis	0	0	0	0	0	0	0	0	0	0	0	38	0	0	0	41	0	0	0	0
+Novosphingobium aromaticivorans	0	0	0	0	0	0	0	0	0	0	25	0	0	0	31	0	0	23	0	0
+Candidatus Coxiella mudrowiae	0	0	36	0	0	0	0	43	0	0	0	0	0	0	0	0	0	0	0	0
+Mycobacterium sp. UM_WWY	0	79	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Deinococcus hopiensis	0	0	0	0	0	0	0	0	0	0	0	36	0	0	0	0	0	19	0	24
+Roseivivax marinus	0	0	0	0	0	0	0	0	0	0	0	0	29	0	0	32	0	19	0	0
+Acinetobacter sp. yr461	0	0	0	0	0	0	0	0	0	0	31	0	0	18	0	0	31	0	0	0
+Micromonospora siamensis	0	0	0	0	0	0	0	0	0	0	24	0	0	0	0	0	0	21	35	0
+Aeromicrobium sp. Root472D3	0	0	0	0	0	0	0	0	0	0	30	30	0	20	0	0	0	0	0	0
+Burkholderia sp. BDU6	0	0	0	0	0	0	0	53	0	0	0	0	28	0	0	0	0	0	0	0
+Desulfonatronum lacustre	0	0	0	0	0	0	0	0	0	0	0	34	0	0	0	0	0	24	0	23
+Halomonas daqiaonensis	0	0	0	0	0	0	0	0	0	0	0	0	0	20	31	0	0	0	0	30
+Sinomonas mesophila	0	0	0	0	0	0	0	0	0	0	0	30	0	21	0	30	0	0	0	0
+Streptomyces sp. HmicA12	0	0	0	0	0	0	0	0	0	0	32	28	0	0	0	0	0	21	0	0
+Micromonospora narathiwatensis	57	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	25	0
+Brevundimonas sp. BAL3	0	0	0	0	0	47	0	0	0	0	36	0	0	0	0	0	0	0	0	0
+Solemya elarraichensis gill symbiont	0	0	0	0	0	0	0	0	0	0	0	0	0	21	38	0	0	0	0	24
+Rhodococcus sp. UNC363MFTsu5.1	0	0	0	0	0	0	0	0	0	0	37	0	27	0	0	0	19	0	0	0
+Cellulomonas sp. KH9	0	0	0	0	0	0	0	0	0	0	26	0	0	0	32	0	0	0	0	25
+Methylobacterium aquaticum	0	0	37	0	0	0	0	0	0	0	0	0	27	0	0	0	0	20	0	0
+Achromobacter sp. Root83	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	20	0	0	34
+Delftia acidovorans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	36	0	20	0	0	28
+Janthinobacterium lividum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	34	0	23	0	0	27
+Saccharomonospora xinjiangensis	0	0	0	0	0	0	0	0	0	0	27	0	0	0	0	38	0	19	0	0
+Meiothermus taiwanensis	0	0	0	0	0	0	0	0	0	0	30	32	0	0	0	0	0	22	0	0
+Cobetia marina	0	0	0	0	0	0	0	0	0	0	0	0	0	21	43	0	21	0	0	0
+Francisellaceae bacterium	0	0	0	85	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Beggiatoa leptomitoformis	0	0	0	0	0	0	0	0	0	0	43	0	0	0	0	0	42	0	0	0
+Raineyella antarctica	0	0	0	0	0	0	0	0	0	0	0	28	27	0	0	30	0	0	0	0
+Devosia sp. Root685	0	0	0	0	0	86	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Roseateles sp. YR242	0	0	0	0	0	0	0	0	0	0	0	0	0	24	37	0	0	0	25	0
+Polaromonas naphthalenivorans	0	0	0	0	0	0	0	0	0	0	27	0	0	20	39	0	0	0	0	0
+Opitutaceae bacterium TAV1	0	0	0	0	0	0	0	0	0	0	26	0	41	19	0	0	0	0	0	0
+Nakamurella panacisegetis	0	0	0	0	0	0	0	0	0	0	0	28	0	0	30	0	0	0	28	0
+Streptomyces bungoensis	0	0	40	0	0	0	46	0	0	0	0	0	0	0	0	0	0	0	0	0
+Streptomyces spongiicola	0	0	35	0	0	0	0	0	51	0	0	0	0	0	0	0	0	0	0	0
+Chitinophaga terrae Kim and Jung 2007	0	0	0	0	0	53	0	0	0	0	0	34	0	0	0	0	0	0	0	0
+Brevundimonas sp. DS20	0	0	0	0	0	55	0	0	0	0	32	0	0	0	0	0	0	0	0	0
+Dechloromonas aromatica	0	0	0	0	0	0	0	0	0	0	0	0	0	17	0	34	36	0	0	0
+Kushneria aurantia	0	0	0	0	0	0	0	0	0	0	0	0	0	0	38	0	21	0	0	28
+Burkholderia pyrrocinia	0	0	0	0	0	0	0	0	0	0	0	0	34	0	33	0	0	21	0	0
+Halomonas xianhensis	0	0	0	0	0	0	0	0	0	0	0	0	0	17	47	0	0	0	0	24
+Paracoccus pantotrophus	0	0	0	0	0	0	0	0	0	0	32	29	0	0	0	0	28	0	0	0
+Bordetella genomosp. 6	0	0	0	0	0	0	0	0	0	0	0	0	0	19	33	0	19	18	0	0
+Burkholderia sp. RPE67	0	0	0	0	0	0	0	0	0	0	0	0	28	0	30	0	0	0	0	31
+Chitinimonas taiwanensis	0	0	0	0	0	0	0	0	0	0	0	0	0	18	0	31	20	20	0	0
+Mycolicibacterium gilvum	0	65	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24	0
+Phycicoccus sp. Root563	0	0	0	0	0	0	0	0	0	0	49	0	0	0	0	0	20	20	0	0
+Streptomyces roseus	0	41	0	0	48	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Stappia sp. ES.058	0	0	0	63	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	27
+Sphingomonas jaspsi	0	0	0	0	0	0	0	0	0	0	26	0	31	0	33	0	0	0	0	0
+Tardibacter chloracetimidivorans	0	0	0	0	0	0	0	0	0	0	0	0	32	0	35	0	0	0	0	23
+Methylophaga nitratireducenticrescens	0	0	0	0	0	0	0	0	0	0	38	0	0	0	0	0	52	0	0	0
+Mycobacterium sp. UM_NYF	0	61	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0	0
+Arthrobacter sp. Soil736	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	42	0	0	24	24
+Selenomonas sputigena	0	0	0	0	0	0	0	0	0	0	0	0	35	0	0	0	0	21	0	34
+Niabella yanshanensis	0	0	0	0	0	61	0	0	0	0	0	30	0	0	0	0	0	0	0	0
+Hymenobacter aerophilus	0	0	0	0	0	0	0	0	0	0	0	0	28	0	0	36	27	0	0	0
+Pandoraea faecigallinarum	0	0	0	0	0	0	0	0	0	0	0	0	27	20	44	0	0	0	0	0
+Chromobacterium subtsugae	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	39	0	25	27	0
+Nitrosococcus oceani	0	0	0	0	0	0	0	0	0	0	35	0	0	18	0	0	38	0	0	0
+Microlunatus soli	0	0	0	0	0	0	0	0	0	0	34	28	29	0	0	0	0	0	0	0
+Amycolatopsis coloradensis	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	37	0	22	0	0
+Amycolatopsis sp. BJA-103	0	0	0	0	0	0	0	0	0	0	26	0	0	0	0	40	0	26	0	0
+Arabia massiliensis	0	0	0	0	0	0	0	0	0	0	0	35	0	0	30	0	0	27	0	0
+Bradyrhizobium symbiodeficiens	0	0	0	0	0	47	0	0	0	0	0	0	0	0	0	0	22	0	0	24
+Rhizobium sp. CF097	0	0	0	0	0	56	0	0	0	0	0	0	37	0	0	0	0	0	0	0
+Acidomonas methanolica	0	0	0	0	0	0	0	0	0	0	25	0	27	0	41	0	0	0	0	0
+Nitrosospira briensis	0	0	0	0	0	0	0	0	0	0	0	0	0	20	0	0	20	0	27	26
+Nitrosospira sp. Nsp13	0	0	0	0	0	0	0	0	0	0	0	0	0	20	40	0	0	0	0	33
+Parachlamydia sp. C2	0	0	0	0	0	0	0	54	0	0	0	0	0	0	0	0	39	0	0	0
+Mycolicibacterium chubuense	0	64	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0	0
+Heliobacterium modesticaldum	0	0	0	0	0	0	0	0	0	0	30	39	0	0	0	0	0	24	0	0
+Chitinophaga ginsengisoli	0	0	0	0	0	43	0	0	0	0	0	51	0	0	0	0	0	0	0	0
+Pandoraea sputorum	0	0	0	0	0	0	0	0	0	0	0	0	0	0	39	32	0	23	0	0
+Verrucosispora maris	0	0	0	0	0	0	0	0	0	0	31	30	0	0	0	33	0	0	0	0
+Bradyrhizobium amphicarpaeae	0	0	0	0	0	42	0	0	0	0	0	0	0	0	30	0	0	23	0	0
+Achromobacter sp. Root170	0	0	0	0	0	0	0	0	0	0	0	0	31	0	41	0	0	23	0	0
+Paraburkholderia ribeironis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	35	27	0	33	0
+Sulfuriferula sp. AH1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	40	30	0	0	0	25
+Streptomyces viridochromogenes	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0	0	31	0	34	0
+Chthonomonas calidirosea	0	0	0	0	0	0	0	0	0	0	0	41	0	27	0	0	27	0	0	0
+Thermus islandicus	0	0	0	0	0	0	0	0	0	0	0	41	0	0	0	0	24	0	30	0
+Cellulomonas sp. A375-1	0	0	0	0	0	0	0	0	0	0	35	0	0	0	30	31	0	0	0	0
+Streptomyces specialis	0	0	0	0	0	47	0	0	0	0	26	0	0	0	0	0	0	23	0	0
+Fischerella muscicola	0	0	0	0	0	0	0	0	0	0	0	0	0	0	69	0	0	0	0	27
+Devosia sp. Root436	0	0	0	0	0	0	46	0	0	0	0	0	27	24	0	0	0	0	0	0
+Erythrobacter sp. HL-111	0	0	0	0	0	0	0	0	0	0	0	0	40	0	32	0	0	0	0	25
+Porphyrobacter colymbi	0	0	0	0	0	0	0	0	0	0	0	0	37	0	0	39	0	21	0	0
+Mesorhizobium sp. URHA0056	0	0	0	0	0	45	0	0	0	0	0	0	0	0	0	0	0	28	0	25
+Granulibacter bethesdensis	0	0	0	0	0	0	0	0	0	0	25	0	34	20	0	0	19	0	0	0
+Bradyrhizobium sp. DOA1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	50	0	0	0	24	25
+Devosia sp. Root635	0	0	0	0	0	43	56	0	0	0	0	0	0	0	0	0	0	0	0	0
+Polaromonas sp. YR568	0	0	39	0	0	0	0	0	0	0	0	0	28	32	0	0	0	0	0	0
+Achromobacter marplatensis	0	0	0	0	0	0	0	0	0	0	0	0	28	17	31	0	0	0	0	24
+Desulfurivibrio alkaliphilus	0	0	0	0	0	0	0	0	0	0	0	0	0	27	0	33	20	20	0	0
+Streptomyces atriruber	0	0	0	0	0	0	0	0	0	0	28	29	0	0	0	0	19	0	0	24
+Burkholderia anthina	0	0	0	0	0	0	0	0	0	0	0	0	32	0	46	0	23	0	0	0
+Teredinibacter turnerae	0	0	0	0	0	0	0	0	0	0	27	0	0	29	0	0	45	0	0	0
+Nocardia pseudobrasiliensis	0	0	0	0	0	42	0	0	0	0	0	0	0	0	0	0	0	0	33	26
+Lysinimicrobium rhizosphaerae	0	0	0	0	0	0	0	0	0	0	35	0	0	21	0	0	20	0	25	0
+Chitinophaga sp. YR573	0	0	0	0	0	51	0	0	0	0	0	51	0	0	0	0	0	0	0	0
+Simkania negevensis	0	0	0	0	0	0	0	72	0	0	0	0	0	0	0	0	30	0	0	0
+Mesorhizobium opportunistum	0	0	0	0	0	47	0	0	0	0	0	0	0	0	30	0	0	0	26	0
+Paraburkholderia aspalathi	0	0	0	0	0	0	0	0	0	0	0	0	32	0	38	33	0	0	0	0
+Aeromicrobium sp. Root344	0	0	0	0	0	0	0	0	0	0	49	0	0	25	0	0	0	0	29	0
+Sphingomonas melonis	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	31	19	0	24	0
+Burkholderia metallica	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	24	21	0	27
+Pseudodesulfovibrio aespoeensis	0	0	0	0	0	0	0	0	0	0	0	37	0	0	0	37	0	30	0	0
+Propionicicella superfundia	0	0	0	0	0	0	0	0	0	0	29	34	0	0	0	0	21	20	0	0
+Solemya velum gill symbiont	0	0	0	0	0	0	0	0	0	0	0	0	0	26	39	0	40	0	0	0
+Amycolatopsis alba	0	0	0	0	0	0	0	0	0	0	28	0	0	0	0	57	0	20	0	0
+Intrasporangiaceae bacterium URHB0013	0	0	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	18	31	28
+Novosphingobium sp. MBES04	0	0	0	0	0	0	0	0	0	0	0	28	0	0	30	30	19	0	0	0
+Geoalkalibacter subterraneus	0	0	0	0	0	0	0	0	0	0	0	33	0	23	32	0	19	0	0	0
+Mycolicibacterium rhodesiae	0	68	0	0	0	0	0	0	0	0	0	0	0	0	39	0	0	0	0	0
+Streptomyces davaonensis	0	0	45	0	0	0	0	0	0	0	28	0	0	0	34	0	0	0	0	0
+Deinococcus swuensis	0	0	0	0	0	0	0	0	0	0	29	0	0	26	0	0	0	0	27	25
+Planifilum fimeticola	0	0	0	0	0	0	0	0	0	0	0	34	0	22	0	0	0	26	25	0
+Siccationidurans arizonensis	0	0	0	0	0	0	0	0	0	0	0	36	0	19	0	30	0	0	0	23
+Methylobacterium gossipiicola	0	0	0	0	0	0	0	0	0	0	32	0	28	0	0	0	22	0	26	0
+Pararhodospirillum photometricum	0	0	0	0	0	0	0	0	0	0	32	0	0	25	0	32	0	19	0	0
+Sphingobium sp. TKS	0	0	0	0	0	0	0	0	0	0	0	0	31	0	35	0	24	18	0	0
+Tamilnaduibacter salinus	0	0	0	0	0	0	0	0	0	0	0	0	38	17	31	0	0	22	0	0
+Candidatus Thiodiazotropha endoloripes	0	0	0	0	0	0	0	0	0	0	0	0	0	24	36	0	23	0	0	25
+Methylomonas sp. LWB	0	0	0	0	0	0	0	0	0	0	0	0	33	21	30	0	24	0	0	0
+Mycobacterium colombiense	0	0	0	0	0	0	0	0	0	0	36	0	0	22	0	0	23	0	0	27
+Georgenia satyanarayanai	0	0	0	0	0	0	0	0	0	0	38	29	0	17	0	0	0	0	24	0
+Phycicoccus sp. Soil803	0	0	0	0	0	0	0	0	0	0	55	28	0	0	0	0	0	25	0	0
+Micromonospora sp. HK10	0	0	0	0	0	0	0	0	0	0	0	0	0	0	36	30	20	22	0	0
+Paraburkholderia sp. JPY251	0	0	0	0	0	0	0	0	0	0	0	0	54	0	35	0	0	20	0	0
+Micromonospora coxensis	0	0	0	0	41	0	0	0	0	0	24	0	0	20	0	0	0	0	24	0
+Aeromicrobium choanae	0	0	0	0	0	0	0	0	0	0	42	40	27	0	0	0	0	0	0	0
+Porphyrobacter sp. CACIAM 03H1	0	0	0	0	0	0	0	0	0	0	0	0	38	0	0	47	0	0	0	25
+Xanthomonas vasicola	0	52	0	0	0	0	0	0	0	0	0	0	0	18	0	40	0	0	0	0
+Oscillochloris trichoides	0	0	0	0	0	0	0	0	0	0	31	39	0	21	0	0	19	0	0	0
+Clostridiales bacterium Marseille-P2846	0	0	0	0	0	0	0	0	0	0	0	0	0	22	0	0	21	31	0	36
+Ochrobactrum anthropi	0	0	0	0	0	111	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Phycicoccus dokdonensis	0	0	0	0	0	0	0	0	0	0	53	0	0	0	0	0	0	22	36	0
+Bradyrhizobium sp. LTSP857	0	0	0	51	0	61	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Sphingomonas sp. Leaf25	0	0	0	0	0	0	0	0	0	0	0	0	49	0	0	41	0	22	0	0
+Lysobacter sp. Root604	0	0	0	0	0	0	0	0	0	0	0	0	38	0	32	42	0	0	0	0
+Parachlamydia acanthamoebae	0	0	0	0	0	0	0	67	0	0	0	0	0	0	0	0	45	0	0	0
+Rhodococcus hoagii	0	0	0	0	0	0	0	0	0	0	57	0	0	0	0	30	0	0	25	0
+Rhodoferax ferrireducens	0	0	0	0	0	0	0	0	0	0	0	0	0	0	38	0	20	0	27	28
+Thioalkalivibrio sp. ALMg11	0	0	0	0	0	0	0	0	0	0	0	0	0	17	58	0	0	0	0	38
+Pseudomonas coronafaciens	0	0	0	0	0	0	0	0	0	0	0	0	32	22	32	0	27	0	0	0
+Saccharomonospora glauca	0	0	0	0	0	0	0	0	0	0	0	0	29	0	0	42	0	18	24	0
+Hymenobacter sp. PAMC 26554	0	0	0	0	0	0	0	0	0	0	0	35	0	17	0	36	0	0	26	0
+Methylobacterium radiotolerans	0	0	0	0	0	0	0	0	0	0	0	28	28	0	39	0	0	19	0	0
+Novosphingobium panipatense	0	0	0	0	0	0	0	0	0	0	0	0	36	20	0	36	22	0	0	0
+Pandoraea vervacti	0	0	0	0	0	0	0	0	0	0	0	0	44	0	40	0	0	0	0	30
+Acidovorax carolinensis	0	0	0	0	0	0	0	0	0	0	25	0	0	0	34	35	0	20	0	0
+Nodosilinea nodulosa	0	0	0	0	0	0	0	0	0	0	28	33	0	0	0	32	0	21	0	0
+Burkholderia sp. IDO3	0	0	0	0	0	0	0	0	0	0	0	0	33	0	33	0	0	19	0	30
+Achromobacter piechaudii	0	0	0	0	0	0	0	0	0	0	0	0	0	17	34	0	0	0	26	39
+Massilia sp. CF038	0	0	0	0	0	0	0	0	0	0	0	0	28	0	0	37	23	0	28	0
+Sedimenticola selenatireducens	0	0	0	0	0	0	0	0	0	0	0	0	0	18	43	0	0	0	25	30
+Streptomyces sp. NRRL S-118	0	41	0	0	0	0	0	0	0	46	0	29	0	0	0	0	0	0	0	0
+Meiothermus silvanus	0	0	0	0	0	0	0	0	0	0	25	28	0	0	0	0	0	0	35	28
+Methylocapsa aurea	0	0	0	0	0	48	0	0	0	0	24	0	0	0	0	0	26	19	0	0
+Promicromonospora kroppenstedtii	0	0	0	0	0	0	0	0	0	0	37	29	0	0	0	0	0	28	0	23
+Cyanobium sp. PCC 7001	0	0	0	0	0	0	0	0	0	0	0	31	0	28	0	0	0	29	29	0
+Caballeronia cordobensis	0	0	0	0	0	0	0	0	0	0	0	0	42	0	51	0	0	0	25	0
+Thermogutta terrifontis	0	0	0	0	0	0	0	0	0	0	0	28	0	31	0	0	30	29	0	0
+Amycolatopsis keratiniphila	0	0	0	0	0	0	0	0	0	0	30	0	29	0	0	38	0	21	0	0
+Altererythrobacter dongtanensis	0	0	0	0	0	0	0	0	0	0	0	0	29	0	36	31	0	24	0	0
+Geobacter bemidjiensis	0	0	0	0	0	0	0	0	0	0	0	46	0	24	0	0	19	31	0	0
+Methylobacterium sp. Leaf99	0	0	36	0	0	0	0	0	0	0	0	30	0	18	0	0	19	18	0	0
+Mycobacterium dioxanotrophicus	61	60	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Cohnella thermotolerans	0	0	0	0	0	0	0	0	0	0	0	31	0	19	0	0	24	20	0	27
+Bradyrhizobium sp. AT1	0	0	0	54	0	0	0	0	0	0	0	41	27	0	0	0	0	0.00E+00	0	0
+Tetrasphaera australiensis	0	0	0	0	0	0	0	0	0	0	31	0	0	21	0	0	19	27	0	24
+Cereibacter changlensis	0	0	0	0	0	0	0	0	0	0	28	0	36	0	0	36	0	0	0	23
+Nostoc linckia	0	0	0	0	0	0	0	0	0	0	0	29	0	22	0	0	28	44	0	0
+Rhodobacter sp. CZR27	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	35	22	0	0	36
+Paludibacterium yongneupense	0	0	0	0	0	0	0	0	0	0	0	0	43	19	36	0	0	26	0	0
+Salinicola tamaricis	0	0	0	0	0	0	0	0	0	0	0	0	28	18	52	0	0	0	0	26
+Limimaricola hongkongensis	0	0	0	0	0	0	0	0	0	0	25	0	29	0	44	0	0	0	0	27
+Leifsonia xyli	0	0	0	0	0	0	0	0	0	0	32	30	0	19	0	44	0	0	0	0
+Pseudomonas sp. 21	0	0	0	0	0	0	0	0	0	0	24	0	27	0	0	0	24	0	25	26
+Geodermatophilus tzadiensis	0	0	0	0	0	0	0	0	0	0	35	30	0	17	0	44	0	0	0	0
+Agromyces flavus	0	0	0	0	0	0	0	0	0	0	32	0	0	0	34	30	0	0	0	30
+Bradyrhizobium arachidis	0	0	0	50	0	50	0	0	0	0	0	0	0	0	0	0	0	0	0	27
+Klebsiella pneumoniae	0	0	0	0	0	0	0	0	0	0	0	0	30	27	35	0	0	0	0	35
+Streptomyces purpureus	57	0	0	0	0	0	0	47	0	0	0	0	0	0	0	0	0	0	24	0
+Marinobacter hydrocarbonoclasticus	0	0	0	0	0	0	0	0	0	0	0	0	27	20	36	0	22	0	24	0
+Streptacidiphilus anmyonensis	0	0	38	0	0	0	0	0	0	0	32	29	0	0	0	30	0	0	0	0
+Bacillus paralicheniformis	78	0	0	51	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Candidatus Nitrosocaldus islandicus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	75	0	0	0	54	0
+Bradyrhizobium sp. Cp5.3	0	0	0	0	0	0	0	0	0	0	0	0	27	0	36	0	19	22	0	26
+Janibacter massiliensis	0	0	0	0	0	0	0	0	0	0	46	28	0	0	0	0	0	0	30	26
+Streptomyces sp. CdTB01	0	0	0	0	0	0	0	39	0	0	29	31	0	0	0	0	0	0	31	0
+Rhodoblastus sphagnicola	0	0	0	0	0	44	0	0	0	0	0	30	38	19	0	0	0	0	0	0
+Celeribacter indicus	0	0	0	0	0	0	0	0	0	0	28	28	0	22	34	0	19	0	0	0
+Burkholderia plantarii	0	0	0	0	0	0	0	0	0	0	0	0	36	0	42	34	0	19	0	0
+Pseudomonas plecoglossicida	0	0	0	0	0	0	0	0	0	0	0	0	39	22	49	0	21	0	0	0
+Glycomyces arizonensis	0	0	0	0	41	0	0	0	0	0	0	35	0	0	0	37	0	19	0	0
+Sphingomonas sp. OV641	0	0	0	0	0	0	0	0	0	0	0	0	36	0	0	32	22	20	0	23
+Nitrosospira sp. Nsp14	0	0	0	0	0	0	0	0	0	0	0	0	0	24	38	52	19	0	0	0
+Lentzea jiangxiensis	0	0	0	0	0	0	0	0	0	0	24	0	41	0	0	41	0	0	27	0
+Planifilum fulgidum	0	0	0	0	0	0	0	0	0	0	0	31	0	0	0	0	25	23	31	23
+Chitinophaga eiseniae	0	0	0	0	0	0	0	0	0	51	0	57	0	0	0	0	0	0	0	26
+Akkermansia muciniphila	0	0	0	0	0	0	0	0	0	0	0	35	0	22	0	0	32	18	27	0
+Alicyclobacillus vulcanalis	0	0	0	0	0	0	0	0	0	0	0	38	27	21	0	0	0	23	0	25
+Acidipropionibacterium acidipropionici	0	0	0	0	0	0	0	0	0	0	35	48	0	0	0	32	0	20	0	0
+Sulfuricella sp. T08	0	0	0	0	0	0	0	0	0	0	0	0	0	19	30	38	0	20	0	29
+Piscirickettsia salmonis	0	0	0	56	0	0	0	0	0	0	32	0	0	0	0	0	48	0	0	0
+Cellulomonas massiliensis	0	0	0	0	0	0	0	0	0	0	32	0	0	22	0	31	0	24	27	0
+Ornithinimicrobium pekingense	0	0	0	0	0	0	0	0	0	0	41	0	0	0	0	31	0	0	29	35
+Saccharomonospora cyanea	0	0	0	0	0	0	0	0	0	0	24	0	29	0	0	52	0	31	0	0
+Streptomyces xiamenensis	0	0	0	50	41	0	45	0	0	0	0	0	0	0	0	0	0	0	0	0
+Citreimonas salinaria	0	0	0	0	0	0	0	0	0	0	0	41	0	0	38	33	0	0	0	25
+Desulfoluna spongiiphila	0	0	0	0	0	0	0	0	0	0	29	44	0	17	0	0	22	25	0	0
+Dyella sp. 333MFSha	0	0	0	0	0	0	0	0	0	0	0	0	45	0	69	0	0	23	0	0
+Sphingomonas sp. Leaf33	0	0	0	0	0	0	0	0	0	0	0	0	43	0	39	32	0	0	0	24
+Vibrio campbellii	66	0	0	72	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Actinopolyspora erythraea	107	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	31
+Duganella sp. CF458	0	0	0	0	0	0	0	0	0	0	0	0	29	0	42	33	0	0	0	35
+Pseudomonas sp. MYb185	0	0	0	0	0	0	0	0	0	0	0	0	30	0	40	0	0	18	24	28
+Phycicoccus sp. Soil748	0	0	0	0	0	0	0	0	0	0	51	46	0	17	0	0	0	0	0	26
+Streptomyces aurantiacus	0	41	0	0	0	0	0	0	51	48	0	0	0	0	0	0	0	0	0	0
+Methylobacterium sp. Leaf117	0	0	0	0	0	46	0	0	0	0	0	0	27	0	0	0	25	19	24	0
+Halomonas aestuarii	0	0	0	0	0	0	0	0	0	0	0	0	30	17	44	0	0	20	30	0
+Micromonospora carbonacea	62	0	0	0	0	0	0	0	0	53	26	0	0	0	0	0	0	0	0	0
+Micromonospora haikouensis	0	52	42	0	0	0	47	0	0	0	0	0	0	0	0	0	0	0	0	0
+Pandoraea norimbergensis	0	0	0	0	0	0	0	0	0	0	0	0	29	0	30	36	23	0	0	24
+Andreprevotia lacus	0	0	0	0	0	0	0	0	0	0	0	0	0	26	37	35	19	0	0	25
+Actinopolyspora xinjiangensis	76	42	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	24
+Terrabacter sp. Soil810	0	0	0	0	0	0	0	0	0	0	55	46	0	18	0	0	0	23	0	0
+Christensenella sp. Marseille-P3954	0	0	0	0	0	0	0	0	0	0	0	0	0	21	31	0	0	29	31	31
+Ralstonia insidiosa	0	0	0	0	0	0	0	0	0	0	0	0	37	19	39	0	24	0	0	25
+Streptomyces antibioticus	0	0	0	0	0	50	49	0	0	45	0	0	0	0	0	0	0	0	0	0
+Pseudomonas psychrotolerans	0	0	0	0	0	0	0	0	0	0	0	0	0	22	45	0	0	21	31	26
+Ciceribacter lividus	0	0	0	0	0	54	0	0	0	0	26	0	0	0	33	0	0	0	0	33
+Niveispirillum irakense	0	0	0	0	0	0	0	0	0	0	35	0	34	0	0	0	22	26	29	0
+Kineococcus radiotolerans	0	0	0	0	0	0	0	0	0	0	38	41	0	0	0	42	0	0	25	0
+Burkholderia territorii	0	0	0	0	0	0	0	0	0	0	0	0	39	0	48	42	0	18	0	0
+Mesorhizobium sp. URHC0008	0	0	0	0	0	0	0	0	0	0	30	0	34	0	39	0	0	22	0	23
+Paracoccus yeei	0	0	0	0	0	0	0	0	0	0	0	0	31	24	34	32	0	0	27	0
+Cupriavidus nantongensis	0	0	0	0	0	0	0	0	0	0	0	0	38	0	54	33	0	0	0	23
+Salinicola sp. CR45	0	0	0	0	0	0	0	0	0	0	0	0	42	0	52	0	0	0	29	25
+Corynebacterium diphtheriae	85	0	0	63	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Blastococcus saxobsidens	0	0	0	0	0	0	0	0	0	0	39	35	0	0	0	0	21	22	0	31
+Streptomyces phaeochromogenes	0	52	0	0	0	0	0	0	0	45	0	33	0	0	0	0	0	18	0	0
+Streptomyces sp. CB03238	58	49	0	0	0	0	0	41	0	0	0	0	0	0	0	0	0	0	0	0
+Hymenobacter sedentarius	0	0	0	0	0	0	0	0	0	0	0	36	27	20	0	44	22	0	0	0
+Salinicola sp. CPA62	0	0	0	0	0	0	0	0	0	0	0	0	0	0	82	0	0	0	27	40
+Mitsuokella multacida	0	0	0	0	0	0	0	0	0	0	0	39	0	0	30	0	24	0	26	30
+Candidatus Rhodobacter lobularis	0	0	0	0	0	0	0	0	0	0	0	31	0	17	35	0	22	18	0	27
+[Pseudomonas] mesoacidophila	0	0	0	0	0	0	0	0	0	0	24	0	30	25	33	38	0	0	0	0
+Halomonas utahensis	0	0	0	0	0	0	0	0	0	0	0	0	35	0	35	0	20	31	0	29
+Rhodanobacter sp. OR92	0	0	0	0	0	0	0	0	0	0	0	0	59	0	60	0	0	0	0	31
+Caldimonas manganoxidans	0	0	0	0	0	0	0	0	0	0	24	0	37	28	0	43	0	19	0	0
+Cellulomonas fimi	0	0	0	0	0	0	0	0	0	0	34	33	39	0	0	0	20	0	0	25
+Nocardioides sp. Root190	0	0	0	0	0	0	0	40	0	0	83	28	0	0	0	0	0	0	0	0
+Streptomyces xanthophaeus	0	0	0	0	47	0	0	43	0	0	25	36	0	0	0	0	0	0	0	0
+Cupriavidus sp. SK-3	0	0	0	0	0	0	0	0	0	0	28	0	0	17	52	0	0	0	27	28
+Pseudomonas indica	0	0	0	0	0	0	0	0	0	0	0	0	31	17	39	39	0	0	26	0
+Mycobacterium sp. Soil538	62	63	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	27	0
+Burkholderia contaminans	0	0	0	0	0	0	0	0	0	0	0	0	33	0	45	33	19	0	0	23
+Azovibrio restrictus	0	0	0	0	0	0	0	0	0	0	0	28	0	28	0	0	0	21	40	36
+Streptacidiphilus neutrinimicus	0	0	0	0	43	0	0	0	0	55	35	0	0	0	0	0	20	0	0	0
+Bradyrhizobium sp. S23321	0	0	0	0	0	50	0	0	0	0	32	28	0	19	0	0	25	0	0	0
+Rhizobium gallicum	0	0	0	0	0	49	0	0	0	0	35	0	45	0	0	0	0	0	0	25
+Comamonas serinivorans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	36	46	0	19	25	28
+Mycolicibacterium tusciae	0	76	0	0	0	0	49	0	0	0	29	0	0	0	0	0	0	0	0	0
+Janibacter indicus	0	0	0	0	0	0	0	0	0	0	47	32	0	22	0	31	0	22	0	0
+Mesorhizobium sp. WSM3626	0	0	0	0	0	0	0	0	0	0	39	0	48	17	0	0	20	31	0	0
+Herbaspirillum seropedicae	0	0	0	0	0	0	0	0	0	0	0	0	44	0	53	0	30	0	0	28
+Mycolicibacterium goodii	72	64	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0
+Sinorhizobium sp. RAC02	0	0	35	0	0	121	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Opitutaceae bacterium TAV5	0	0	0	0	0	0	0	0	0	0	24	40	0	0	34	34	0	24	0	0
+Halegenticoccus soli	0	0	0	0	0	0	0	0	0	0	38	35	0	21	0	0	19	19	24	0
+Achromobacter sp. 2789STDY5608625	0	0	0	0	0	0	0	0	0	0	0	0	0	17	42	39	0	0	27	32
+Frateuria aurantia	0	0	0	0	0	0	0	0	0	0	0	0	39	20	39	0	26	0	0	33
+Agrococcus lahaulensis	0	0	0	0	0	0	0	0	0	0	0	31	28	17	34	0	0	20	0	27
+Paracoccus tibetensis	0	0	0	0	0	0	0	0	0	0	32	0	33	0	41	31	21	0	0	0
+Glycomyces sambucus	0	0	0	0	0	0	0	0	0	0	0	40	0	20	0	0	20	23	31	25
+Harryflintia acetispora	0	0	0	0	0	0	0	0	0	0	26	28	0	0	32	45	0	0	28	0
+Cardiobacterium hominis	0	0	0	0	0	0	0	0	0	0	0	0	0	17	52	0	26	0	27	38
+Brevundimonas sp. LM2	0	0	0	0	0	0	0	0	0	0	54	0	0	0	39	41	0	0	0	27
+Kitasatospora cheerisanensis	0	0	0	0	0	0	49	0	0	56	25	0	0	0	0	31	0	0	0	0
+Pseudoduganella violaceinigra	0	0	0	0	0	0	0	0	0	0	0	0	33	0	38	32	0	0	27	33
+Streptomyces olivoreticuli	57	0	0	50	0	0	57	0	0	0	0	0	0	0	0	0	0	0	0	0
+Ruminococcaceae bacterium	0	0	0	0	0	0	0	0	0	0	0	35	0	19	0	44	0	19	24	23
+Halomonas anticariensis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	33	73	32	0	0	27
+Chitinilyticum litopenaei	0	0	0	0	0	0	0	0	0	0	0	0	0	22	37	33	29	18	0	27
+Salinicola salarius	0	0	0	0	0	0	0	0	0	0	0	0	34	0	39	34	0	0	27	32
+Streptomyces sp. CB00455	0	42	0	0	47	0	51	0	0	0	0	0	0	0	0	0	0	0	27	0
+Cyanobium gracile	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0	59	20	25	33	0
+Mesorhizobium sp. Root172	0	0	0	0	0	46	0	42	0	0	31	0	31	18	0	0	0	0	0	0
+Sphingomonas taxi	0	0	0	0	0	0	0	0	0	0	0	36	52	0	30	0	0	22	0	28
+Desulfovibrio gigas	0	0	0	0	0	0	0	0	0	0	0	34	0	19	0	0	29	32	30	24
+Ornithinimicrobium sp. CNJ-824	0	0	0	0	0	0	0	0	0	0	37	28	0	21	0	34	0	24	0	24
+Rhodothermus profundi	0	0	0	0	0	0	0	0	0	0	26	30	0	23	0	31	33	26	0	0
+Victivallales bacterium CCUG 44730	0	0	0	0	0	0	0	0	0	0	0	36	28	24	0	0	0	31	26	24
+Micromonospora sp. ATCC 39149	58	0	0	0	0	0	56	0	0	0	26	0	0	0	0	0	0	29	0	0
+Amycolatopsis regifaucium	0	0	0	0	0	0	0	0	0	0	0	0	39	22	0	59	0	24	0	25
+Streptomyces kasugaensis	0	0	36	0	0	0	47	40	0	46	0	0	0	0	0	0	0	0	0	0
+Rhizobium subbaraonis	0	0	0	0	0	51	0	0	0	0	0	0	0	0	32	33	0	23	0	31
+Ensifer sojae	0	0	0	0	0	147	0	0	0	0	0	0	0	23	0	0	0	0	0	0
+Luteibacter sp. 22Crub2.1	0	0	0	0	0	0	0	0	0	0	0	0	32	0	69	0	0	0	34	35
+Verrucomicrobia bacterium IMCC26134	0	0	0	0	0	0	0	0	0	0	0	30	0	22	0	39	27	23	29	0
+Microterricola viridarii	0	0	0	0	0	0	0	0	0	0	27	30	0	0	35	32	0	22	24	0
+Nocardiopsis sp. CNT312	0	0	0	0	0	0	51	0	51	0	33	35	0	0	0	0	0	0	0	0
+Salipiger profundus	0	0	0	0	0	0	0	0	0	0	24	0	0	0	52	30	20	20	25	0
+Bordetella holmesii	0	0	0	0	0	0	0	0	0	0	0	28	29	18	35	31	0	0	0	30
+Vogesella sp. LIG4	0	0	0	0	0	0	0	0	0	0	0	0	35	22	31	52	0	31	0	0
+Ereboglobus luteus	0	0	0	0	0	0	0	0	0	0	0	30	0	22	31	0	0	30	29	29
+Ammonifex degensii	0	0	0	0	0	0	0	0	0	0	31	32	0	0	0	0	25	19	36	28
+Bordetella sp. FB-8	0	0	0	0	0	0	0	0	0	0	0	0	35	22	69	0	0	22	0	24
+Paraburkholderia xenovorans	0	0	0	0	0	0	0	0	0	0	0	0	0	21	45	0	25	25	31	25
+Tetrasphaera sp. Soil756	0	0	0	0	0	0	0	0	0	0	66	34	0	0	0	0	0	19	24	29
+Nocardia neocaledoniensis	0	43	0	0	0	0	0	0	0	0	0	0	35	21	32	0	0	20	0	23
+Mobilicoccus massiliensis	0	0	0	0	0	0	0	0	0	0	51	29	0	19	0	0	0	22	28	25
+Streptomyces sp. JV178	101	0	0	74	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Nitrobacter winogradskyi	0	0	0	0	0	0	58	0	0	0	0	0	30	0	0	0	0	18	0	70
+Halomonas ventosae	0	0	0	0	0	0	0	0	0	0	0	0	36	0	30	0	21	33	25	31
+Nocardioides sp. Iso805N	0	0	0	0	0	0	0	0	0	0	92	30	0	0	0	30	0	24	0	0
+Pseudomonas fuscovaginae	0	0	0	0	0	0	0	0	0	0	0	30	55	22	33	37	0	0	0	0
+Methylocella silvestris	0	0	37	0	0	52	0	0	0	0	25	0	0	21	0	0	19	0	0	24
+Sphingomonas phyllosphaerae	0	0	0	0	0	0	0	0	0	0	0	0	35	0	57	0	22	0	26	39
+Sphingopyxis fribergensis	0	0	0	0	0	63	0	0	0	0	0	0	33	0	34	30	19	0	0	0
+Halomonas saccharevitans	0	0	0	0	0	0	0	0	0	0	0	0	0	0	69	36	0	0	35	39
+Streptomyces sp. CNH287	0	45	0	0	0	0	0	0	0	45	0	39	0	0	0	0	0	18	32	0
+Burkholderia pseudomultivorans	0	0	0	0	0	0	0	0	0	0	0	0	37	17	36	47	20	0	0	23
+Streptomyces caeruleatus	67	0	35	50	0	0	0	0	0	0	0	0	0	0	0	0	0	0	28	0
+Azoarcus sp. BH72	0	0	0	0	0	0	0	0	0	0	0	0	0	25	50	32	21	19	0	34
+Methylobacterium pseudosasicola	0	0	0	0	0	47	0	0	0	0	33	30	0	0	0	32	22	18	0	0
+Nitratireductor sp. OM-1	0	0	38	64	0	0	0	0	0	0	24	0	33	0	0	0	23	0	0	0
+Pluralibacter gergoviae	0	0	0	0	0	0	0	0	0	0	0	0	48	17	43	0	20	29	25	0
+Nocardia sp. BMG111209	0	0	0	0	52	0	0	0	0	0	25	0	33	0	0	47	0	0	25	0
+Marinovum algicola	0	0	0	0	0	43	0	0	0	0	26	39	28	0	0	0	25	22	0	0
+Andreprevotia chitinilytica	0	0	0	0	0	0	0	0	0	0	0	0	34	40	39	0	27	18	25	0
+Pseudomonas kuykendallii	0	0	0	0	0	0	0	0	0	0	0	0	36	0	40	34	23	19	31	0
+Brevundimonas subvibrioides	0	0	0	0	0	58	0	0	0	0	51	0	0	18	0	0	26	0	0	31
+Halothiobacillus sp. LS2	0	0	0	0	0	0	0	0	0	0	0	0	38	25	40	0	27	0	28	26
+Nocardioides terrae	0	0	0	0	0	0	0	0	0	0	111	0	0	0	0	30	20	23	0	0
+Thermobifida fusca	0	0	43	0	0	0	46	0	48	47	0	0	0	0	0	0	0	0	0	0
+Streptococcus sp. HMSC072D03	128	0	0	56	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Variovorax sp. YR266	0	0	0	0	0	0	0	0	0	0	29	0	37	0	32	42	0	19	0	26
+Nocardia puris	62	0	0	0	0	59	0	0	0	0	0	31	0	0	0	33	0	0	0	0
+Chitinophaga sp. CF118	66	0	0	0	0	66	0	0	0	0	0	54	0	0	0	0	0	0	0	0
+Phaeospirillum fulvum	0	0	0	0	0	0	0	0	0	0	57	35	29	17	0	0	25	0	0	23
+Hydrogenophaga sp. IBVHS1	0	0	0	0	0	0	0	0	0	0	0	0	30	0	46	39	20	20	0	31
+Friedmanniella sagamiharensis	0	0	0	0	0	0	0	0	0	0	41	28	0	18	0	47	0	27	25	0
+Vibrio agarivorans	98	0	0	90	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Variovorax sp. Root473	0	0	0	0	0	0	0	0	0	0	26	0	38	0	32	45	29	19	0	0
+Streptomyces carpinensis	0	0	37	0	0	0	0	51	51	0	29	0	0	0	0	0	0	21	0	0
+Caulobacter sp. URHA0033	0	0	0	0	0	0	0	0	0	0	0	0	43	0	53	45	0	24	0	25
+Sphingomonas sp. JS21-1	0	0	0	0	0	0	0	0	0	0	29	0	29	23	40	0	0	20	24	25
+Candidimonas bauzanensis	0	0	0	0	0	0	0	0	0	0	26	0	33	0	45	32	0	20	0	34
+Paraburkholderia phenazinium	0	0	0	0	0	0	0	0	0	0	0	0	34	0	82	36	0	0	0	38
+Serpentinomonas mccroryi	0	0	0	0	0	0	0	0	0	0	0	0	0	25	43	41	36	21	0	24
+Erythrobacter litoralis	0	0	0	0	0	0	0	0	0	0	0	32	32	0	43	34	23	0	27	0
+Ectothiorhodospira haloalkaliphila	0	0	0	0	0	0	0	0	0	0	0	0	36	30	52	0	0	0	30	43
+Thioalkalivibrio sp. ALJT	0	0	0	0	0	0	0	0	0	0	0	0	28	0	72	36	21	0	0	34
+Mesorhizobium australicum	0	0	0	0	0	0	0	0	0	0	28	0	37	0	40	34	0	28	0	25
+Moorella thermoacetica	0	0	0	0	0	0	0	0	0	0	27	37	0	19	0	0	19	26	34	30
+Roseivivax roseus	0	0	0	0	0	0	0	0	0	0	35	0	42	0	42	0	22	21	0	31
+Aeromicrobium massiliense	0	0	0	0	0	42	0	0	0	0	60	30	0	0	0	35	0	26	0	0
+Desulfococcus oleovorans	0	0	0	0	0	0	0	0	0	0	26	38	0	31	0	47	20	32	0	0
+Methylobacterium phyllostachyos	0	0	35	0	0	0	0	0	0	0	0	0	36	0	43	0	0	31	27	23
+Methylobacter tundripaludum	0	0	0	0	0	0	0	0	0	0	31	0	38	25	0	38	41	22	0	0
+Deinococcus peraridilitoris	0	0	0	0	0	0	0	0	0	0	33	35	0	24	0	0	19	25	30	29
+Ensifer sp. BR816	0	0	0	0	0	69	0	0	0	0	26	0	30	17	0	0	24	30	0	0
+Synechococcus sp. BO 8801	0	0	0	0	0	0	0	0	0	0	0	29	31	0	34	38	19	22	0	23
+Sphingomonas sp. Root710	0	0	0	0	0	0	0	0	0	0	0	0	50	0	39	33	20	0	26	29
+Streptomyces dioscori	0	0	36	0	0	0	48	0	0	45	0	28	0	0	0	0	20	20	0	0
+Deinococcus sp. NW-56	0	0	0	0	0	0	0	0	0	0	29	32	0	17	0	48	21	19	31	0
+Mesorhizobium sp. Root157	0	0	0	0	0	52	0	64	0	0	0	0	28	0	0	0	0	26	0	28
+Bradyrhizobium sp. Ghvi	0	0	0	61	0	0	0	0	0	0	0	33	34	21	0	0	27	23	0	0
+Ensifer sp. ZNC0028	0	0	0	0	0	136	0	0	0	0	29	0	34	0	0	0	0	0	0	0
+Microbulbifer yueqingensis	0	0	0	0	0	0	0	0	0	0	0	0	49	18	55	53	0	0	0	24
+Caulobacter sp. Root1472	0	0	0	0	0	0	0	0	0	0	37	0	28	20	0	40	23	22	30	0
+Methylobacter luteus	0	0	0	0	0	0	0	0	0	0	42	0	28	30	34	0	66	0	0	0
+Schlesneria paludicola	0	0	0	0	0	0	0	0	0	0	26	38	0	31	0	44	40	21	0	0
+Aureimonas altamirensis	0	0	0	51	0	0	0	0	0	0	0	0	36	0	35	30	0	25	24	0
+Pulveribacter suum	0	0	0	0	0	0	0	0	0	0	33	0	44	18	0	30	0	24	25	27
+Paraburkholderia tuberum	0	0	0	0	0	0	0	0	0	0	0	0	39	0	67	0	22	0	35	39
+Salinicola peritrichatus	0	0	0	0	0	0	0	0	0	0	0	28	51	0	44	34	0	19	26	0
+Streptomyces angustmyceticus	0	0	0	49	0	0	55	49	0	0	27	0	0	0	0	0	0	22	0	0
+Acidithiobacillus caldus	0	0	0	0	0	0	0	0	0	0	0	0	0	18	62	31	0	19	33	40
+Hydrogenophaga sp. RAC07	0	0	0	0	0	0	0	0	0	0	0	0	29	0	56	51	0	0	31	36
+Lentzea waywayandensis	0	0	0	0	0	0	51	0	0	0	27	0	33	0	0	49	0	19	24	0
+Devosia sp. 17-2-E-8	0	0	0	0	0	0	0	58	0	0	29	0	41	0	0	0	19	0	30	27
+Nitrosomonas ureae	0	0	0	0	0	0	0	0	0	0	42	0	0	33	36	32	61	0	0	0
+Nocardioides insulae	0	0	0	0	0	0	0	0	0	0	116	33	0	0	0	0	0	27	28	0
+Ralstonia sp. 25mfcol4.1	0	0	0	0	0	0	0	38	0	0	0	29	35	0	37	37	0	0	0	29
+Lentzea flaviverrucosa	0	0	0	0	0	0	0	0	0	0	34	34	31	0	0	55	21	0	30	0
+Candidatus Filomicrobium marinum	0	0	45	63	0	98	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Hwanghaeicola aestuarii	0	0	0	0	0	0	0	0	0	0	30	35	39	20	32	0	0	0	26	24
+Pseudomonas monteilii	0	0	0	0	0	0	0	0	0	0	0	0	39	23	37	35	25	0	24	23
+Niabella soli	0	0	0	0	0	75	0	0	0	50	0	57	0	0	0	0	0	0	25	0
+Herbaspirillum hiltneri	0	0	0	0	0	0	0	0	0	0	26	0	50	17	39	30	22	24	0	0
+Desulfovibrio piger	0	0	0	0	0	0	0	0	0	0	29	34	0	0	39	46	0	23	37	0
+Desulfovibrio sp. U5L	0	0	0	0	0	0	0	0	0	0	28	41	27	26	0	38	23	25	0	0
+Escherichia coli	0	0	0	0	0	0	0	0	0	0	30	0	0	36	43	0	54	19	0	26
+Comamonas testosteroni	0	0	0	0	0	0	0	0	0	0	0	0	31	25	41	42	19	0	27	24
+Duganella zoogloeoides	0	0	0	0	0	0	0	0	0	0	0	0	48	0	45	42	19	0	27	28
+Chromohalobacter salexigens	0	0	0	0	0	0	0	0	0	0	0	0	39	26	62	0	19	0	24	39
+Pseudomonas cichorii	0	0	0	0	0	0	0	0	0	0	0	0	37	28	51	0	19	20	28	26
+Ferriphaselus sp. R-1	0	0	0	0	0	0	0	0	0	0	0	0	0	23	55	31	22	27	24	28
+Azoarcus olearius	0	0	0	0	0	0	0	0	0	0	0	0	0	20	51	49	22	0	29	39
+Ectothiorhodospira magna	0	0	0	0	0	0	0	0	0	0	0	0	0	32	58	0	36	0	32	52
+Nocardioides alpinus	0	0	0	0	0	0	0	0	0	0	141	0	0	24	0	0	0	19	27	0
+Streptomyces alni	66	41	0	0	46	0	0	0	0	0	0	0	0	0	0	37	0	21	0	0
+Ectothiorhodospira sp. BSL-9	0	0	0	0	0	0	0	0	0	0	0	0	29	19	54	40	0	0	33	37
+Nitrobacter sp. Nb-311A	0	0	0	0	0	0	74	0	0	0	0	0	0	0	0	0	0	0	33	106
+Thioalkalivibrio sp. AKL11	0	0	0	0	0	0	0	0	0	0	0	0	36	23	70	0	0	19	26	40
+Geodermatophilus telluris	0	0	0	0	0	0	47	0	0	0.00E+00	47	0	0	0	0	34	20	20	24	23
+Psychrobacillus sp. FJAT-21963	118	0	0	97	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Nakamurella lactea	0	0	0	0	0	0	0	0	0	0	52	29	0	0	35	35	21	19	0	25
+Haliea salexigens	0	0	0	0	0	0	0	0	0	0	0	0	38	17	75	0	23	0	31	33
+Micromonospora endolithica	0	0	0	0	0	42	0	0	0	0	38	0	33	18	0	36	0	20	30	0
+Levilinea saccharolytica	0	0	0	0	0	0	0	0	0	0	44	31	0	32	0	30	20	0	34	26
+Pseudomonas borbori	0	0	0	0	0	0	0	0	0	0	28	0	45	22	38	37	24	0	24	0
+Nocardia suismassiliense	0	45	0	0	0	46	0	0	0	0	30	32	0	0	0	42	0	23	0	0
+Xylophilus ampelinus	0	0	0	0	0	0	0	0	0	0	0	28	27	0	40	46	0	24	26	28
+Agrobacterium rhizogenes	0	0	39	49	0	54	0	0	0	0	30	0	0	28	0	0	20	0	0	0
+Marmoricola solisilvae	0	0	0	0	0	0	0	0	0	0	144	0	0	22	0	0	23	0	31	0
+Bordetella pseudohinzii	0	0	0	0	0	0	0	0	0	0	0	0	30	23	35	30	27	19	29	28
+Paraburkholderia caffeinilytica	0	0	0	0	0	0	0	0	0	0	0	29	32	19	44	0	22	20	28	27
+Blastococcus sp. DSM 46786	0	0	0	0	0	0	0	0	0	0	50	39	0	0	0	30	21	22	24	35
+Geodermatophilus siccatus	0	0	0	0	0	0	0	0	0	0	38	39	0	18	40	37	25	0	24	0
+Hymenobacter sp. PAMC 26628	0	0	0	0	0	0	0	0	0	0	27	48	0	23	36	38	26	0	25	0
+Gluconacetobacter diazotrophicus	0	0	0	0	0	0	0	0	0	0	26	30	29	19	38	33	23	25	0	0
+Sphingomonas sp. NFR15	0	0	0	0	0	0	0	0	0	0	0	29	38	0	47	40	19	23	27	0
+Dechloromonas agitata	0	0	0	0	0	0	0	0	0	0	31	0	44	20	43	41	0	20	24	0
+Halomonas ilicicola	0	0	0.00E+00	0	0	0	0	0	0	0.00E+00	0	0	41	27	45	31	21	23	35	0
+Pseudomonas knackmussii	0	0	0	0	0	0	0	0	0	0	0	0	34	0	66	39	29	28	0	27
+Auraticoccus monumenti	0	0	0	0	0	0	0	0	0	0	46	32	0	0	0	33	23	23	33	33
+Deinococcus indicus	0	0	0	0	0	0	0	0	0	0	34	44	0	22	0	37	21	0	26	40
+Desulfomonile tiedjei	0	73	0	0	0	76	0	0	0	46	0	0	0	0	0	31	0	0	0	0
+Collimonas arenae	0	0	0	0	0	0	0	0	0	0	26	29	0	28	52	41	20	0	0	31
+Halomonas shengliensis	0	0	0	0	0	0	0	0	0	0	0	0	38	17	45	43	19	0	29	36
+Thaumarchaeota archaeon SCGC AC-337_F14	0	0	0	0	0	0	0	0	0	0	0	39	0	40	52	0	23	24	24	25
+Chelativorans sp. J32	0	0	42	0	0	44	0	0	0	0	0	0	44	22	37	0	0	0	0	39
+Melaminivora sp. SC2-9	0	0	0	0	0	0	0	0	0	0	24	0	0	25	40	55	33	24	27	0
+Collimonas pratensis	0	0	0	0	0	0	0	0	0	0	0	0	48	19	56	30	26	23	26	0
+Desulfovibrio magneticus	0	0	0	0	0	0	0	0	0	0	31	37	29	37	0	0	26	27	41	0
+Glycomyces artemisiae	0	0	0	0	0	0	0	0	108	0	43	29	0	0	0	0	0	22	0	26
+Niabella ginsenosidivorans	57	0	0	0	0	64	0	0	63	0	0	45	0	0	0	0	0	0	0	0
+Micromonospora auratinigra	0	0	42	0	0	0	45	39	0	0	28	0	0	0	0	31	0	18	26	0
+Sphingopyxis granuli	0	0	0	0	0	0	0	47	0	0	27	0	28	0	37	34	0	0	30	27
+Methylosinus sp. LW3	0	0	0	0	0	57	0	0	0	0	27	0	29	26	42	0	25	0	0	25
+Halomonas korlensis	0	0	0	0	0	0	0	0	0	0	0	0	46	18	51	37	28	0	25	26
+Paraburkholderia phymatum	0	0	0	0	0	0	0	0	0	0	0	32	0	0	49	35	27	18	29	42
+Saccharomonospora azurea	0	0	0	0	0	0	0	0	0	0	39	36	44	18	0	40	0	28	28	0
+Streptomyces abyssalis	0	0	40	0	0	0	0	42	53	0	0	0	0	0	34	0	0	0	31	33
+Pseudomonas parafulva	0	0	0	0	0	0	0	0	0	0	24	0	39	21	37	0	35	25	24	29
+Streptomyces oceani	0	0	40	0	52	0	48	38	56	0	0	0	0	0	0	0	0	0	0	0
+Nocardioides sp. Soil805	0	0	0	0	0	0	0	0	0	0	165	0	0	17	0	0	0	29	24	0
+Bradyrhizobium ottawaense	0	0	35	49	0	50	0	0	0	0	0	0	31	17	0	33	21	0	0	0
+Devosia enhydra	0	0	0	0	0	58	0	0	0	0	35	29	35	20	0	33	26	0	0	0
+Devosia sp. H5989	0	0	0	0	0	0	0	0	0	0	27	0	35	17	49	0	20	24	29	35
+Streptomyces harbinensis	0	0	42	49	0	0	48	0	0	0	0	0	0	21	0	33	0	18	25	0
+Paracoccus denitrificans	0	0	0	0	0	0	0	0	0	0	44	33	37	0	37	38	25	23	0	0
+Cupriavidus sp. SK-4	0	0	0	0	0	0	0	0	0	0	0	0	0	0	76	33	20	23	38	47
+Lautropia mirabilis	0	0	0	0	0	0	0	0	0	0	24	0	38	34	49	48	0	18	26	0
+Lentzea kentuckyensis	0	0	0	0	0	0	60	0	0	0	48	0	57	0	0	72	0	0	0	0
+Paraburkholderia bryophila	0	0	0	0	0	0	0	0	0	0	0	0	33	17	49	31	21	20	31	36
+Flavisolibacter tropicus	0	0	35	0	44	73	0	0	0	49	0	38	0	0	0	0	0	0	0	0
+Mesorhizobium qingshengii	0	0	0	0	0	55	0	0	0	0	36	33	27	21	38	0	0	0	0	29
+Rhodospirillum rubrum	0	0	0	0	0	0	0	0	0	0	64	33	35	0	32	0	26	24	0	25
+Streptomyces sp. BoleA5	0	53	43	0	51	0	0	39	0	53	0	0	0	0	0	0	0	0	0	0
+Bradyrhizobium sp. ORS 3257	0	0	0	0	0	48	0	0	0	0	29	33	30	18	0	32	27	0	0	23
+Niveispirillum cyanobacteriorum	0	0	0	0	0	0	0	0	0	0	32	0	38	0	38	33	40	0	29	30
+Rhodanobacter sp. OR87	0	0	0	0	0	0	0	0	0	0	0	35	27	17	64	0	0	23	28	46
+Actinoplanes derwentensis	0	0	42	0	0	46	0	0	0	0	27	28	0	0	0	44	21	0	32	0
+Microvirga guangxiensis	0	0	39	0	0	54	0	0	0	0	0	33	29	0	30	0	28	28	0	0
+Mesorhizobium sp. WSM2561	0	0	0	0	0	51	0	0	0	0	29	0	40	18	38	0	0	18	25	23
+Pusillimonas noertemannii	0	0	0	0	0	0	0	0	0	0	0	0	40	21	56	36	22	29	0	38
+Modestobacter marinus	0	0	0	0	0	42	0	0	0	0	40	38	0	0	0	38	0	26	32	26
+Methylobacterium sp. WSM2598	0	0	0	0	0	0	0	0	0	0	27	0	28	26	39	36	37	26	24	0
+Sphingomonas sp. TDK1	0	0	0	0	0	0	0	0	0	0	29	0	44	17	48	34	24	20	0	27
+Sinomonas atrocyanea	0	0	0	0	0	0	0	0	0	0	34	42	0	17	34	33	0	25	32	26
+Sphingomonas wittichii	0	0	0	0	0	0	0	0	0	0	0	0	78	0	0	31	44	2.50E+01	66	0
+Chromobacterium vaccinii	0	0	0	0	0	0	0	0	0	0	0	0	27	72	51	0	20	0	30	44
+Isoptericola variabilis	0	0	0	0	0	0	0	0	0	0	36	41	38	18	0	32	0	28	25	26
+Noviherbaspirillum sp. Root189	0	0	0	0	0	0	0	0	0	44	24	0	41	32	30	0	26	0	25	23
+Desulfococcus multivorans	0	0	0	0	0	0	0	0	0	0	26	40	31	20	0	0	30	36	29	33
+Alcanivorax sp. N3-2A	0	0	0	0	0	0	0	0	0	0	0	0	42	25	30	30	39	18	27	34
+Spirochaeta thermophila	0	0	0	0	0	0	0	0	0	0	36	36	0	26	0	32	29	26	37	24
+Laribacter hongkongensis	0	0	0	0	0	0	0	0	0	0	0	0	33	23	58	39	32	0	37	25
+Kitasatospora sp. Root107	0	0	36	0	45	0	52	0	50	65	0	0	0	0	0	0	0	0	0	0
+Bordetella sp. N	0	0	0	0	0	0	0	0	0	0	0	34	53	23	45	0	31	34	0	29
+Paraburkholderia susongensis	0	0	0	0	0	0	0	0	0	0	0	0	43	18	55	38	29	21	0	46
+Duganella sp. Root1480D1	0	0	0	0	0	0	0	0	0	0	0	0	27	37	50	40	21	21	25	29
+Streptomyces sulphureus	0	0	0	51	0	0	46	0	0	0	30	41	0	0	0	0	0	22	35	25
+Streptomyces sp. AcH 505	0	0	35	52	42	0	0	41	0	0	24	0	0	0	0	31	0	0	25	0
+Massilia aurea	0	0	0	0	0	0	0	0	0	0	30	44	47	0	36	58	36	0	0	0
+Thiorhodovibrio sp. 970	0	0	0	0	0	0	0	0	0	0	0	31	37	0	61	34	23	0	31	34
+Salinicola halophilus	0	0	0	0	0	0	0	0	0	0	0	0	39	0	66	40	0	24	35	47
+Geodermatophilus amargosae	0	0	0	0	0	0	0	0	0	0	44	28	29	24	0	42	34	23	0	28
+Pandoraea apista	0	0	0	0	0	0	0	0	0	0	24	29	37	24	38	49	25	0	0	27
+Spiribacter salinus	0	0	0	0	0	0	0	0	0	0	0	0	27	24	90	31	0	0	34	47
+Mycolicibacterium hassiacum	60	72	0	0	0	0	0	0	0	0	34	37	0	0	0	0	0	19	31	0
+Niabella drilacis	0	0	0	0	0	70	0	0	57	63	0	38	0	0	0	0	0	0	26	0
+Hymenobacter sp. APR13	0	0	0	0	0	0	0	0	0	0	0	42	31	17	31	45	20	18	24	26
+Caulobacter sp. FWC26	0	0	0	0	0	0	0	0	0	0	27	30	51	0	34	41	25	21	0	25
+Halomonas gudaonensis	0	0	0	0	0	0	0	0	0	0	0	0	41	0	72	35	0	21	32	54
+Modestobacter caceresii	0	0	0	0	0	0	0	0	0	0	45	39	0	17	36	36	22	0	31	29
+Saccharomonospora sp. LRS4.154	0	0	0	0	0	0	0	0	0	0	38	31	40	18	0	58	0	39	0	31
+Actinopolyspora mortivallis	133	50	0	0	41	0	0	0	0	0	0	0	0	0	0	0	0	0	0	32
+Longilinea arvoryzae	0	0	0	0	0	0	0	0	0	0	51	47	0	25	0	30	23	22	31	28
+Bradyrhizobium sp. R5	0	0	37	54	0	57	0	0	0	0	0	0	0	17	0	0	20	20	26	27
+Azospirillum sp. TSA6c	0	0	0	0	0	0	0	0	0	0	39	0	34	23	45	38	0	19	29	31
+Sphingomonas hengshuiensis	0	0	0	0	0	46	0	0	0	0	31	0	41	0	34	47	28	0	31	0
+Acidovorax konjaci	0	0	0	0	0	0	0	0	0	0	31	0	31	0	56	0	29	29	32	50
+Streptomyces sp. 150FB	60	0	0	0	0	0	52	0	45	51	0	32	0	0	0	0	0	18	0	0
+Acidovorax wautersii	0	0	0	0	0	0	0	0	0	0	30	0	28	22	46	53	0	23	28	31
+Aminomonas paucivorans	0	0	0	0	0	0	0	0	0	0	38	49	0	24	0	33	28	23	37	29
+Halomonas taeanensis	0	0	0	0	0	0	0	0	0	0	26	28	32	0	69	32	0	0	31	45
+Selenomonas bovis	0	0	0	0	0	0	0	0	0	0	0	41	0	28	47	0	31	50	36	30
+Burkholderia sp. Bp7605	0	0	0	0	0	0	0	0	0	0	0	0	51	24	50	46	0	23	30	41
+Halomonas sp. A11	0	0	0	0	0	0	0	0	0	0	0	0	44	0	79	40	20	0	36	46
+Burkholderia lata	0	0	0	0	0	47	0	0	0	0	0	0	39	21	38	40	32	24	0	25
+Bradymonas sediminis	0	0	0	0	0	0	0	0	0	0	31	32	0	32	0	42	28	31	33	37
+Geobacter bremensis	0	0	0	0	0	0	0	0	0	0	36	52	0	43	30	0	25	24	33	24
+Geodermatophilaceae bacterium URHA0031	0	0	0	0	0	0	0	0	0	0	44	44	31	19	0	45	20	29	35	0
+Catalinimonas alkaloidigena	0	0	0	0	0	0	0	0	0	0	0	70	0	22	0	64	32	25	32	23
+Tumebacillus avium	0	0	0	0	0	0	0	0	0	0	0	56	44	27	30	33	24	28	0	26
+Thiomonas bhubaneswarensis	0	0	0	0	0	0	0	0	0	0	0	0	0	21	83	36	23	30	32	45
+Bradyrhizobium sp. WSM3983	0	0	0	64	0	56	0	0	0	0	26	0	0	19	43	0	0	0	24	39
+Tranquillimonas alkanivorans	0	0	0	0	0	0	0	0	0	0	29	34	37	22	43	38	22	22	0	24
+Azonexus hydrophilus	0	0	0	0	0	0	0	0	0	0	25	0	51	20	42	49	28	0	27	29
+Mycolicibacterium vaccae	58	68	0	0	0	0	49	0	0	0	35	0	0	0	0	39	0	22	0	0
+Tsukamurella tyrosinosolvens	0	0	0	0	0	0	0	0	0	0	30	35	35	23	0	38	22	25	31	32
+Thermus aquaticus	0	0	0	0	0	0	0	0	0	0	34	46	35	24	0	41	25	26	40	0
+Thermus oshimai	0	0	0	0	0	0	0	0	0	0	29	54	0	41	0	55	29	32	31	0
+Methylovirgula ligni	0	0	0	53	0	75	0	0	0	0	0	0	37	20	39	0	22	0	26	0
+Rhodoblastus acidophilus	0	0	0	0	0	53	0	0	0	0	34	35	0	18	49	0	0	23	34	26
+Flavisolibacter ginsengisoli	62	0	0	0	43	87	0	0	45	0	0	36	0	0	0	0	0	0	0	0
+Streptomyces barkulensis	59	41	0	0	0	46	0	0	80	47	0	0	0	0	0	0	0	0	0	0
+Amycolatopsis azurea	0	45	38	0	0	0	0	0	0	53	25	0	44	0	0	42	0	27	0	0
+Rhizorhabdus dicambivorans	0	0	0	0	0	0	0	0	0	0	36	30	35	0	38	33	23	22	32	26
+Microbulbifer marinus	0	0	0	0	0	0	0	0	0	0	39	0	45	0	59	48	25	20	0	39
+Thioalkalivibrio sp. ALJ16	0	0	0	0	0	0	0	0	0	0	0	0	39	22	93	51	23	0	0	47
+Asinibacterium sp. OR43	0	0	36	0	50	52	0	0	53	47	0	38	0	0	0	0	0	0	0	0
+Bradyrhizobium sp. Gha	0	0	35	0	41	55	0	0	0	0	27	0	27	21	41	0	29	0	0	0
+Candidatus Competibacter denitrificans	0	0	0	0	0	0	0	0	0	0	29	41	31	33	43	0	30	0	42	27
+Desulfacinum hydrothermale	0	0	0	0	0	0	0	0	0	0	27	45	0	30	0	51	33	34	27	30
+Mycobacterium leprae	135	0	0	142	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Bradyrhizobium yuanmingense	0	0	37	69	45	44	0	0	0	0	0	29	0	0	0	30	26	0	0	0
+Pleomorphomonas oryzae	0	0	40	0	0	52	0	0	0	0	41	0	41	0	0	0	27	20	29	30
+Aeromonas hydrophila	0	0	0	0	0	0	0	0	0	0	0	0	45	20	48	45	20	33	36	33
+Aquicella lusitana	0	0	109	0	0	0	0	39	0	0	0	35	41	0	0	0	56	0	0	0
+Novosphingobium resinovorum	0	0	0	0	0	0	0	0	0	0	25	0	45	0	39	56	36	25	26	29
+Sphingomonas panacis	0	0	0	0	0	0	0	0	0	0	36	31	38	0	31	39	24	25	32	25
+Sphingomonas sp. PAMC 26605	0	0	0	0	0	0	0	0	0	0	28	30	32	0	31	33	43	28	33	25
+Nocardioides psychrotolerans	0	0	0	0	0	0	0	0	0	0	153	41	0	18	0	0	24	20	27	0
+Bradyrhizobium sacchari	0	0	35	62	0	70	0	0	0	0	28	30	34	0	0	0	25	0	0	0
+Pseudomonas linyingensis	0	0	0	0	0	0	0	0	0	0	30	32	28	19	48	47	0	22	33	25
+Verrucomicrobium sp. 3C	0	0	0	0	0	0	0	0	0	0	0	0	0	286	0	0	0	0	0	0
+Nocardioides sp. Root122	0	0	0	0	0	0	0	38	0	0.00E+00	195	0	0	22	0	0	0	0	0	31
+Dechloromonas denitrificans	0	0	0	0	0	0	0	39	0	0	24	28	47	22	0	47	21	28	0	31
+Azospirillum humicireducens	0	0	0	0	0	0	0	0	0	0	60	39	35	20	42	42	30	20	0	0
+Streptomyces sp. TP-A0875	0	43	0	0	44	0	0	44	0	0	0	0	67	0	0	0	0	90	0	0
+Sinorhizobium americanum	0	0	0	57	0	71	0	0	0	0	0	0	34	0	43	42	22	20	0	0
+Pseudomonas sagittaria	0	0	0	0	0	0	0	0	0	0	0	35	42	0	63	43	24	23	29	30
+Mesorhizobium sp. Root552	0	0	0	0	0	0	53	78	0	0	0	0	0	0	40	0	0	19	69	31
+Halomonas sp. 1513	0	0	0	0	0	0	0	0	0	0	25	30	55	19	49	37	0	18	26	31
+Streptomyces sp. NBRC 110611	66	42	41	0	0	0	51	0	48	0	0	0	0	0	0	42	0	0	0	0
+Geodermatophilus sp. DSM 44511	0	0	0	0	0	0	0	0	0	0	53	29	30	21	0	46	31	21	26	34
+Sphingopyxis sp. Root1497	0	0	0	0	0	52	0	0	0	0	0	37	36	20	30	36	33	21	0	27
+Brachybacterium alimentarium	0	0	0	0	0	0	0	0	0	0	31	33	28	22	48	35	20	18	26	31
+Sphingobium sp. SYK-6	0	0	35	0	0	42	0	0	0	0	41	35	46	24	0	31	21	19	0	0
+Sphingomonas sp. Cra20	0	0	0	0	0	0	0	0	0	0	35	0	58	0	66	34	28	18	28	27
+Sphingomonas sp. Leaf412	0	0	0	0	0	0	0	0	0	0	24	30	61	28	49	36	21	19	26	0
+Actinokineospora cianjurensis	0	0	0	0	0	0	0	0	0	0	53	0	85	0	0	156	0	0	0	0
+Roseateles depolymerans	0	0	0	0	0	0	0	0	0	0	31	0	50	22	40	37	34	20	29	32
+Nocardioides sp. Soil777	0	0	35	0	0	0	0	0	0	0	195	0	0	19	0	0	0	22	0	24
+Burkholderia vietnamiensis	0	0	0	0	0	0	0	0	0	0	0	0	44	22	67	36	24	32	34	38
+Verminephrobacter eiseniae	0	0	0	0	0	0	0	0	0	0	45	0	42	0	45	38	27	20	37	43
+Thermopetrobacter sp. TC1	0	0	57	52	0	45	0	0	0	0	25	0	0	0	40	0	25	0	24	30
+Sphingomonas sp. IBVSS2	0	0	0	0	0	0	0	0	0	0	33	0	37	26	40	41	45	23	27	27
+Deinococcus actinosclerus	0	0	0	0	0	0	0	0	0	0	43	57	31	32	0	58	21	25	32	0
+Deinococcus reticulitermitis	0	0	0	0	0	0	0	0	0	0	35	53	37	31	39	0	22	22	32	28
+Mesorhizobium muleiense	0	0	0	0	0	0	0	0	0	0	36	0	33	0	64	40	27	0	47	53
+Methylorubrum extorquens	0	0	42	0	0	62	0	0	0	0	27	33	32	0	45	0	0	30	0	30
+Phyllobacteriaceae bacterium	0	0	0	0	0	60	0	0	0	0	38	0	35	0	36	33	22	18	25	34
+Chlorobaculum limnaeum	0	0	0	0	0	0	0	0	0	0	35	45	30	33	35	36	31	28	0	29
+Ralstonia mannitolilytica	0	0	0	0	0	0	0	0	0	0	0	32	41	23	55	35	36	19	34	28
+Beutenbergia cavernae	0	0	0	0	0	0	0	0	0	0	59	46	33	18	0	36	23	23	37	28
+Pseudomonas citronellolis	0	0	0	0	0	0	0	0	0	0	0	29	40	18	63	45	24	20	35	30
+Mesorhizobium prunaredense	0	0	44	0	0	47	0	0	0	0	39	0	32	18	43	0	0	22	35	25
+Streptomyces katrae	0	0	57	53	0	0	54	42	49	50	0	0	0	0	0	0	0	0	0	0
+Candidatus Desulforudis audaxviator	0	0	0	0	0	0	0	0	0	0	34	41	32	27	0	30	23	40	46	32
+Paraburkholderia diazotrophica	0	0	0	0	0	0	0	0	0	0	32	0	30	23	65	43	19	18	44	32
+Paraburkholderia eburnea	0	0	0	0	0	0	0	0	0	0	0	0	40	17	59	48	24	22	46	50
+Paraburkholderia sartisoli	0	0	0	0	0	0	0	0	0	0	0	34	45	21	70	43	0	23	31	40
+Streptomyces paucisporeus	0	47	0	0	0	47	0	0	48	54	0	29	0	0	0	40	0	18	24	0
+Acetobacteraceae bacterium AT-5844	0	0	37	0	0	0	0	0	0	0	32	28	36	17	30	52	20	28	0	29
+Methylobacterium sp. ap11	0	0	48	0	0	0	0	0	0	0	30	39	28	0	0	44	31	31	32	27
+Paraburkholderia sprentiae	0	0	0	0	0	0	0	0	0	0	0	29	59	0	67	46	24	21	33	31
+Massilia sp. NR 4-1	0	0	0	0	0	0	0	0	0	0	0	36	58	26	55	35	0	29	34	37
+Silicimonas algicola	0	0	0	0	0	43	0	0	0	0	40	29	35	30	38	34	0	0	31	31
+Sphingomonas sp. Root241	0	0	0	0	0	50	0	0	0	0	28	28	61	20	0	36	37	22	29	0
+Hylemonella gracilis	0	0	0	0	0	0	0	0	0	0	40	30	32	25	65	0	20	22	32	45
+Bordetella bronchiseptica	0	0	0	0	0	0	0	0	0	0	24	32	35	0	61	43	21	25	36	35
+Chromobacterium sp. ATCC 53434	0	0	0	0	0	0	0	0	0	0	25	0	52	19	65	39	31	22	27	32
+Sideroxydans lithotrophicus	0	47	0	0	0	0	0	0	0	0	0	0	41	25	51	41	20	22	24	41
+Geoalkalibacter ferrihydriticus	0	0	0	0	0	0	0	0	0	0	32	56	0	25	39	31	35	31	24	39
+Nakamurella multipartita	58	0	38	0	0	0	0	0	0	0	34	44	28	18	0	47	22	23	0	0
+Vibrio owensii	147	0	0	166	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Rhodanobacter glycinis	0	0	0	0	0	0	0	0	0	0	0	0	49	35	51	69	43	0	34	32
+Paracoccus aminovorans	0	0	0	49	0	0	0	0	0	0	31	32	35	0	33	32	22	31	24	25
+Nocardia tenerifensis	0	0	0	0	0	64	0	0	0	0	49	36	42	18	30	51	0	24	0	0
+Hydrogenophaga sp. IBVHS2	0	0	0	0	0	0	0	0	0	0	37	0	34	19	50	56	19	24	31	45
+Geodermatophilus nigrescens	0	0	0	0	0	0	0	0	0	0	42	50	33	0	42	41	19	20	33	35
+Martelella mediterranea	0	0	36	51	0	55	0	0	0	0	38	32	0	23	0	34	29	18	0	0
+Roseiflexus sp. RS-1	0	0	0	0	0	0	0	0	0	0	47	56	0	34	33	32	22	26	37	29
+Anaerotruncus massiliensis	0	0	0	0	0	0	0	0	0	0	35	38	30	25	32	46	23	31	26	30
+Duganella sp. CF402	0	0	0	0	0	0	0	0	0	0	0	43	54	20	52	49	43	21	35	0
+Candidatus Dactylopiibacterium carminicum	0	0	0	0	0	0	0	0	0	0	0	32	33	27	68	52	20	0	30	55
+Terriglobus saanensis	0	0	0	0	0	0	0	0	0	0	25	64	34	42	0	65	32	33	24	0
+Xanthomonas citri	0	0	0	0	0	0	0	0	0	0	26	0	62	27	63	37	23	22	27	32
+Methylosinus sp. LW4	0	0	43	52	0	56	0	0	0	0	32	29	32	18	0	0	0	27	31	0
+Salipiger mucosus	0	0	0	0	0	0	0	0	0	0	31	40	31	21	56	39	26	18	27	31
+Serratia marcescens	0	0	0	0	0	0	0	0	0	0	0	33	50	27	54	47	19	23	29	38
+Methylobacterium sp. B4	0	0	43	51	0	57	0	0	0	0	26	29	31	21	0	38	0	26	0	0
+Desulfovibrio mexicanus	0	0	0	0	0	0	0	0	0	0	43	50	0	36	35	39	24	26	37	32
+Mycobacterium haemophilum	0	0	0	0	0	0	0	0	0	0	183	95	0	0	0	0	0	45	0	0
+Mesorhizobium sp. SOD10	0	0	0	0	0	66	0	44	0	0	40	0	34	0	35	47	0	23	0	35
+Pseudomonas guangdongensis	0	0	0	0	0	0	0	0	0	0	0	30	54	19	87	44	26	0	34	30
+Phycicoccus cremeus	0	0	0	0	0	0	0	0	0	48	67	44	0	24	0	40	22	20	36	23
+Actinoplanes sp. TFC3	0	45	0	0	0	42	0	38	45	0	0	32	0	21	0	31	0	19	24	27
+Roseiflexus castenholzii	0	0	0	0	0	0	0	0	0	0	29	44	41	31	33	39	24	26	25	32
+Bordetella sp. H567	0	0	41	0	0	0	0	0	0	0	28	36	0	18	42	44	22	34	30	31
+Streptomyces niveiscabiei	59	0	0	0	46	62	57	39	0	0	0	31	0	0	0	32	0	0	0	0
+Burkholderia sp. UYPR1.413	0	0	0	0	0	0	0	0	0	0	0	31	55	0	73	40	36	25	27	40
+Microbulbifer donghaiensis	0	0	0	0	0	0	0	0	0	0	0	0	66	28	84	52	0	0	46	52
+Streptomyces sp. CB01580	57	0	46	0	41	0	45	47	48	44	0	0	0	0	0	0	0	0	0	0
+Bradyrhizobium nitroreducens	0	0	39	62	0	59	0	0	0	0	31	28	33	18	0	30	0	29	0	0
+Tetrasphaera japonica	0	49	40	0	0	0	0	45	0	0	42	44	27	0	0	35	20	0	27	0
+Nitrococcus mobilis	0	0	0	0	0	0	0	0	0	0	0	0	47	38	67	43	21	31	33	50
+Janthinobacterium agaricidamnosum	0	0	0	0	0	0	0	0	0	0	0	37	53	23	46	33	33	36	34	36
+Nocardioides sp. URHA0020	0	0	0	0	0	0	0	47	0	0	164	40	0	21	0	0	0	0	30	29
+Zobellella denitrificans	0	0	0	0	0	0	0	0	0	0	24	32	36	28	62	46	20	0	50	34
+Sphingopyxis sp. QXT-31	0	0	0	0	0	73	0	0	0	0	0	34	54	0	53	57	30	32	0	0
+Pandoraea thiooxydans	0	0	0	0	0	46	0	0	0	0	0	29	53	26	56	52	0	0	32	39
+Caenimonas sp. SL110	0	0	0	0	0	45	0	0	0	0	35	31	34	20	65	36	32	0	0	35
+Nocardioides sp. Leaf307	0	0	0	49	0	0	0	0	0	0.00E+00	223	0	30	0	0	31	0	0	0	0
+Geodermatophilus africanus	0	0	0	0	0	0	0	0	0	0	58	50	0	23	36	42	24	32	46	23
+Streptacidiphilus melanogenes	62	0	38	54	42	0	56	0	52	0	30	0	0	0	0	0	0	0	0	0
+Cupriavidus pauculus	0	0	0	0	0	0	0	0	0	0	24	32	57	25	54	35	27	25	28	28
+Acidovorax citrulli	0	0	0	0	0	0	0	0	0	0	27	36	56	0	67	36	27	23	28	35
+Geobacter sp. M21	0	0	0	0	0	0	0	0	0	0	35	41	29	28	35	58	40	35	34	0
+Bradyrhizobium sp. WSM1743	0	0	0	85	0	53	0	0	0	0	0	0	36	25	0	0	32	48	25	32
+Polaromonas glacialis	0	0	0	0	0	0	0	0	0	0	51	32	38	28	52	37	20	28	26	24
+Actinokineospora terrae	0	0	0	0	0	0	0	0	0	0	75	0	98	0	0	143	0	20	0	0
+Streptomyces wuyuanensis	131	0	50	0	50	0	0	0	76	0	29	0	0	0	0	0	0	0	0	0
+Caulobacter sp. Root487D2Y	0	0	0	0	0	0	0	0	0	0	31	34	50	30	37	46	28	22	30	29
+Burkholderia stagnalis	0	0	0	0	0	0	0	0	0	46	0	0	76	19	66	38	29	28	35	0
+Pseudomonas alcaligenes	0	0	0	0	0	0	0	0	0	0	35	0	87	27	45	61	23	34	25	0
+Pseudomonas formosensis	0	0	0	0	0	0	0	0	0	248	0	0	31	0	34	0	0	0	0	24
+Sphingomonas sp. LM7	0	0	0	0	0	0	0	0	0	0	31	0	55	0	66	59	37	24	36	30
+Candidatus Bipolaricaulis anaerobius	0	0	0	0	0	0	0	0	0	0	44	58	32	36	32	34	23	20	30	30
+Nocardioides sp. CF8	0	0	0	0	0	0	0	0	0	0	221	0	0	0	0	32	0	27	30	30
+Afifella marina	0	0	43	52	0	42	0	0	0	0	28	0	49	19	33	0	27	22	0	26
+Noviherbaspirillum massiliense	0	0	0	0	0	0	0	0	0	0	0	0	50	32	59	60	29	22	37	52
+Pseudomonas flexibilis	0	0	0	0	0	0	0	0	0	0	0	29	47	18	57	48	44	31	39	28
+Bradyrhizobium sp.	0	0	41	66	0	58	0	0	0	0	35	30	33	18	34	0	0	0	0	28
+Variovorax sp. Root318D1	0	0	0	0	0	0	0	0	0	0	27	31	32	0	65	58	35	19	35	41
+Massilia oculi	0	0	0	0	0	43	0	0	0	0	0	0	56	30	48	69	47	23	27	0
+Maricaulis maris	0	0	0	0	0	0	0	0	0	0	26	38	43	0	85	47	27	0	35	43
+Bradyrhizobium sp. DOA9	0	0	38	63	0	84	0	0	0	0	0	28	43	0	32	0	29	28	0	0
+Micromonospora humi	73	47	0	0	0	47	0	0	49	47	24	0	0	0	0	40	0	18	0	0
+Acidovorax sp. MR-S7	0	0	40	0	0	0	0	0	0	0	34	31	37	25	44	56	26	27	27	0
+Nocardia cyriacigeorgica	61	0	0	0	0	68	0	0	0	0	34	31	32	19	0	39	19	21	0	24
+Nitrobacter vulgaris	0	0	0	0	0	0	140	0	0	0	0	0	0	0	0	0	0	0	54	156
+Hephaestia caeni	0	0	0	0	0	0	0	0	0	0	30	34	51	17	56	45	27	33	34	23
+Saccharomonospora saliphila	63	0	0	0	0	48	0	0	0	0	37	0	28	0	0	55	0	65	27	27
+Mesorhizobium japonicum	0	0	0	0	0	47	0	0	0	0	35	42	36	21	56	0	19	35	25	35
+Sinorhizobium saheli	0	0	0	0	0	79	0	0	0	0	37	0	28	32	32	33	26	24	29	31
+Actinosynnema mirum	83	0	0	0	49	0	62	43	69	45	0	0	0	0	0	0	0	0	0	0
+Cupriavidus sp. YR651	0	0	38	0	0	0	0	0	0	0	34	0	48	26	56	43	23	25	28	31
+Hydrogenophaga sp. Root209	0	0	0	0	0	0	0	0	0	0	28	0	54	22	88	62	20	0	33	45
+Pseudodesulfovibrio indicus	0	0	0	0	0	0	0	0	0	0	29	53	37	32	38	40	30	29	35	29
+Collimonas fungivorans	0	0	0	0	48	54	0	0	0	0	0	31	55	32	50	0	23	26	0	35
+Ardenticatena maritima	0	0	0	0	0	0	0	0	0	0	47	54	39	28	32	36	33	23	29	34
+Paraburkholderia piptadeniae	0	0	0	0	0	0	0	0	0	0	25	32	54	22	54	47	26	24	28	44
+Extensimonas vulgaris	0	0	0	0	0	0	0	0	0	0	42	0	37	19	72	50	35	30	26	45
+Nocardia mexicana	0	48	0	0	47	59	0	0	0	0	31	41	0	0	42	40	24	0	0	24
+Streptomyces griseoruber	59	47	42	57	0	0	0	42	64	45	0	0	0	0	0	0	0	0	0	0
+Sphingomonas sp. TZW2008	0	0	0	0	0	0	0	0	0	0	37	33	48	19	53	34	46	24	29	34
+Aquabacterium olei	0	0	37	0	0	0	0	0	0	0	32	33	60	28	43	63	0	30	0	31
+Acidovorax anthurii	0	0	0	0	0	0	0	0	0	0	42	39	33	18	47	61	25	29	28	35
+Geobacter uraniireducens	0	0	0	0	0	0	0	0	0	0	0	34	62	30	31	48	37	52	40	23
+Mycolicibacterium rutilum	94	87	0	52	0	43	50	0	0	0	31	0	0	0	0	0	0	0	0	0
+Prauserella marina	0	0	0	0	0	0	0	0	0	0	47	32	49	24	0	71	20	54	29	31
+Coxiella burnetii	0	0	67	0	0	0	46	138	0	0	29	0	0	0	31	0	47	0	0	0
+Brevundimonas bacteroides	0	0	0	0	0	75	0	0	0	0	71	0	44	0	50	36	29	0	26	28
+Variovorax sp. EL159	0	0	0	0	0	0	0	0	0	0	26	37	61	21	63	39	25	27	25	35
+Desulfovibrio longus	0	0	0	0	0	0	0	0	0	0	0	43	27	35	49	64	28	28	45	41
+Intrasporangium calvum	0	0	0	0	0	0	0	0	0	0	81	52	40	0	34	32	24	25	39	33
+Streptomyces lincolnensis	67	49	0	0	48	0	46	50	45	0	0	0	0	0	0	0	0	0	28	27
+Burkholderia stabilis	0	0	0	0	0	0	0	0	0	0	0	45	56	23	64	55	22	26	29	41
+Chloroflexus islandicus	0	0	0	0	0	0	0	0	0	0	25	61	27	30	37	44	33	32	39	33
+Deinococcus yavapaiensis	0	0	0	0	0	0	0	0	0	0	36	46	37	36	39	41	24	35	41	26
+Caulobacter flavus	0	0	0	0	0	42	0	0	0	0	29	32	44	17	49	51	24	23	25	26
+Thiomonas intermedia	0	0	0	0	0	0	0	0	0	0	0	36	45	22	86	39	34	21	36	43
+Methylocystis sp. ATCC 49242	0	0	39	0	0	75	0	0	0	0	36	0	33	18	58	0	24	19	31	30
+Asinibacterium sp. OR53	67	0	41	0	56	62	0	0	48	51	0	41	0	0	0	0	0	0	0	0
+Kiritimatiella glycovorans	0	0	0	0	0	0	0	0	0	0	42	45	29	31	38	43	40	42	25	31
+Eggerthella lenta	0	0	0	0	0	0	0	0	0	0	49	55	39	27	31	35	30	39	31	30
+Brevundimonas naejangsanensis	0	0	0	0	0	59	0	0	0	0	78	43	40	0	33	49	21	18	26	0
+Curvibacter sp. PAE-UM	0	0	45	0	0	0	0	0	0	0	46	0	36	18	62	52	24	29	32	25
+Xanthomonas oryzae	0	42	0	0	0	0	0	0	0	0	0	0	54	32	74	41	31	20	36	39
+Ralstonia pickettii	0	0	0	0	0	0	0	0	0	0	26	32	63	27	75	48	32	28	40	0
+Pseudogulbenkiania sp. NH8B	0	0	0	0	0	0	0	0	0	0	24	37	38	25	46	84	31	21	33	32
+Micromonospora chaiyaphumensis	64	51	35	0	0	44	0	0	0	0	0	0	30	19	0	45	0	31	25	27
+Lentzea albida	0	0	35	0	0	46	0	0	0	0	43	40	42	0	0	74	19	19	30	23
+Caulobacter sp. K31	0	0	0	0	0	0	0	0	0	0	30	38	61	18	54	46	30	23	42	31
+Sphingomonas sp. Y57	0	0	0	0	48	45	0	0	0	0	32	0	43	25	41	36	44	21	38	0
+Geothermobacter sp. HR-1	0	0	0	0	0	0	0	0	0	0	33	43	32	36	44	79	20	38	24	25
+Halomonas daqingensis	0	0	0	0	0	0	0	0	0	0	24	32	41	19	82	53	23	27	26	47
+Kitasatospora sp. CB01950	71	54	35	0	42	0	50	45	46	0	0	0	0	0	0	0	0	0	31	0
+Deinococcus maricopensis	0	0	0	0	0	0	0	0	0	0	26	47	48	28	55	48	31	30	27	34
+Hymenobacter sp. CRA2	0	0	0	0	0	0	0	0	0	0	36	38	40	26	47	67	29	25	27	40
+Halomonas beimenensis	0	0	0	0	0	0	0	0	0	0	38	37	41	17	58	41	28	29	40	46
+Tepidiphilus margaritifer	0	0	0	0	0	0	45	0	0	0	0	37	53	28	81	0	23	19	31	58
+Glycomyces harbinensis	58	0	36	0	0	0	63	0	0	60	50	44	0	18	0	0	24	24	0	0
+Niabella aurantiaca	61	0	0	0	44	63	0	0	76	59	0	50	0	0	0	0	0	0	25	0
+Thermomonas hydrothermalis	0	0	0	0	0	0	0	0	0	0	0	32	45	28	66	45	39	20	40	63
+Bradyrhizobium forestalis	0	0	45	63	0	73	0	0	0	0	26	0	34	20	34	0	24	18	0	43
+Dechlorosoma suillum	0	0	0	0	0	0	0	41	51	0	24	33	0	28	46	52	26	25	25	29
+Methylobacterium sp. 4-46	0	0	41	0	0	47	0	0	0	0	32	42	42	19	39	31	22	38	29	0
+Achromobacter insolitus	0	0	0	0	0	47	0	0	0	0	32	34	41	24	40	32	37	26	32	37
+Deinococcus ficus	0	0	0	0	0	0	0	0	0	0	40	48	27	26	51	52	28	29	40	41
+Nisaea denitrificans	0	0	0	0	0	76	0	0	0	0	74	41	29	21	36	31	27	23	0	25
+Verrucomicrobia bacterium	0	0	0	0	0	0	0	0	0	0	24	49	27	27	49	52	31	32	53	39
+Nocardioides alkalitolerans	0	0	36	0	0	0	53	0	0	0	151	41	28	0	0	0	20	20	34	0
+Deinococcus gobiensis	0	0	0	0	0	0	0	0	0	0	44	47	32	33	35	59	28	25	41	39
+Bordetella trematum	0	0	0	0	0	44	0	0	0	0	36	0	38	20	81	51	26	19	31	39
+Marmoricola ginsengisoli	0	0	40	0	0	0	0	0	0	0	161	42	33	21	0	0	0	28	33	27
+Amycolatopsis halophila	0	0	0	0	0	0	0	0	0	0	74	45	53	20	0	89	0	42	28	34
+Deinococcus apachensis	0	0	0	0	0	0	0	0	0	0	34	66	34	37	41	43	26	28	44	35
+Cronobacter turicensis	0	0	0	0	0	0	0	0	0	0	25	38	42	37	63	59	27	28	36	34
+Streptomyces sp. NRRL F-6676	0	58	37	54	47	0	57	0	63	49	24	0	0	0	0	0	0	0	0	0
+Massilia timonae	0	0	0	0	0	0	0	0	0	0	0	43	59	25	70	57	33	38	31	34
+Chromobacterium violaceum	0	0	0	0	0	0	0	0	0	0	28	28	48	36	50	61	31	32	37	40
+Afipia birgiae	0	0	0	76	0	79	0	40	0	0	0	31	34	22	31	0	25	20	0	34
+Brevibacillus thermoruber	0	0	0	0	0	0	0	0	0	0	37	68	59	27	38	38	30	35	36	24
+Kitasatospora sp. MBT66	57	47	45	0	42	43	51	0	55	0	25	0	0	0	0	0	0	0	28	0
+Xylophilus sp. Leaf220	0	0	0	0	0	0	0	41	0	0	39	0	54	31	47	58	32	39	28	25
+Streptomyces albus	66	50	0	0	41	0	0	47	55	54	28	0	0	0	0	30	0	24	0	0
+Streptomyces guanduensis	0	0	0	0	43	0	55	38	49	47	29	40	0	0	0	45	0	23	0	27
+Alcanivorax pacificus	0	0	57	0	0	0	0	0	0	0	28	0	72	30	70	39	28	23	26	24
+Thiomonas sp. X19	0	0	0	0	0	0	0	0	0	0	24	30	65	31	65	45	37	36	28	39
+Dyella sp. 4G-K06	0	0	0	0	0	0	0	0	0	0	28	33	74	33	83	34	48	0	35	32
+Marmoricola sp. Leaf446	0	0	0	0	0	0	46	0	0	0	229	28	0	19	0	0	19	31	28	0
+Achromobacter sp. DMS1	0	0	0	57	0	0	0	0	0	0	30	30	50	0	52	48	29	18	34	53
+Streptomyces sp. CNT360	70	0	45	57	50	0	60	43	0	45	31	0	0	0	0	0	0	0	0	0
+Desulfomicrobium escambiense	0	0	0	0	0	0	0	0	0	0	37	59	38	44	36	40	29	49	32	39
+Clostridium tetani	0	0	0	0	0	90	121	0	155	0	0	0	0	0	0	0	0	39	0	0
+Burkholderia insecticola	0	0	0	0	0	44	0	0	0	0	0	29	64	39	58	58	29	22	30	35
+Streptomyces rhizosphaericus	110	47	35	0	57	46	51	38	0	0	0	0	0	0	0	0	0	24	0	0
+Rhodovulum sulfidophilum	0	0	44	0	0	0	0	0	0	0	36	37	42	30	51	44	24	22	30	49
+Bordetella flabilis	0	0	0	0	0	0	0	39	0	0	33	42	38	39	50	40	37	33	27	31
+Vogesella indigofera	0	0	0	0	0	0	0	0	0	0	35	31	55	20	67	67	30	31	36	37
+Mycolicibacterium phlei	81	92	0	0	0	44	61	42	0	0	39	0	0	0	0	30	0	20	0	0
+Amycolatopsis kentuckyensis	0	0	36	0	0	0	0	0	0	0	82	35	43	25	0	96	0	31	35	26
+Paenibacillus mucilaginosus	0	0	37	0	0	0	0	0	0	0	29	54	31	32	31	45	38	40	37	35
+Nocardioides dokdonensis	0	45	0	0	0	0	0	0	0	46	221	0	0	0	33	0	19	21	0	25
+Catelliglobosispora koreensis	90	0	0	53	42	0	73	0	0	44	37	0	38	0	0	34	0	0	0	0
+Cupriavidus pinatubonensis	0	0	0	0	0	0	0	0	0	0	27	30	40	24	76	66	22	34	36	58
+Variovorax sp. PAMC 28711	0	0	0	0	0	0	0	0	0	0	32	31	69	27	70	43	29	37	31	44
+Lysobacter sp. Root690	0	0	0	0	0	0	0	0	0	0	0	32	83	43	69	43	33	40	29	41
+Desulfovibrio desulfuricans	0	0	0	0	0	0	0	0	0	0	38	68	37	39	30	64	30	48	29	31
+Bordetella hinzii	0	0	38	53	0	0	0	0	0	0	27	31	32	31	39	42	30	28	24	40
+Spiribacter curvatus	0	0	0	0	0	0	0	0	0	0	0	29	51	17	122	42	23	27	49	55
+Amycolatopsis orientalis	0	0	56	0	0	0	0	40	54	45	46	0	53	0	0	85	0	36	0	0
+Magnetospirillum magneticum	0	41	0	0	0	0	0	0	0	0	70	41	46	25	32	50	34	24	29	24
+Pseudogulbenkiania subflava	0	0	0	0	0	0	0	0	0	0	33	34	66	23	73	55	30	32	34	36
+Verrucomicrobium spinosum	0	0	0	0	0	0	0	0	0	0	36	46	37	42	40	59	47	33	45	31
+Thermocrispum municipale	64	0	0	0	0	0	0	0	0	0	67	42	46	0	0	72	27	32	39	27
+Burkholderiaceae bacterium 16	0	0	0	0	0	50	0	38	0	0	40	0	47	31	48	36	37	35	25	31
+Methylosarcina fibrata	0	0	0	0	0	0	0	0	0	0	0	36	70	34	59	53	47	3.80E+01	42	39
+Streptacidiphilus carbonis	72	0	47	0	46	0	47	0	0	48	43	33	0	0	0	33	0	19	0	30
+Variovorax boronicumulans	0	0	35	0	0	0	0	44	0	0	37	32	62	28	39	56	30	26	0	30
+Pseudomonas balearica	0	0	0	0	0	0	0	0	0	0	0	36	57	27	102	53	28	36	35	45
+Marmoricola sp. URHB0036	0	0	0	0	0	0	0	0	0	0	212	46	0	19	0	36	25	27	32	24
+Mycolicibacterium thermoresistibile	74	75	0	0	0	0	0	197	0	48	0	0	0	0	0	0	0	28	0	0
+Syntrophobacter fumaroxidans	0	0	0	0	0	0	0	0	0	0	45	63	35	45	32	46	32	48	46	31
+Glycomyces tenuis	0	0	0	0	0	0	47	0	0	47	41	62	39	20	0	47	25	20	48	27
+Pseudoxanthomonas spadix	0	0	0	0	0	0	0	0	0	0	0	31	67	24	100	49	33	29	39	52
+Microvirga vignae	0	0	35	63	0	83	0	0	0	0	40	37	27	24	0	31	25	0	25	35
+Telmatospirillum siberiense	0	0	36	0	0	47	0	0	0	0	73	29	40	24	40	35	45	31	25	0
+Nocardioides szechwanensis	0	0	36	0	0	0	0	0	0	0	257	31	0	17	0	32	0	0	28	24
+Magnetospirillum sp. ME-1	0	47	0	0	0	0	0	0	0	0	62	51	49	23	43	39	24	25	26	37
+Salmonella enterica	0	0	0	56	0	0	0	0	0	44	32	42	35	34	48	0	46	18	36	36
+Thalassobaculum salexigens	0	0	50	0	0	61	0	0	0	0	69	43	42	22	31	43	31	36	0	0
+Paraburkholderia nodosa	0	0	0	0	0	0	0	0	0	0	37	40	49	24	62	60	26	28	38	64
+Rubrobacter aplysinae	0	0	0	0	0	0	0	0	0	0	56	62	28	31	38	45	44	41	51	32
+Fimbriimonas ginsengisoli	0	0	0	0	0	0	0	0	0	0	49	61	33	47	53	45	31	31	39	39
+Pandoraea pulmonicola	0	0	0	0	0	0	0	0	0	0	26	32	82	23	64	69	32	30	33	38
+Blastococcus sp. DSM 46838	58	0	0	0	41	0	0	0	0	48	47	60	37	22	0	39	0	20	27	31
+Streptomyces silvensis	0	0	44	51	0	52	48	43	60	45	27	28	0	0	0	32	0	0	0	0
+Kitasatospora sp. SolWspMP-SS2h	59	53	0	49	0	55	49	43	0	0	24	32	0	0	0	41	0	0	0	26
+Azospirillum sp. TSH64	0	0	0	0	0	43	0	0	0	0	72	33	47	24	60	32	33	24	40	24
+Massilia sp. BSC265	0	0	0	0	0	0	0	0	0	0	35	40	77	26	59	51	40	38	28	38
+Pseudohaliea rubra	0	0	0	0	0	0	0	0	0	0	27	40	74	21	64	51	36	27	38	54
+Pseudoxanthomonas sp. J35	0	0	0	0	0	0	0	0	0	0	30	0	79	25	88	50	53	29	41	39
+Isosphaera pallida	0	0	50	0	0	0	0	0	0	0	36	45	31	47	35	40	37	39	32	42
+Paraburkholderia hospita	0	48	0	0	0	0	0	0	0	0	0	40	49	17	91	64	37	0	37	52
+Massilia sp. Root418	0	0	0	0	0	0	0	0	0	0	30	39	57	34	66	64	36	25	42	42
+Thermobacillus composti	0	0	0	0	0	0	0	0	0	0	44	64	52	40	53	41	41	33	32	35
+Sciscionella sp. SE31	69	46	38	0	52	0	0	0	0	0	29	0	45	22	0	38	0	37	30	31
+Melaminivora alkalimesophila	0	0	0	0	0	0	0	0	0	0	33	49	52	26	67	62	36	28	34	51
+Candidatus Babela massiliensis	0	0	0	0	65	0	0	0	0	0	294	0	0	22	0	0	60	0	0	0
+Lechevalieria fradiae	0	43	0	0	0	45	45	40	0	0	58	0	49	0	30	56	0	21	24	31
+Acidibrevibacterium fodinaquatile	0	0	38	0	0	46	0	0	0	0	67	35	35	25	44	31	25	29	28	40
+Corallococcus macrosporus	0	0	0	0	0	0	0	0	0	0	37	71	50	27	51	80	27	38	34	29
+Massilia sp. Root351	0	0	0	0	0	0	0	0	0	0	33	43	57	34	65	63	37	39	33	42
+Azotobacter chroococcum	0	0	0	0	0	0	0	0	0	0	25	54	59	41	72	58	35	34	32	36
+Thiomonas delicata	0	0	0	0	0	0	0	0	0	0	57	43	31	30	70	61	31	31	36	58
+Meiothermus ruber	0	0	0	0	0	0	0	0	0	0	51	60	54	20	44	51	33	38	43	54
+Achromobacter sp. AONIH1	0	46	42	0	0	51	0	0	0	0	33	0	49	24	40	65	25	21	24	29
+Streptomyces sp. NEAU	57	42	0	0	0	54	50	46	48	54	0	0	0	0	0	30	21	0	25	23
+Variovorax sp. 770b2	0	0	0	0	0	0	0	0	0	0	42	47	45	32	56	80	32	47	31	39
+Xiangella phaseoli	58	0	39	60	0	0	62	48	49	49	44	0	0	0	0	42	0	0	0	0
+Chitinophaga arvensicola	64	0	57	0	50	102	0	0	46	58	0	75	0	0	0	0	0	0	0	0
+Streptomyces himastatinicus	82	47	40	0	46	0	64	52	67	54	0	0	0	0	0	0	0	0	0	0
+Paenibacillus sp. UNC496MF	0	0	0	0	0	0	0	0	0	0	48	51	42	36	44	57	32	40	51	51
+Blastopirellula marina	0	43	50	0	0	0	0	0	0	0	36	40	27	43	35	33	49	23	39	35
+Gloeobacter kilaueensis	0	0	0	0	0	0	0	0	0	0	46	60	39	37	35	61	36	53	48	38
+Stenotrophomonas sp. Leaf70	0	0	0	0	0	0	0	0	0	0	27	37	63	30	103	40	29	30	37	58
+Streptomyces glaucescens	66	0	47	59	0	0	63	48	52	53	0	37	0	0	0	0	0	0	0	30
+Azospirillum ramasamyi	0	0	0	0	0	56	0	0	0	0	72	39	52	19	47	42	38	18	30	43
+Rhizobium phaseoli	0	0	35	58	0	57	0	0	0	0	0	30	47	29	59	35	22	26	34	27
+Paraburkholderia kururiensis	0	0	0	0	0	0	0	0	0	0	42	29	62	20	85	56	47	21	45	52
+Desulfocurvibacter africanus	0	0	36	0	0	0	0	0	0	0	33	45	41	31	41	82	39	38	34	39
+Nocardioides sp. J54	0	0	0	0	0	0	0	80	0	0	198	38	0	25	42	31	0	19	27	0
+Sphingomonas sp. URHD0057	0	0	0	0	0	0	0	0	0	0	55	35	58	32	72	57	35	36	46	35
+Desulfatiglans anilini	0	0	36	0	0	0	0	0	0	0	45	62	0	29	51	53	48	56	43	39
+Cupriavidus basilensis	0	0	40	0	0	0	0	0	0	0	35	0	43	30	98	62	41	32	44	38
+Cupriavidus sp. amp6	0	0	0	0	0	0	0	38	0	0	39	35	45	29	87	53	31	39	25	44
+Massilia yuzhufengensis	0	0	0	0	0	0	0	0	45	0	34	36	67	24	54	66	39	32	35	35
+Halomonas muralis	0	0	54	49	0	0	0	0	0	0	29	29	62	0	67	40	30	43	29	35
+Paraburkholderia silvatlantica	0	0	0	0	0	0	0	0	45	0	43	43	62	31	68	39	31	23	36	47
+Stappia stellulata	0	46	46	91	0	59	0	0	0	0	39	30	0	18	0	33	26	28	31	23
+Caulobacter segnis	0	0	0	0	0	56	0	0	0	0	41	35	48	20	66	51	45	32	38	39
+Magnetospirillum sp. XM-1	0	0	0	0	0	53	0	0	0	0	98	49	41	17	45	48	30	34	29	29
+Calidithermus timidus	0	0	0	0	0	0	0	0	0	0	42	86	47	38	64	54	43	31	30	38
+Blastococcus endophyticus	0	0	41	0	42	51	0	0	0	0	66	42	30	27	33	0	42	27	36	37
+Magnetospirillum gryphiswaldense	0	0	44	0	0	54	0	0	0	45	77	40	40	44	44	0	26	33	0	28
+Amycolatopsis methanolica	94	45	38	0	0	0	0	0	0	0	58	0	59	22	0	64	0	37	34	24
+Bradyrhizobium sp. LTSPM299	0	50	39	75	0	90	0	0	0	0	27	0	38	0	35	32	27	33	0	30
+Dyella sp. 4MSK11	0	0	0	0	0	0	0	0	0	0	27	33	92	35	59	71	45	30	40	44
+Hydrogenibacillus schlegelii	0	0	0	0	0	0	0	0	0	0	62	72	45	36	52	43	35	45	46	40
+Pseudomonas thermotolerans	0	0	0	0	0	0	0	0	0	0	26	39	54	29	105	55	35	29	46	59
+Thalassobaculum litoreum	0	0	0	66	0	61	0	0	0	0	72	47	29	25	40	31	22	24	34	27
+Marmoricola scoriae	60	0	39	0	0	0	0	0	0	0	215	43	0	17	31	0	0	19	28	26
+Ahniella affigens	0	0	0	0	0	0	0	0	0	0	31	0	93	49	73	64	61	31	41	36
+Bradyrhizobium sp. cf659	0	0	40	53	0	53	0	0	0	0	35	0	39	38	64	38	31	22	32	35
+Sinorhizobium medicae	0	0	38	0	0	79	0	0	0	0	43	39	50	34	48	46	25	21	29	29
+Bordetella genomosp. 9	0	0	43	0	0	0	0	0	0	0	26	46	49	42	64	52	32	35	36	56
+Cupriavidus metallidurans	0	0	0	0	0	53	46	0	0	0	33	29	48	27	50	62	38	23	34	38
+Desulfovibrio putealis	0	0	0	0	0	0	0	0	0	0	35	56	43	32	43	100	37	50	37	50
+Luteibacter sp. 329MFSha	0	0	0	0	0	0	0	0	0	0	0	32	87	26	119	52	33	31	41	62
+Nitrobacter hamburgensis	0	0	42	67	0	61	51	0	0	0	0	0	29	23	51	0	22	0	59	79
+Albidovulum xiamenense	0	0	40	0	0	61	0	0	0	0	36	40	52	34	57	61	19	21	27	36
+Nocardioides lianchengensis	0	0	41	0	0	0	51	0	0	0	235	38	27	0	0	0	22	19	27	25
+Roseovarius indicus	0	0	0	54	0	52	0	0	0	0	49	49	43	31	50	35	23	27	24	49
+Methylocaldum szegediense	0	0	0	0	0	0	0	0	0	0	26	43	75	26	97	42	40	42	28	68
+Thermus thermophilus	0	0	0	0	0	0	0	0	0	0	57	77	45	58	47	60	34	27	46	36
+Streptomyces cacaoi	61	0	58	50	0	43	45	48	45	0	48	34	0	0	0	0	0	22	0	34
+Rhizobium sullae	58	0	46	0	0	69	0	0	0	0	49	0	31	20	40	46	31	23	40	36
+Magnetospirillum marisnigri	0	0	0	0	0	46	46	0	0	0	65	37	38	31	51	50	39	19	42	25
+Massilia violaceinigra	0	0	0	0	0	0	0	0	47	0	25	52	54	71	62	50	44	21	30	33
+Micromonospora purpureochromogenes	60	0	40	0	44	0	65	0	53	53	45	31	28	0	0	46	0	0	26	0
+Micromonospora tulbaghiae	73	44	0	0	46	44	49	38	53	0	31	0	0	0	0	35	0	21	28	29
+Myxococcus virescens	0	0	0	0	0	46	0	0	0	0	58	66	54	27	43	70	36	29	40	25
+Streptomyces sp. MBT76	0	59	0	58	58	48	68	41	48	0	24	0	0	17	31	0	19	0	0	23
+Aminobacter aminovorans	0	48	0	62	0	79	0	58	0	0	36	0	38	26	36	48	0	25	0	39
+Caldilinea aerophila	0	0	0	0	0	0	0	0	0	0	60	77	43	38	41	44	48	41	50	53
+Azotobacter vinelandii	0	0	0	0	0	0	0	0	0	48	24	41	63	31	67	55	37	34	40	57
+Streptomyces tateyamensis	62	60	46	57	49	43	0	0	0	52	0	38	29	0	0	30	0	0	33	0
+Bradyrhizobium sp. LTSP885	60	46	38	67	0	69	0	0	0	49	40	34	0	21	0	0	30	20	0	26
+Friedmanniella flava	68	45	0	0	43	0	0	47	0	47	48	31	33	19	0	36	0	31	28	27
+Microvirga flocculans	0	0	43	67	0	75	0	0	0	54	34	29	40	36	49	0	31	0	0	46
+Hoeflea olei	59	0	40	0	45	62	0	0	0	0	29	34	46	27	41	44	28	22	0	27
+Rhodobacter capsulatus	0	51	0	0	0	44	0	0	0	0	50	39	48	30	56	40	25	35	44	42
+Holophaga foetida	0	0	0	0	0	0	0	0	0	0	40	68	37	42	40	112	28	56	38	44
+Luteibacter sp. UNC138MFCol5.1	0	0	0	0	0	0	0	0	0	0	30	44	64	17	109	63	39	29	50	62
+Pseudomonas oryzae	0	0	0	0	0	42	0	0	0	0	0	35	65	23	106	66	25	37	39	70
+Pseudogulbenkiania ferrooxidans	0	0	0	0	0	46	0	0	0	0	40	47	56	40	70	72	40	20	27	51
+Geobacter pelophilus	0	0	0	0	0	0	0	0	0	0	56	59	46	46	57	67	37	54	45	42
+Azospirillum sp. TSH58	0	0	39	0	0	47	45	0	0	45	74	38	40	19	0	39	44	30	27	24
+endosymbiont of Ridgeia piscesae	0	0	0	0	0	0	0	0	0	0	27	29	56	35	129	42	35	23	48	87
+Actinoplanes missouriensis	0	0	38	0	0	0	50	45	50	45	46	52	37	22	0	47	26	24	29	0
+Streptomyces xinghaiensis	76	60	38	0	55	50	48	47	75	62	0	0	0	0	0	0	0	0	0	0
+Desulfovirgula thermocuniculi	0	0	0	0	0	0	0	0	0	0	57	81	34	39	44	65	38	59	53	42
+Caulobacter sp. UNC358MFTsu5.1	0	0	0	0	0	47	0	0	0	0	44	47	59	0	56	91	54	32	38	45
+Tolypothrix campylonemoides	0	0	0	0	0	0	0	0	0	0	0	40	90	28	103	53	45	51	47	56
+Bradyrhizobium pachyrhizi	0	0	52	73	47	62	0	0	0	0	27	35	55	0	39	40	31	0	24	29
+Thioalkalivibrio sp. ALJ24	0	0	0	0	0	0	0	0	0	0	0	37	64	30	149	60	20	35	41	78
+Hoeflea sp. 108	0	0	35	73	0	73	57	50	0	0	52	0	48	18	0	41	24	20	24	0
+Blastococcus sp. URHD0036	57	0	0	0	0	51	0	46	0	0	60	47	34	22	35	39	26	28	40	31
+Streptomyces sp. TLI_053	58	55	54	66	53	0	55	48	67	60	0	0	0	0	0	0	0	0	0	0
+Chitinophaga niabensis	68	119	35	0	44	79	0	0	56	57	0	59	0	0	0	0	0	0	0	0
+Afipia broomeae	0	44	49	73	43	71	0	43	0	0	28	0	40	0	31	0	34	0	30	33
+Thermomicrobium roseum	0	0	0	0	0	0	0	0	0	0	65	68	49	41	53	61	38	43	48	54
+Methylobacterium sp. Leaf399	0	0	68	62	0	79	0	0	0	0	43	0	39	25	38	41	33	28	29	36
+Massilia armeniaca	0	0	0	0	0	0	0	0	0	0	26	44	83	32	82	82	41	49	36	46
+Actinoalloteichus hoggarensis	89	46	0	52	45	51	51	38	52	51	0	0	0	0	0	46	0	0	0	0
+Streptomyces aidingensis	58	55	51	0	50	0	51	39	0	47	29	30	27	0	0	0	0	19	34	31
+Azospirillum sp. B506	0	42	0	51	0	50	0	0	0	0	64	36	55	30	53	36	24	30	27	24
+Mesorhizobium sp. ORS 3359	0	0	40	0	0	80	0	48	0	0	40	36	49	24	40	52	31	25	24	35
+Mycobacterium sp. QGD 101	123	157	0	49	0	57	85	0	0	0	31	0	0	0	0	0	0	22	0	0
+Streptomyces canus	0	51	44	0	58	49	51	45	55	0	33	0	34	23	0	30	0	18	0	34
+Filimonas lacunae	79	44	39	55	53	87	0	0	56	60	0	55	0	0	0	0	0	0	0	0
+Nocardiopsis sinuspersici	86	45	58	77	0	44	56	42	61	59	0	0	0	0	0	0	0	0	0	0
+Thioalkalivibrio sp. ALSr1	0	0	0	0	0	0	0	0	0	0	27	52	70	27	126	44	30	24	60	71
+Mycobacterium sp. URHB0044	73	116	0	54	0	52	67	0	0	0	0	32	27	20	0	40	0	26	0	25
+Nitrospina gracilis	0	0	0	0	0	0	0	0	0	0	51	77	49	47	52	49	46	60	48	54
+Streptomyces violaceusniger	84	64	37	67	55	0	48	51	68	59	0	0	0	0	0	0	0	0	0	0
+Aureimonas sp. AU20	0	0	41	59	0	62	0	0	0	0	55	45	48	25	32	44	29	19	36	39
+Pelobacter propionicus	0	0	0	0	0	0	0	0	0	0	61	72	40	55	43	77	48	54	52	33
+Desulfovibrio vulgaris	0	0	40	0	0	0	0	0	0	0	46	79	47	43	61	56	36	51	41	37
+Thermocrispum agreste	72	0	35	0	0	0	49	0	0	0	55	0	68	0	40	103	20	36	29	31
+Bosea sp. OK403	64	0	41	72	49	101	0	0	0	44	24	32	0	18	40	31	0	0	0	24
+Herbaspirillum robiniae	0	0	37	57	0	0	47	0	0	0	26	33	56	25	51	73	39	32	30	35
+Acidiferrobacter sp. SPIII_3	0	0	0	0	0	0	0	0	0	0	29	43	65	36	124	61	33	29	57	64
+Streptomyces sp. MP131-18	62	50	0	62	46	0	54	40	74	45	36	0	0	0	0	0	0	0	42	30
+Dyella sp. DHG54	0	0	0	0	0	51	0	0	50	0	0	47	82	32	79	64	24	26	34	53
+Micromonospora krabiensis	0	48	0	49	41	61	0	46	51	47	46	32	28	0	0	37	0	18	38	0
+Rubrobacter radiotolerans	0	0	35	0	0	0	0	0	0	0	58	65	35	35	47	59	49	49	51	59
+Alicyclobacillus macrosporangiidus	0	0	0	0	0	0	0	0	0	0	61	71	47	37	46	49	45	53	63	70
+Friedmanniella luteola	0	0	0	50	46	0	46	38	0	55	67	56	29	0	0	45	20	27	35	29
+Desulfovibrio aminophilus	0	0	0	0	0	0	0	0	0	0	54	69	51	59	50	75	41	62	51	33
+Desulfuromonas sp. TF	0	0	36	0	0	0	0	0	0	0	50	70	47	42	43	65	48	64	40	42
+Streptomyces alboverticillatus	0	49	48	53	55	46	54	55	63	75	29	0	0	0	0	0	0	20	0	0
+Methylocystis bryophila	0	43	40	67	0	63	0	0	0	0	25	47	38	28	57	42	28	27	0	43
+Burkholderia ambifaria	0	0	0	0	0	48	0	0	0	0	40	32	66	25	94	53	49	28	53	60
+Opitutaceae bacterium TSB47	0	0	0	0	0	0	0	0	0	52	50	57	42	50	44	79	28	51	52	43
+Pseudaminobacter salicylatoxidans	0	0	44	76	0	78	0	74	0	0	35	31	31	32	0	36	29	25	28	31
+Achromobacter spanius	0	0	0	51	48	63	0	0	0	0	29	40	63	20	50	48	26	29	39	44
+Streptomyces noursei	65	45	42	53	42	42	80	40	77	65	0	0	0	0	0	0	0	0	0	0
+Yangia pacifica	0	43	0	0	42	43	0	0	0	0	42	41	50	37	54	52	22	31	43	52
+Truepera radiovictrix	0	0	0	0	0	0	0	0	0	0	64	69	54	38	64	69	45	41	63	47
+Burkholderia sp. yr520	0	0	0	0	42	0	0	0	0	0	28	35	63	24	97	79	43	41	42	62
+Massilia alkalitolerans	0	0	0	0	0	0	0	0	0	45	32	60	80	25	94	78	28	46	27	43
+Orrella dioscoreae	0	0	38	50	0	42	47	0	48	0	24	35	44	0	49	60	23	38	25	36
+Rhodococcus opacus	70	55	0	49	0	49	0	38	0	0	38	38	46	17	0	42	31	28	33	26
+Caulobacter vibrioides	0	0	0	0	0	56	0	0	0	0	40	60	79	40	56	78	40	42	30	40
+Pseudomonas jinjuensis	0	44	0	0	0	0	0	0	0	0	47	41	70	31	86	71	38	42	43	48
+Streptomyces globosus	76	48	38	72	0	52	53	66	59	44	0	28	0	0	0	0	0	0	25	0
+Methylocaldum marinum	0	0	0	0	0	0	0	0	0	0	28	64	77	56	86	50	64	53	36	48
+Luteibacter rhizovicinus	0	0	0	0	0	0	0	0	0	0	24	43	115	22	96	74	47	27	52	64
+Mesorhizobium sp. 1M-11	0	0	0	56	0	60	56	84	0	0	36	0	38	20	40	30	0	36	29	80
+Bordetella genomosp. 8	0	0	0	0	0	0	56	45	48	0	31	33	46	24	75	53	27	36	41	50
+Streptomyces puniciscabiei	62	61	0	57	42	0	62	42	58	49	36	0	0	17	0	31	0	0	25	24
+Sphingomonas indica	0	0	0	0	0	0	52	0	58	0	43	49	66	27	59	67	38	44	33	34
+Xanthomonas albilineans	0	52	0	0	0	0	0	0	0	52	25	41	64	54	79	49	39	29	32	54
+Granulicella tundricola	0	0	0	0	0	0	0	0	0	0	44	87	35	71	44	81	40	51	61	58
+Desulfobulbus elongatus	0	0	37	0	0	42	0	0	0	0	44	82	36	55	44	83	38	41	29	42
+Pseudomonas putida	0	0	0	0	0	0	0	0	45	0	38	53	87	32	94	69	38	37	34	46
+Clavibacter michiganensis	62	0	42	0	0	0	0	0	0	49	61	43	31	35	39	56	31	35	39	50
+Thauera aromatica	0	0	0	50	0	0	0	43	0	0	34	42	75	20	78	64	41	45	30	52
+Dyella sp. OK004	0	0	0	0	0	0	0	0	0	0	35	43	66	40	109	67	43	56	48	67
+Streptomyces glauciniger	61	43	51	54	43	45	56	56	0	48	0	31	0	0	0	32	0	0	31	23
+Sediminibacterium ginsengisoli	76	49	51	0	82	86	0	0	76	61	0	64	0	0	0	0	0	0	30	0
+Geodermatophilaceae bacterium URHB0062	0	42	0	0	0	0	48	0	46	0	59	51	36	26	54	50	31	33	48	52
+Mesorhizobium sp. WSM3224	60	0	0	54	42	63	0	48	0	0	39	31	43	19	37	37	34	0	29	41
+Geobacter metallireducens	0	0	0	0	0	0	0	0	0	0	75	56	49	50	50	76	56	55	58	52
+Rhodanobacter sp. Root627	0	0	0	0	0	0	0	0	0	0	24	51	87	35	113	80	39	34	39	76
+Rhodocyclaceae bacterium Paddy-1	0	0	36	0	0	0	52	52	52	49	39	28	37	22	41	58	27	30	28	28
+Pseudomonas chlororaphis	0	46	0	0	0	0	0	0	0	0	41	53	80	33	95	58	48	24	45	56
+Frankia sp. EAN1pec	58	0	0	0	48	46	57	54	0	51	38	36	29	0	0	41	0	23	53	45
+Streptomyces sp. CNH099	65	44	38	50	0	43	0	44	51	0	33	28	29	0	38	46	19	27	27	0
+Desulfuromonas soudanensis	0	0	0	0	0	0	0	0	0	0	53	85	44	48	52	78	51	62	64	47
+Streptomyces aureus	65	46	38	0	45	0	53	60	48	50	34	35	0	0	0	39	0	20	27	26
+Streptomyces yanglinensis	71	47	50	64	45	43	54	44	0	0	44	42	29	0	0	35	0	18	0	0
+Thiohalomonas denitrificans	0	0	0	0	0	0	0	0	0	0	0	48	63	32	146	64	48	35	60	91
+Streptomyces indicus	557	0	0	0	0	0	0	0	0	0	0	0	0	0	0	30	0	0	0	0
+Micromonospora inositola	0	43	41	53	46	50	51	0	0	0	36	42	28	0	43	50	0	19	50	38
+Microvirga sp. 17 mud 1-3	0	49	48	80	42	72	0	0	0	0	35	0	40	23	44	41	29	26	29	33
+Geodermatophilus saharensis	0	48	42	51	0	0	65	41	47	0	50	39	28	0	40	39	0	30	39	32
+Neorhizobium galegae	0	0	43	57	42	86	0	0	0	0	30	42	49	20	54	38	35	18	32	46
+Burkholderia sp. JS23	0	0	0	0	0	0	50	0	0	0	28	42	79	36	101	74	33	28	58	66
+Streptomyces sp. URHA0041	77	58	38	0	59	0	51	43	61	59	35	35	0	0	0	35	0	18	30	0
+Pseudomonas mendocina	0	46	0	0	0	0	0	0	0	0	29	47	91	45	82	79	51	30	47	53
+Amycolatopsis marina	62	0	38	0	42	0	0	0	47	0	63	43	78	22	0	98	25	52	30	0
+Desulfacinum infernum	0	0	0	0	0	0	0	0	0	0	66	89	47	49	64	56	60	60	69	42
+Paraburkholderia sp. SOS3	0	0	0	0	0	0	0	0	0	0	41	47	70	29	103	80	64	40	59	71
+Bradyrhizobium manausense	0	0	55	78	49	86	0	0	0	0	33	41	32	32	42	40	36	23	25	34
+Trinickia caryophylli	0	0	0	0	0	0	0	0	0	46	24	49	74	49	103	61	47	45	45	63
+Pseudomonas benzenivorans	0	0	36	0	0	43	0	0	0	0	31	38	73	26	90	75	67	31	49	47
+Jiangella sp. DSM 45060	0	0	40	55	0	52	109	40	0	0	62	64	36	21	0	46	27	25	29	0
+Rhodospira trueperi	0	0	39	0	0	49	0	44	0	0	79	70	49	27	44	42	43	40	48	33
+Massilia sp. YMA4	0	0	0	0	0	0	0	0	0	50	28	35	90	44	85	88	52	49	41	45
+Nitrosospira multiformis	0	51	36	0	0	0	46	43	0	0	29	30	41	53	59	59	49	29	40	42
+Cupriavidus oxalaticus	0	0	43	0	0	0	0	0	0	0	35	37	54	36	128	82	37	22	56	78
+Caulobacteraceae bacterium OTSz_A_272	0	0	0	0	53	100	48	63	0	80	0	28	77	20	31	61	0	19	0	30
+Marichromatium purpuratum	0	0	0	0	0	0	0	0	0	0	28	55	106	21	104	75	40	44	62	75
+Lysobacter sp. cf310	0	0	0	0	41	0	0	0	0	0	42	68	97	31	90	82	40	26	47	46
+Roseimicrobium gellanilyticum	0	0	0	0	0	42	48	0	0	0	58	56	45	48	39	67	56	44	52	57
+Bordetella ansorpii	0	0	40	0	0	51	53	40	47	0	0	28	44	28	73	52	34	38	29	56
+Actinoplanes teichomyceticus	75	0	0	0	50	52	71	0	0	52	57	46	35	0	0	48	20	30	45	33
+Streptomyces sp. NBS 14/10	87	45	41	65	59	56	82	55	64	60	0	0	0	0	0	0	0	0	0	0
+Streptomyces kebangsaanensis	80	70	39	64	69	42	62	50	76	66	0	0	0	0	0	0	0	0	0	0
+Pirellula staleyi	0	0	47	54	85	49	0	0	0	0	33	34	33	53	36	75	26	28	31	38
+Chitinophagaceae bacterium IBVUCB2	78	0	67	0	57	131	0	0	95	60	0	58	36	0	0	41	0	0	0	0
+Aureimonas jatrophae	0	0	46	0	0	51	0	0	0	49	48	61	66	30	56	49	26	37	59	46
+Mycoplana dimorpha	0	44	41	72	0	49	0	39	0	0	60	30	49	19	64	35	32	20	37	34
+Angustibacter sp. Root456	59	44	0	0	0	0	64	43	0	48	63	39	31	30	42	50	22	26	27	39
+Streptomyces acidiscabies	83	44	56	59	51	51	66	58	79	50	32	0	0	0	0	0	0	0	0	0
+Marinithermus hydrothermalis	0	0	0	0	0	0	0	0	0	0	71	98	52	53	67	62	51	49	66	60
+Microvirga sp. KLBC 81	0	47	58	88	42	76	0	0	0	0	44	35	50	27	38	37	29	31	0	29
+Pseudonocardia sp. HH130630-07	89	61	38	0	0	44	51	0	0	56	42	38	29	32	32	38	0	25	28	30
+Streptomyces sp. ICBB 8177	58	50	46	61	58	55	60	38	64	64	29	32	0	0	0	0	0	18	0	0
+Kineosporia sp. R_H_3	0	0	41	0	0	0	45	41	48	0	82	64	34	35	42	77	31	24	37	33
+Variovorax sp. OK605	0	41	44	0	0	43	48	0	47	0	46	41	44	23	51	70	47	29	35	26
+Devosia sp. A16	58	0	0	57	0	78	46	0	50	0	37	35	51	21	51	43	23	25	31	30
+Methylomicrobium album	0	0	0	0	0	0	0	0	0	0	35	40	95	43	119	76	69	45	38	77
+Gammaproteobacteria bacterium 2W06	0	0	0	0	0	0	0	0	0	0	38	33	81	29	151	74	41	34	71	85
+Jiangella gansuensis	59	56	36	52	0	0	0	0	0	56	66	43	42	18	41	42	23	34	44	28
+Streptomyces iranensis	81	72	39	67	49	63	55	40	57	64	25	0	0	0	0	0	0	0	29	0
+Luteibacter sp. UNCMF366Tsu5.1	0	0	0	0	46	0	0	0	0	0	28	43	97	37	122	67	41	38	65	58
+Luteimonas sp. 100111	0	0	35	0	0	0	0	0	0	0	28	55	97	35	120	81	41	44	45	62
+Rhodoferax koreense	0	46	36	0	41	0	0	42	0	0	84	32	47	31	75	60	37	30	34	50
+Shinella sp. HZN7	0	0	41	0	0	230	0	46	0	0	71	34	40	23	33	0	31	25	33	39
+Paraburkholderia caribensis	0	48	0	0	0	0	0	49	0	46	42	50	65	30	79	49	48	40	50	50
+Jiangella alba	61	41	36	0	0	0	114	38	0	0	56	54	36	24	0	53	25	36	43	31
+Pelomonas sp. Root1217	0	0	0	0	0	49	0	41	0	0	43	62	90	37	86	68	46	35	48	48
+Ktedonobacter racemifer	73	53	39	49	43	0	0	40	0	0	32	51	28	38	32	43	31	34	36	32
+Aminobacter sp. Root100	0	0	48	68	0	65	49	62	0	47	53	0	29	28	34	57	31	22	26	36
+Azotobacter beijerinckii	0	0	0	0	0	0	0	0	0	0	43	64	78	48	107	75	66	42	72	61
+Lentzea guizhouensis	67	51	0	0	0	0	65	41	49	0	60	45	69	22	0	107	0	25	35	23
+Geobacter sulfurreducens	0	0	43	0	0	0	0	0	0	0	72	83	54	66	49	96	41	64	43	49
+Rubellimicrobium mesophilum	0	0	43	0	0	53	0	0	0	0	60	61	52	60	64	73	41	45	64	45
+Bradyrhizobium sp. Rc2d	61	41	57	87	0	77	0	0	0	0	59	38	0	27	43	43	27	23	40	41
+Actinomycetospora chiangmaiensis	71	48	0	0	0	0	0	49	0	50	69	62	39	24	36	58	44	44	35	35
+Bradyrhizobium sp. URHA0002	57	0	47	74	0	66	0	46	0	0	30	48	51	17	53	40	34	43	28	32
+Nocardia amikacinitolerans	205	78	42	0	0	71	0	93	45	0	36	0	31	23	0	42	0	0	0	0
+Oxalobacteraceae bacterium AB_14	0	0	0	0	0	0	0	0	47	47	47	66	88	36	61	80	50	52	48	45
+Aurantimonas manganoxydans	0	48	49	84	0	92	0	39	0	0	39	40	32	23	39	43	40	30	36	34
+Burkholderia oklahomensis	0	0	0	0	0	42	0	0	0	45	51	43	97	0	100	82	45	45	51	69
+Myxococcus xanthus	0	46	37	0	0	42	0	0	0	0	43	91	54	47	55	81	44	48	45	37
+Rhizobium etli	0	54	49	0	0	81	0	0	0	56	43	43	50	27	64	41	38	50	34	41
+Bordetella genomosp. 13	0	0	40	0	0	0	52	0	46	46	35	48	58	28	78	70	39	33	49	49
+Methyloversatilis thermotolerans	0	43	0.00E+00	0	0	0	65	0	56	61	37	28	44	29	76	84	30	33	29	57
+Saccharomonospora marina	66	0	36	0	41	0	52	39	54	51	60	43	47	0	35	68	23	58	0	0
+Pelomonas sp. Root1237	0	0	0	0	42	0	0	0	49	0	39	44	72	39	84	111	49	38	57	50
+Lentzea aerocolonigenes	64	49	0	0	0	0	51	41	50	0	65	32	95	0	44	85	20	19	37	23
+Streptomyces albireticuli	86	66	44	61	76	60	52	43	79	68	0	0	0	19	0	0	0	0	27	0
+Brevundimonas diminuta	0	0	0	53	0	95	0	0	0	54	97	46	62	31	41	60	37	39	33	35
+Nocardioides sp. URHA0032	60	0	37	0	0	0	0	0	0	0	282	61	0	36	33	46	20	32	40	36
+Streptomyces viridosporus	71	52	38	67	57	0	60	49	68	57	31	29	0	0	0	33	0	18	26	28
+Massilia sp. PDC64	0	47	0	0	44	0	0	0	0	0	35	48	99	28	113	71	48	43	53	56
+Rhodococcus ruber	61	49	0	0	46	53	49	0	0	0	72	48	52	22	45	50	31	29	44	34
+Caulobacter sp. Root655	0	42	0	0	0	0	0	0	0	0	30	41	115	23	103	103	72	52	47	59
+Oceanicola granulosus	0	0	51	55	0	61	0	38	0	0	44	64	66	33	55	49	27	45	52	48
+Alkalispirillum mobile	0	0	0	0	0	0	0	0	0	0	37	39	85	53	171	79	46	39	58	81
+Frankia discariae	63	43	56	0	42	0	50	41	66	0	52	45	32	0	36	35	23	28	34	42
+Rhodanobacter sp. OR444	0	0	0	0	0	0	0	0	0	0	0	57	112	58	143	83	41	54	54	87
+Nocardia seriolae	87	0	0	49	44	43	0	48	0	58	37	50	47	35	45	59	0	21	29	38
+Bosea vaviloviae	0	0	59	97	46	108	0	43	0	48	39	35	36	28	50	42	27	0	0	34
+Saccharopolyspora antimicrobica	215	87	0	0	81	0	46	0	0	0	44	32	38	0	30	59	0	23	0	38
+Bradyrhizobium diazoefficiens	0	0	57	71	43	68	48	0	0	0	30	44	45	41	67	43	33	19	41	47
+Gloeobacter violaceus	0	47	40	0	0	0	0	40	0	0	42	95	53	45	71	70	45	57	54	38
+Streptomyces avermitilis	80	74	66	66	62	44	57	55	51	55	25	0	27	0	0	37	0	0	0	0
+Hoeflea marina	0	42	59	74	50	88	0	0	0	47	54	28	66	17	46	46	28	24	0	31
+Acidovorax avenae	0	43	0	0	0	46	53	45	0	49	39	50	65	30	63	59	32	40	43	43
+Pseudacidovorax intermedius	0	48	35	0	0	43	0	0	0	52	63	41	62	34	78	79	32	30	54	51
+Thiobacillus thioparus	0	0	40	0	0	46	55	0	0	64	0	44	73	31	84	81	49	34	48	53
+Methylobacterium currus	68	0	80	76	0	63	0	0	0	0	45	47	47	25	44	47	44	27	48	43
+Cnuella takakiae	62	66	72	0	76	108	0	42	85	90	0	73	0	0	0	0	0	0	36	0
+Jiangella muralis	76	49	40	0	0	43	61	38	0	45	80	40	50	17	0	44	23	37	40	27
+Afipia sp. GAS231	57	49	62	75	51	78	0	0	0	45	32	31	32	26	60	45	26	0	0	43
+Alicycliphilus denitrificans	0	0	47	0	0	48	49	38	45	0	62	38	57	31	72	67	41	40	43	35
+Alcaligenes faecalis	604	0	0	0	0	0	0	0	0	0	0	0	0	19	0	0	27	0	40	25
+Massilia putida	0	0	0	0	0	0	0	38	0	0	40	51	128	30	109	92	60	49	58	63
+Anaerosalibacter massiliensis	0	0	0	0	0	0	0	0	94	0	0	49	161	0	44	0	30	159	147	34
+Propionivibrio dicarboxylicus	0	0	0	0	42	0	55	43	52	50	28	0	65	30	88	84	42	40	43	58
+Sciscionella marina	277	58	0	0	76	0	0	0	0	0	31	0	51	17	0	67	0	112	0	31
+Nocardiopsis sp. TSRI0078	114	64	54	70	62	57	90	49	64	70	0	0	0	0	0	0	0	0	28	0
+Tepidiphilus thermophilus	0	0	0	0	0	0	45	0	0	44	35	51	81	33	112	102	41	51	55	74
+Sphaerotilus hippei	0	0	0	0	0	48	0	45	0	52	51	28	77	44	92	94	40	51	43	60
+Modestobacter sp. DSM 44400	62	49	37	0	53	46	0	42	59	66	48	33	36	23	38	33	20	22	34	25
+Candidatus Nitrosomarinus catalina	0	0	0	0	0	0	0	0	0	0	74	103	55	88	141	0	90	71	49	55
+Actinoplanes friuliensis	72	0	44	0	43	45	55	38	65	5.00E+01	43	36	46	25	0	64	21	23	30	29
+Paenibacillus pasadenensis	0	0	0	0	0	0	0	0	0	0	51	99	54	33	120	81	48	50	78	118
+Actinoplanes sp. N902-109	61	45	36	0	46	0	62	56	61	0	39	37	31	18	46	72	26	25	39	33
+Kitasatospora setae	78	53	45	55	62	49	72	45	59	62	31	38	0	0	0	36	0	0	24	24
+Micromonospora echinaurantiaca	75	43	39	51	42	56	55	60	60	55	42	0	36	0	0	43	0	27	27	24
+Pseudoxanthomonas sp. J31	0	0	0	0	0	0	0	0	46	47	30	53	117	39	126	81	61	35	49	55
+Streptomyces lunaelactis	80	49	0	51	60	57	0	49	54	0	50	47	40	24	36	34	26	27	32	23
+Desulfuromonas sp. DDH964	0	0	58	0	0	0	0	0	0	0	65	90	64	69	71	87	60	75	58	43
+Pelomonas sp. Root662	0	42	45	0	0	52	0	0	50	0	30	33	79	31	121	57	46	49	51	56
+Kitasatospora sp. MMS16-BH015	67	62	59	65	61	0	69	49	58	54	38	41	0	0	0	51	0	18	28	24
+Dyella japonica	0	0	0	0	0	49	0	0	46	0	30	37	91	59	112	93	35	43	65	86
+Streptomyces peucetius	96	42	44	72	61	70	85	57	64	64	25	42	0	0	0	0	0	0	24	0
+Alicyclobacillus acidocaldarius	0	0	38	0	0	0	0	0	0	0	60	96	54	63	77	67	57	80	80	75
+Acidimicrobium ferrooxidans	0	0	0	0	0	0	0	0	0	0	159	132	63	17	66	34	65	61	79	74
+Nocardioides halotolerans	0	0	0	0	41	0	63	49	0	0	232	48	35	29	51	41	36	30	49	46
+Wenxinia marina	0	47	48	0	0	46	46	0	0	46	71	63	80	27	61	68	30	33	35	50
+Actinosynnema pretiosum	92	49	38	49	41	53	76	53	0	59	40	28	59	0	0	67	0	23	0	25
+Mesorhizobium amorphae	0	58	52	97	0	82	0	73	0	50	62	0	45	35	52	50	0	24	40	34
+Actinobacteria bacterium IMCC26256	0	0	0	0	0	0	0	0	0	0	249	131	33	22	45	30	71	25	71	78
+Aquamicrobium defluvii	84	0	51	56	0	83	89	88	0	0	27	32	67	21	37	0	34	41	0	48
+Terracidiphilus gabretensis	0	60	0	0	0	43	0	0	0	0	46	127	53	78	45	101	50	51	63	43
+Pseudomonas resinovorans	0	0	0	81	43	0	0	0	0	50	38	41	81	40	119	77	35	30	53	74
+Desulfarculus baarsii	0	0	44	0	0	42	0	0	0	0	58	109	66	49	59	96	46	67	75	52
+Azospirillum thiophilum	0	0	38	73	0	65	0	48	0	0	94	47	62	50	59	63	43	35	35	54
+Streptomyces vitaminophilus	82	78	60	89	52	60	61	65	71	73	0	38	0	0	0	37	0	0	0	0
+Actinoplanes lutulentus	81	73	55	66	51	47	54	52	49	59	28	28	0	17	0	49	0	0	33	25
+Streptomyces rubidus	64	53	0	66	57	50	71	62	64	65	36	42	0	22	0	34	0	18	40	24
+Bosea sp. PAMC 26642	71	53	62	74	60	122	0	42	0	0	44	36	30	26	31	48	21	21	0	30
+Cupriavidus alkaliphilus	66	58	0	0	45	0	0	0	56	0	38	50	62	19	91	93	39	43	52	60
+Bosea sp. 1131	68	52	66	93	0	85	0	43	0	45	33	40	40	21	46	34	27	25	30	26
+Methylobacterium brachiatum	0	44	56	53	42	80	0	41	0	0	35	59	62	40	61	42	24	37	52	46
+Sphingobium yanoikuyae	0	43	41	0	0	59	46	51	0	44	56	34	60	36	66	58	65	20	55	40
+Roseomonas rosea	0	51	50	56	41	60	49	0	0	0	65	63	50	24	49	56	24	44	45	48
+Pseudomonas azotifigens	0	52	0	0	0	0	50	0	0	0	42	67	100	31	119	97	60	50	59	48
+Desulfocarbo indianensis	0	0	35	0	0	0	0	0	0	0	59	121	49	51	90	108	53	74	78	62
+Nocardia terpenica	65	58	46	55	62	56	60	49	0	55	43	43	0	21	31	50	0	34	28	24
+Sphingosinicella microcystinivorans	0	58	0	51	43	62	0	0	59	0	54	47	78	22	88	57	53	32	40	38
+Sphingomonas koreensis	0	0	0	0	0	306	0	0	0	0	31	43	53	27	69	76	57	34	45	43
+Rhizobiales bacterium	0	42	37	73	0	142	0	45	0	68	29	37	49	29	53	46	28	28	45	34
+Humitalea rosea	0	0	64	90	0	72	0	42	0	56	76	70	36	35	33	56	41	46	36	34
+Frankia sp. QA3	77	53	42	58	50	60	64	52	59	44	50	47	0	17	0	0	19	27	38	30
+Stackebrandtia nassauensis	63	48	40	58	43	50	45	0	59	55	47	43	45	23	33	50	0	24	35	30
+Micromonospora echinofusca	66	74	64	67	51	48	67	58	51	57	37	31	29	22	0	45	0	24	0	0
+Sphingomonas sanxanigenens	0	46	55	0	0	68	0	0	56	50	44	58	85	35	78	55	60	31	34	38
+Thiocystis violascens	0	0	38	0	48	0	0	0	0	0	31	44	103	55	170	86	33	44	67	76
+Aminobacter sp. MSH1	0	0	47	84	46	85	50	50	0	0	32	47	51	25	78	38	27	42	37	59
+Streptacidiphilus griseoplanus	88	55	53	84	48	60	74	62	69	60	0	38	28	0	0	0	0	20	37	24
+Acidobacteriaceae bacterium KBS 89	0	57	0	0	0	48	0	0	0	44	49	93	50	91	41	107	35	75	79	42
+Deinococcus pimensis	0	0	0	0	0	0	0	0	0	0	93	117	66	58	106	93	51	58	94	75
+Rhodanobacter sp. Root561	0	0	0	0	0	43	0	0	53	47	35	47	132	33	111	73	56	41	61	80
+Xanthomonadaceae bacterium	0	0	37	0	0	0	0	0	0	51	27	56	130	44	140	97	48	45	58	80
+Trinickia symbiotica	0	46	0	52	44	44	0	0	45	0	36	49	80	25	92	80	56	56	51	58
+Mycobacterium sp. JS623	120	301	87	84	0	44	90	69	0	0	0	0	0	0	0	0	0	21	0	0
+Luteimonas sp. JM171	61	0	0	0	0	0	0	104	0	0	28	46	75	40	130	92	46	45	72	78
+Achromobacter denitrificans	0	0	0	0	58	57	51	51	58	46	52	45	62	34	73	60	37	45	49	40
+Desulfocurvus vexinensis	0	0	40	0	0	0	0	0	0	0	83	113	69	52	95	109	57	70	62	70
+Parvibaculum lavamentivorans	0	64	49	77	0	97	0	56	0	45	41	32	58	32	82	54	40	34	29	32
+Streptomyces sp. TSRI0281	109	70	60	96	80	63	96	69	88	92	0	0	0	0	0	0	0	0	0	0
+Lamprocystis purpurea	0	0	38	0	0	0	0	0	0	49	33	44	82	60	157	85	65	44	81	91
+Kaistia soli	0	51	50	103	42	94	0	47	0	49	45	42	56	38	57	36	32	22	38	30
+Pseudomonas nitroreducens	167	52	0	168	0	0	0	38	0	0	29	40	36	24	55	49	40	20	72	43
+Chitinophaga rupis	95	64	57	55	54	104	0	48	81	73	0	99	0	0	31	0	0	0	41	32
+Azospirillum sp. B4	0	0	42	58	41	62	0	0	0	0	107	54	67	47	77	91	58	28	54	50
+Burkholderia cenocepacia	0	0	0	53	0	0	0	39	48	48	40	68	92	60	104	94	45	44	49	56
+Chitinophaga barathri	0	53	0	0	41	55	59	39	391	68	0	62	0	0	0	0	0	0	36	37
+Pseudonocardia sp. N23	71	0	46	0	47	45	63	45	0	47	81	72	32	31	43	64	36	49	53	23
+Actinokineospora inagensis	89	44	0	51	0	0	50	0	0	0	81	34	141	0	42	265	0	27	0	25
+Actinoplanes regularis	81	64	46	68	55	59	54	0	49	53	45	54	0	25	30	55	21	23	34	34
+Mycolicibacterium smegmatis	135	116	52	52	0	43	67	47	0	51	44	51	37	24	0	44	0	21	32	35
+Lechevalieria xinjiangensis	99	64	55	51	0	42	60	60	78	56	36	39	44	17	0	84	0	27	39	0
+Thermomonas fusca	0	42	0	0	0	44	0	0	93	0	35	40	91	54	123	113	37	43	63	74
+Amycolatopsis balhimycina	85	57	0	52	50	48	93	61	0	0	43	40	64	0	41	110	0	43	30	35
+Streptomyces diastatochromogenes	125	88	61	66	79	65	77	88	94	76	34	0	0	0	0	0	0	0	0	0
+Nocardiopsis sp. CNR-923	98	62	72	72	67	44	64	55	86	70	33	50	0	0	0	0	23	29	28	0
+Aureimonas sp. Leaf460	61	43	55	63	42	72	0	45	0	47	74	42	63	33	44	48	28	29	34	33
+Nocardioides sp. Root224	0	51	44	54	0	45	60	39	58	48	171	57	30	29	0	43	42	0	43	42
+Rubricoccus marinus	0	0	39	0	0	0	0	0	0	0	98	115	100	57	102	104	57	57	72	56
+Rhodanobacter sp. Soil772	0	0	0	0	0	44	0	0	0	0	32	51	111	36	213	69	80	46	69	110
+Paraburkholderia mimosarum	0	44	44	0	0	60	50	0	0	0	38	55	75	35	145	87	44	28	78	79
+Alkalilimnicola ehrlichii	0	0	0	0	42	42	0	0	0	44	32	44	92	48	178	91	45	45	73	88
+Methylorubrum populi	0	65	59	90	44	82	0	0	0	52	55	44	63	28	54	52	38	35	58	46
+Frankia elaeagni	73	53	43	54	56	55	61	40	46	48	68	49	29	23	0	47	31	30	29	30
+Streptomyces venezuelae	94	0	64	60	41	51	57	92	48	64	40	44	0	22	0	63	24	23	39	40
+Streptacidiphilus jiangxiensis	61	51	46	62	60	50	64	0	57	57	61	43	40	0	0	65	36	35	46	33
+Belnapia moabensis	0	0	68	69	48	84	53	46	0	0	65	54	49	39	59	55	42	43	50	44
+Acidihalobacter ferrooxidans	0	49	0	0	0	0	0	0	50	0	43	55	104	44	180	80	54	37	74	98
+Candidatus Nitrosopelagicus brevis	0	0	0	0	0	0	0	0	0	0	93	166	68	106	120	0	96	110	58	55
+Thiohalospira halophila	0	0	0	0	0	0	0	0	0	0	39	68	112	49	173	98	53	64	102	116
+Streptomyces sp. CB02056	84	61	63	69	52	60	87	68	65	87	36	38	0	17	0	42	19	0	0	26
+Thermomonas haemolytica	0	0	36	0	0	0	0	44	51	0	34	60	120	30	179	87	47	42	55	94
+Rhodopseudomonas sp. B29	85	65	56	82	48	65	46	40	0	0	35	36	51	32	46	42	45	27	46	34
+Streptomyces turgidiscabies	133	70	58	119	81	50	111	72	95	67	0	0	0	0	0	0	0	0	25	0
+Candidatus Nitrosopumilus sediminis	0	0	0	0	0	0	0	0	0	0	110	135	53	122	137	0	118	98	49	60
+Geobacter pickeringii	0	0	49	0	0	46	0	0	45	0	88	120	64	81	53	82	59	65	72	61
+Chromatiaceae bacterium 2141T.STBD.0c.01a	0	0	0	0	42	0	48	0	0	0	40	51	109	49	181	77	50	50	66	124
+Pseudonocardia ammonioxydans	87	49	53	0	42	0	53	40	0	47	79	56	48	31	46	59	29	58	59	51
+Methylobacterium platani	60	0	65	67	45	67	56	41	0	0	45	45	78	37	61	49	37	34	37	64
+Geodermatophilus sabuli	57	0	38	63	46	0	64	48	60	44	99	73	32	28	50	48	34	33	34	38
+Rhodobacteraceae bacterium	58	45	38	76	62	65	0	39	0	0	52	52	62	44	67	47	48	42	47	47
+Nocardiopsis alba	129	66	49	62	71	55	93	46	96	62	0	69	0	0	0	0	0	43	27	24
+Microvirga lotononidis	57	52	61	84	0	85	0	46	45	68	51	36	45	42	44	61	30	25	35	28
+Caulobacter henricii	0	42	36	0	0	69	45	0	0	54	53	59	96	38	78	103	67	57	58	43
+Frankia sp. DC12	65	52	37	56	68	0	47	44	46	56	66	59	51	30	47	40	26	2.90E+01	33	47
+Actinopolymorpha singaporensis	101	0	44	55	45	68	50	58	51	0	71	52	34	23	33	60	0	24	91	45
+Methylobacterium sp. 174MFSha1.1	61	53	47	79	52	79	45	42	0	0	53	51	56	33	57	60	34	33	35	39
+Pseudogracilibacillus auburnensis	702	71	0	0	0	0	0	0	0	0	0	98	0	0	0	0	0	39	0	0
+Rhodovibrio salinarum	0	46	39	82	0	77	0	0	0	0	134	77	93	46	87	48	61	36	40	45
+Roseomonas gilardii	59	0	41	0	46	66	0	57	0	56	83	68	76	45	70	63	44	41	57	42
+Burkholderiales bacterium JOSHI_001	0	0	54	50	58	0	72	48	62	59	56	42	66	24	67	85	46	45	30	52
+Halorhodospira halophila	0	0	0	0	0	0	0	0	0	45	42	66	102	66	206	91	66	55	73	104
+Massilia sp. WG5	0	56	50	0	45	0	0	55	60	44	41	60	93	23	102	105	47	50	45	44
+Thauera linaloolentis	63	48	40	0	0	58	66	0	69	0	35	33	78	28	113	80	50	35	46	85
+Roseospirillum parvum	0	44	53	66	0	70	0	0	0	47	106	69	59	49	92	68	55	55	53	43
+Pseudomonas fluorescens	0	61	45	0	0	54	0	38	52	61	32	55	61	53	92	89	52	44	63	78
+Hartmannibacter diazotrophicus	65	64	64	94	51	91	0	50	0	50	40	58	46	19	43	58	37	39	36	32
+Lysobacter sp. yr284	76	44	43	0	51	52	0	44	49	66	40	59	80	34	60	83	59	32	36	30
+Streptomyces sp. CB03911	100	69	54	81	52	51	90	54	81	60	35	46	29	17	0	40	0	22	29	29
+Streptomyces hyaluromycini	126	88	77	105	95	59	95	88	106	89	0	0	0	0	0	0	0	19	0	0
+Nocardia brasiliensis	78	60	42	53	56	90	68	42	63	54	60	37	32	25	41	61	0	25	32	32
+Paraburkholderia unamae	0	43	53	0	47	44	51	43	0	45	37	61	71	40	96	99	50	31	68	73
+Actinoplanes xinjiangensis	82	63	74	60	50	56	67	64	61	63	44	46	29	22	32	42	26	21	24	26
+Plantactinospora sp. KBS50	76	57	65	73	52	59	72	52	56	51	56	50	36	26	0	59	20	26	40	28
+Pseudoxanthomonas sp. Root630	0	0	0	0	0	90	0	46	0	47	32	60	134	34	177	99	47	45	56	88
+Phycisphaera mikurensis	0	0	49	0	0	42	0	0	0	44	108	87	71	61	57	120	83	87	76	70
+Mesorhizobium sp. ORS 3324	0	42	62	59	51	79	65	75	0	0	64	42	83	29	63	60	32	37	66	50
+Thermoanaerobaculum aquaticum	0	0	0	0	0	43	0	0	0	0	88	144	66	61	65	186	68	96	80	63
+Variovorax sp. URHB0020	0	56	0	0	48	48	51	0	69	51	47	48	82	37	105	99	48	39	60	73
+Actinoplanes italicus	94	70	49	67	54	64	83	53	62	60	36	50	34	23	31	48	22	24	41	0
+Bradyrhizobium sp. th.b2	84	68	77	115	50	87	46	0	0	59	27	40	57	17	48	49	40	38	27	38
+Azoarcus communis	57	49	47	0	45	0	0	47	66	54	42	47	69	42	135	69	49	33	56	62
+Halotalea alkalilenta	0	42	0	49	53	56	0	0	0	48	48	64	85	46	161	83	63	37	68	73
+Micromonospora viridifaciens	95	54	53	79	73	72	82	65	81	75	50	37	0	18	32	55	23	0	32	0
+Rhizobacter sp. Root1221	0	0	35	0	0	63	62	71	60	71	48	41	77	38	96	98	45	64	46	62
+Janthinobacterium sp. CG3	0	48	37	0	0	53	45	47	56	56	50	58	93	40	82	95	64	46	57	51
+Tepidimonas taiwanensis	0	41	0	0	47	43	51	38	59	0	49	72	89	37	139	90	39	49	59	77
+Motilibacter peucedani	66	0	46	55	50	53	52	52	60	59	62	52	36	32	70	67	34	44	44	46
+Allokutzneria sp. NRRL B-24872	101	56	44	72	56	0	68	47	0	54	61	42	94	19	0	132	31	34	34	38
+Sporichthya polymorpha	256	50	56	0	0	0	0	0	57	0	77	79	60	30	70	61	40	43	52	54
+Pseudonocardia oroxyli	95	60	46	68	50	47	64	42	55	52	75	40	33	25	48	48	30	39	36	35
+Thioalkalivibrio nitratireducens	0	46	0	0	0	44	0	0	0	54	25	62	152	57	174	100	46	57	76	97
+Stenotrophomonas rhizophila	57	0	44	0	0	58	0	0	54	72	28	53	153	41	119	83	46	55	62	65
+Terrimonas ferruginea	102	90	71	60	109	98	0	49	148	103	0	90	33	0	0	0	0	0	39	0
+Methylosinus trichosporium	70	48	70	88	51	126	0	57	0	62	49	35	44	38	61	39	40	29	41	45
+Sphingopyxis macrogoltabida	0	46	51	0	63	140	0	45	0	45	40	37	86	26	80	95	78	43	74	45
+Streptomyces albulus	94	77	64	83	92	52	69	77	96	83	34	39	0	23	0	34	0	20	31	28
+Amycolatopsis benzoatilytica	74	44	0	59	59	94	77	42	59	71	52	39	95	17	0	112	0	45	35	26
+Oligotropha carboxidovorans	204	53	76	82	48	100	0	0	50	0	25	43	60	29	47	32	37	25	42	48
+Pseudonocardia spinosispora	85	48	53	0	42	48	57	61	0	46	74	80	71	33	53	81	33	41	43	53
+Roseomonas cervicalis	61	44	61	71	42	75	48	0	0	44	95	64	51	26	68	64	43	57	57	36
+Kitasatospora sp. MBT63	91	66	66	77	80	61	73	60	80	77	45	38	30	20	0	35	0	34	42	33
+Massilia sp. KIM	0	44	0	0	0	58	65	42	53	51	52	72	89	39	119	100	57	51	61	58
+Lysobacter defluvii	0	0	0	0	0	0	0	0	49	49	33	52	123	63	206	132	60	50	84	110
+Streptomyces cattleya	108	95	50	94	61	92	85	62	82	82	29	29	0	17	0	43	21	25	36	0
+Pannonibacter phragmitetus	57	0	87	111	57	107	59	47	47	51	51	41	50	18	53	53	28	33	35	27
+Luteimonas abyssi	0	41	0	0	0	43	0	0	50	54	39	65	137	41	148	112	51	51	87	94
+Bordetella bronchialis	0	49	57	60	0	60	54	52	65	59	42	62	87	34	69	84	38	43	42	60
+Hydrogenophaga sp. PML113	0	59	51	0	0	73	0	68	100	66	61	66	59	24	102	87	45	38	56	63
+Streptacidiphilus albus	105	62	68	76	76	46	65	50	62	67	50	33	34	20	33	30	29	26	38	49
+Candidatus Microthrix parvicella	0	41	40	0	0	60	0	44	0	48	207	145	63	39	41	44	78	39	71	61
+Luteibacter sp. UNCMF331Sha3.1	0	58	0	0	53	46	0	0	0	62	38	71	146	54	133	115	70	47	56	74
+Belnapia sp. F-4-1	0	0	58	96	48	77	57	45	0	64	63	72	63	42	67	80	37	55	63	38
+Rhodothermaceae bacterium RA	0	0	43	0	0	0	0	0	0	44	95	119	79	66	112	143	74	73	93	86
+Phenylobacterium sp. Root700	0	0	41	53	0	202	0	0	50	63	55	56	87	25	111	100	49	42	41	53
+Stappia indica	79	54	67	89	51	94	47	42	0	47	64	47	56	35	74	45	30	24	37	46
+Ensifer aridi	0	45	59	69	48	123	0	43	0	0	89	49	74	50	72	75	78	57	54	44
+Roseomonas stagni	59	45	59	73	0	95	62	0	0	0	82	77	85	33	89	75	38	58	61	40
+Verrucomicrobium sp. GAS474	0	53	36	0	0	52	0	41	0	48	71	92	73	80	92	104	55	86	87	62
+Azoarcus sp. CIB	0	69	45	0	0	49	50	0	51	48	40	62	95	45	138	111	44	53	62	75
+Dyella jiangningensis	0	44	0	0	0	48	0	0	0	50	44	46	158	46	173	138	63	54	79	102
+Micromonospora echinospora	122	57	74	98	80	73	91	70	84	68	42	37	28	0	0	42	22	0	35	23
+Duganella sp. CF517	0	58	0	0	50	60	48	40	50	63	35	62	103	34	88	118	77	49	52	60
+Azonexus fungiphilus	66	65	43	0	53	50	60	50	53	44	38	38	82	34	86	88	45	61	38	53
+Burkholderia glumae	57	55	36	50	52	50	0	43	0	52	39	51	92	39	94	91	54	40	75	78
+Pseudoxanthomonas sp. Root65	0	43	0	0	45	109	0	63	0	44	32	40	118	51	151	106	56	39	69	86
+Oceanithermus profundus	0	0	44	0	0	0	0	0	0	46	96	146	92	67	96	102	93	82	115	84
+Cellulosimicrobium cellulans	74	54	62	67	46	53	61	42	0	53	80	68	43	42	62	60	37	33	67	60
+Methyloversatilis sp. RAC08	0	57	43	50	42	58	93	63	47	45	0	36	80	35	130	83	40	55	45	67
+Rhodospirillaceae bacterium	64	0	54	65	50	76	0	41	0	0	120	60	93	38	105	80	50	63	42	72
+Nitrospirillum amazonense	0	62	49	60	44	62	0	0	46	0	119	67	72	60	110	112	53	40	69	51
+Nitrosopumilus adriaticus	0	0	0	0	0	0	0	0	0	0	111	182	68	155	184	0	137	116	62	61
+Bosea lathyri	76	66	57	129	75	147	48	58	0	55	43	46	42	27	50	43	28	20	36	31
+Bradyrhizobium sp. Ec3.3	103	77	67	119	58	99	48	39	0	53	55	38	64	31	46	34	27	42	31	46
+Amycolatopsis xylanica	90	49	45	0	54	55	79	0	49	59	81	57	94	0	45	157	22	68	37	41
+Streptomyces lydicus	98	70	73	90	80	68	112	75	83	91	35	47	45	20	39	30	0	0	27	0
+Streptomyces hygroscopicus	146	92	73	82	85	64	93	76	83	97	28	37	0	0	0	38	21	20	29	23
+Bradyrhizobium sp. ORS 285	106	61	65	83	51	101	51	69	0	62	50	42	77	28	52	56	47	3.10E+01	30	29
+Chitiniphilus shinanonensis	65	49	50	0	0	45	69	48	67	57	46	53	84	50	107	93	51	49	46	62
+Nocardia farcinica	94	74	43	66	64	84	71	59	65	66	59	48	39	28	46	61	22	34	37	31
+Stenotrophomonas acidaminiphila	0	0	42	0	0	65	0	78	53	51	50	57	105	53	151	91	64	63	87	84
+Actinospica robiniae	84	65	49	69	58	52	80	59	84	67	78	53	49	25	41	37	22	28	50	46
+Candidatus Accumulibacter phosphatis	0	42	57	59	0	47	61	54	0	60	39	61	108	53	118	75	81	56	56	71
+Geodermatophilus ruber	94	52	61	63	58	53	60	62	49	68	70	81	38	38	41	58	33	36	50	34
+Cupriavidus necator	61	47	58	50	0	60	0	55	77	61	45	67	95	46	75	87	65	68	44	41
+Granulicella mallensis	0	50	36	54	0	42	0	44	0	54	62	162	74	78	71	103	60	92	60	62
+Bradyrhizobium macuxiense	67	66	65	107	50	130	45	50	0	49	53	51	54	26	58	70	33	38	48	44
+Bosea sp. AS-1	97	43	68	114	92	176	48	70	0	59	50	32	38	25	30	38	32	23	29	44
+Noviherbaspirillum denitrificans	0	56	45	61	42	55	72	54	59	68	29	45	88	45	109	90	54	45	45	51
+Amycolatopsis sp. M39	112	103	59	87	73	51	79	52	87	76	44	50	38	27	0	79	23	31	43	0
+Pandoraea pnomenusa	0	51	36	54	49	60	0	45	65	54	55	50	94	65	116	77	41	58	64	83
+Amycolatopsis pretoriensis	99	59	48	73	54	50	74	56	57	70	73	61	74	19	36	87	22	44	36	26
+Corallococcus coralloides	0	42	50	54	44	54	0	38	0	57	61	95	94	47	76	152	83	55	49	69
+Pseudosporangium ferrugineum	98	68	60	69	55	77	71	67	62	60	74	47	40	26	35	71	19	41	35	47
+Geobacter sp. M18	0	0	63	0	0	65	0	0	45	0	116	133	66	87	91	131	72	91	100	63
+Longispora albida	127	93	76	89	78	61	75	64	68	76	43	51	44	21	0	37	24	28	35	34
+Bradyrhizobium sp. ORS 278	63	86	56	98	63	102	47	61	45	74	47	51	50	36	50	47	48	27	32	45
+Bradyrhizobium sp. SK17	76	52	59	132	65	142	51	41	49	60	44	37	62	25	57	37	53	19	38	29
+Brevundimonas sp. Root1423	0	0	37	58	0	289	0	0	0	0	277	53	101	31	58	77	49	24	48	35
+Thauera humireducens	67	46	43	52	43	67	69	66	56	0	37	47	75	24	121	107	47	47	49	74
+Sphaerotilus natans	0	42	42	51	44	52	55	55	52	67	70	70	85	37	101	120	59	37	46	60
+Actinopolymorpha cephalotaxi	120	47	57	63	59	63	67	56	81	55	73	72	31	33	31	55	26	30	88	39
+Chelatococcus asaccharovorans	87	57	66	97	52	99	65	66	0	50	53	55	42	43	83	54	37	31	59	51
+Thioalkalivibrio thiocyanodenitrificans	0	0	39	0	46	0	0	0	0	47	45	53	104	64	266	126	52	46	113	147
+Azorhizobium caulinodans	97	66	85	133	45	115	61	50	0	56	42	49	63	26	44	60	39	41	29	48
+Thauera chlorobenzoica	57	57	48	55	47	64	72	66	78	58	41	46	73	26	94	97	31	44	40	56
+Frankiales bacterium	92	76	58	69	63	64	82	53	71	60	80	63	49	22	37	42	31	38	56	45
+Alloactinosynnema iranicum	80	52	48	56	0	0	73	0	0	0	125	35	205	0	37	343	0	27	35	37
+Afipia felis	91	73	63	130	63	142	64	57	45	56	39	46	50	24	59	42	39	24	28	36
+Pseudoxanthomonas sp. CF125	0	50	0	0	53	0	52	40	57	65	39	53	167	49	141	125	87	61	70	62
+Bosea sp. UNC402CLCol	72	88	103	108	61	157	50	76	0	55	46	48	61	41	45	44	23	24	28	42
+Limimonas halophila	0	50	57	57	45	73	0	0	0	0	157	80	92	70	100	124	78	71	69	51
+Rhodothermaceae bacterium	0	45	36	51	49	0	0	44	0	0	75	128	111	78	98	126	84	107	83	67
+Bradyrhizobium sp. STM 3843	93	81	65	126	60	109	53	50	0	66	55	42	73	22	65	64	51	35	30	44
+Jeongeupia sp. USM3	0	48	39	0	45	54	64	69	63	77	34	59	134	52	122	95	60	57	50	63
+Caulobacter mirabilis	0	54	45	52	53	95	0	47	46	74	75	79	115	40	98	107	73	55	49	37
+Bradyrhizobium oligotrophicum	87	63	65	111	51	104	55	44	50	73	76	63	77	39	41	49	47	38	30	32
+Amycolatopsis lexingtonensis	99	59	57	56	71	67	70	65	80	62	75	46	70	33	33	137	20	42	31	36
+Oceanicella actignis	62	49	43	99	61	102	53	48	0	68	77	65	61	66	77	57	61	39	56	66
+Amycolatopsis thermoflava	122	72	52	65	68	82	69	64	56	66	68	44	93	26	0	115	22	69	42	30
+Afifella pfennigii	95	54	110	131	63	130	55	49	46	54	59	46	47	38	43	53	63	22	36	38
+Thermobifida cellulosilytica	136	90	71	104	92	91	97	112	101	121	29	37	0	21	0	32	0	33	38	30
+Hydrogenophaga sp. PBC	0	58	37	52	53	63	54	77	273	44	41	36	65	31	81	89	44	50	44	45
+endosymbiont of unidentified scaly snail isolate Monju	57	0	0	0	49	64	0	0	0	70	39	57	171	56	241	97	59	52	101	129
+Bosea sp. Leaf344	97	71	95	120	72	161	59	67	0	93	40	51	62	21	64	46	27	30	32	39
+Cryptosporangium aurantiacum	79	60	56	83	81	66	75	53	70	60	93	59	71	32	51	71	43	49	58	40
+Mycobacterium kansasii	131	108	45	123	54	73	89	51	55	53	58	63	53	31	66	45	42	34	44	34
+Amorphus coralli	84	67	103	103	68	118	77	64	0	60	52	50	64	23	64	73	53	31	36	63
+Methyloversatilis universalis	76	66	42	49	56	49	85	56	57	74	46	61	88	34	94	106	52	32	53	80
+Pimelobacter simplex	63	57	52	0	44	64	58	303	0	54	146	46	40	26	57	64	38	35	44	66
+Amycolatopsis saalfeldensis	101	61	41	68	44	58	56	49	70	59	69	45	90	30	47	153	25	116	42	33
+Nitrosovibrio sp. Nv17	72	57	53	52	60	45	90	63	59	62	41	46	79	35	131	84	56	62	44	67
+Hamadaea tsunoensis	89	74	72	77	72	79	97	65	66	89	78	55	63	24	37	92	23	30	43	34
+bacterium	0	0	44	52	0	0	0	50	0	63	145	139	86	95	100	107	104	76	112	86
+Oceanicella sp. SM1341	68	41	64	80	53	92	54	39	46	61	84	98	80	39	85	75	46	52	46	58
+Streptomyces sp. SBT349	117	76	77	111	78	74	92	80	97	104	36	51	40	20	40	48	27	37	34	28
+Thermoflexus hugenholtzii	0	0	42	0	0	47	0	0	0	0	137	187	89	97	90	110	76	102	158	132
+Bradyrhizobium sp. BTAi1	68	63	103	143	71	159	67	51	0	65	39	47	62	49	57	38	67	47	39	34
+Lysobacter gummosus	0	63	0	56	57	51	45	44	70	84	50	55	171	51	142	91	65	46	50	84
+Nocardiopsis gilva	116	97	94	90	86	92	100	96	103	99	52	42	31	20	0	40	23	34	35	30
+Nocardiopsis flavescens	132	90	70	107	94	92	90	88	91	95	41	62	0	23	30	48	20	35	41	35
+Microvirga subterranea	89	75	80	116	59	121	49	54	0	57	85	63	55	51	60	94	55	29	45	50
+Rhizobacter sp. OV335	0	57	53	83	49	65	57	58	59	69	55	73	104	61	109	99	72	54	50	61
+Euzebya sp. DY32-46	0	45	62	51	0	53	46	43	0	0	182	144	83	69	83	103	92	71	79	82
+Wenzhouxiangella marina	0	0	0	0	54	0	0	38	47	56	49	90	171	67	215	122	59	80	123	120
+Allokutzneria albata	131	91	55	73	70	53	80	75	82	55	82	45	85	23	30	128	24	43	24	42
+Xanthomonas sp. Mitacek01	0	42	0	0	49	48	0	0	61	66	39	77	183	58	219	137	78	62	76	99
+Massilia sp. Root335	161	71	0	139	53	0	45	56	0	48	44	57	97	72	118	95	51	65	72	58
+Catenulispora acidiphila	89	63	49	79	55	57	96	73	81	70	71	66	67	42	53	77	36	45	83	60
+Massilia niastensis	76	58	44	0	46	58	66	61	61	55	57	79	115	31	149	115	82	55	50	55
+Legionella pneumophila	0	56	47	0	0	904	0	65	111	0	40	0	0	22	0	0	72	0	0	0
+Actinomycetospora cinnamomea	108	67	52	65	60	62	61	57	71	50	78	76	65	25	72	91	52	48	88	69
+Bradyrhizobium sp. Ai1a-2	70	84	76	129	70	115	55	62	0	45	78	69	72	27	104	57	42	31	72	61
+Cryptosporangium arvum	94	82	62	88	69	79	82	53	76	68	84	80	66	36	43	65	46	34	64	48
+Micromonospora sp. CB01531	123	117	61	94	90	65	109	95	119	94	46	48	42	18	31	61	20	23	37	28
+Streptomyces niveus	115	86	84	80	89	70	82	83	111	74	54	66	36	32	39	57	27	37	58	42
+Prauserella sp. PE36	114	48	53	0	61	45	80	47	55	52	92	71	121	30	57	146	43	100	53	56
+Frankia inefficax	99	60	58	85	55	76	72	86	51	63	112	85	44	28	52	54	62	48	67	72
+Zavarzinella formosa	81	74	107	74	53	90	55	64	0	57	71	92	77	79	38	80	79	58	51	60
+Thermobifida halotolerans	137	102	79	122	109	93	111	99	109	121	37	59	27	0	30	40	0	29	38	0
+Saccharopolyspora spinosa	291	98	59	61	87	45	66	58	52	54	46	43	64	19	36	88	27	36	43	73
+Terriglobus roseus	0	78	57	56	45	73	0	54	0	68	64	169	91	101	64	110	75	105	73	65
+Paraburkholderia tropica	65	62	49	56	78	87	63	66	51	56	50	62	89	43	119	104	60	44	82	71
+Pelomonas sp. Root1444	0	60	43	70	57	64	49	58	60	68	51	69	142	30	132	120	88	72	60	68
+Pleomorphomonas koreensis	71	77	88	136	57	123	63	49	52	62	77	74	85	45	64	50	49	48	54	38
+Amycolatopsis taiwanensis	123	78	42	72	72	77	74	62	76	68	83	43	100	27	32	147	30	64	50	46
+Methylococcus capsulatus	75	63	54	0	52	45	0	47	48	67	45	60	137	81	185	100	69	64	76	100
+Calidithermus chliarophilus	0	0	43	0	0	44	0	0	0	0	132	187	110	94	132	182	89	104	140	111
+Thermaerobacter subterraneus	0	0	42	0	0	46	0	0	0	0	133	215	99	99	117	174	87	87	146	126
+Symbiobacterium thermophilum	0	0	47	0	0	43	0	0	0	0	146	206	98	82	106	147	104	131	122	141
+Burkholderiales bacterium GJ-E10	0	47	49	0	62	57	58	71	61	64	56	56	88	52	208	125	68	62	96	99
+Xanthomonas sacchari	59	67	46	49	50	54	49	0	56	69	56	72	187	64	141	104	74	51	64	71
+Actinokineospora mzabensis	113	68	48	55	64	54	84	54	68	53	115	55	175	0	36	261	19	32	0	34
+Mesorhizobium oceanicum	93	56	86	105	68	156	85	74	0	64	68	66	76	33	76	59	40	62	45	78
+Xanthobacter autotrophicus	88	65	77	130	70	137	69	58	51	73	76	60	66	46	92	57	43	30	51	53
+Methyloversatilis discipulorum	63	51	59	77	52	66	99	81	92	78	43	45	93	33	115	112	53	46	58	82
+Thiomonas sp. FB-6	57	53	53	52	69	57	54	42	52	59	66	48	105	54	145	140	59	58	78	100
+Actinopolymorpha alba	142	57	71	107	89	47	71	87	77	69	79	97	52	20	46	66	32	38	101	54
+Salinibacter ruber	0	0	35	0	0	54	0	38	0	50	121	171	123	115	158	148	102	78	126	85
+Methylibium sp. CF468	71	42	44	0	50	79	71	75	71	56	66	68	119	51	134	151	76	65	45	74
+Enterococcus faecium	162	116	148	275	0	98	57	97	95	96	0	61	0	0	50	37	23	19	44	30
+Rhodanobacter denitrificans	66	66	0	0	42	44	63	43	60	52	41	49	185	63	185	143	62	68	68	112
+Pseudonocardia dioxanivorans	137	72	58	72	65	69	92	65	74	68	83	88	81	29	71	86	34	61	55	54
+Pseudorhodoferax sp. Leaf274	84	67	55	51	52	73	55	59	82	70	80	78	87	46	103	137	45	67	51	76
+Rhodobacter sphaeroides	58	56	80	102	43	100	60	59	0	63	94	78	92	75	117	102	51	42	77	71
+Saccharothrix sp. CB00851	133	72	55	50	58	67	88	50	77	72	116	58	119	20	46	206	22	37	36	42
+Azospirillum sp. TSO35-2	69	59	59	76	66	72	66	68	65	68	112	67	107	49	128	82	47	50	57	61
+Myxococcus hansupus	0	48	47	0	53	73	0	57	45	76	104	145	102	68	98	174	101	78	90	80
+Dyella thiooxydans	0	48	36	0	42	58	0	0	65	45	47	104	198	60	250	121	66	69	119	112
+Actinoplanes atraurantiacus	105	82	77	87	95	85	121	83	90	90	75	81	49	20	42	88	27	39	69	36
+Cupriavidus gilardii	84	70	49	81	77	76	65	80	65	94	47	46	95	43	117	120	64	65	48	58
+Metallibacterium scheffleri	0	54	0	56	57	42	0	41	60	55	50	83	176	61	220	112	74	56	108	140
+Bosea sp. Root670	73	94	76	128	129	263	58	125	53	50	47	37	66	24	44	50	26	26	28	51
+Bosea sp. Root381	118	72	98	176	73	169	72	65	54	83	68	54	69	29	53	50	36	34	36	42
+Lacunisphaera limnophila	57	62	54	73	60	58	0	40	0	55	77	116	119	81	110	139	72	100	100	85
+Streptomyces sp. TP-A0874	217	136	113	154	141	108	127	120	159	115	0	32	0	0	0	0	0	0	38	0
+Methylibium sp. YR605	65	72	56	56	74	56	72	55	70	68	53	68	148	36	106	133	74	55	65	79
+Azoarcus sp. SY39	76	70	59	57	63	71	87	69	73	68	58	53	91	48	100	127	59	83	55	100
+Candidatus Thiodictyon syntrophicum	0	49	44	0	47	54	51	50	63	51	54	98	132	56	219	121	66	69	110	134
+Asanoa hainanensis	104	83	71	98	65	65	118	54	81	77	93	84	77	32	51	89	48	52	68	59
+Pseudoxanthobacter soli	98	67	90	120	61	141	53	57	54	63	137	67	84	47	87	52	56	30	58	49
+Azospirillum lipoferum	62	53	59	76	50	86	68	47	50	61	155	70	103	81	101	106	65	53	59	66
+Albimonas pacifica	77	78	81	70	60	68	58	64	66	62	101	96	89	42	89	100	58	84	71	71
+Nitriliruptor alkaliphilus	0	0	58	0	0	47	45	47	0	54	184	173	108	80	135	147	127	75	100	105
+Actinokineospora enzanensis	103	60	53	61	54	70	89	47	66	61	128	34	193	19	49	322	0	26	29	25
+Noviherbaspirillum humi	85	78	65	55	57	71	100	79	104	83	62	40	101	51	114	96	64	51	59	78
+Pseudorhodoferax soli	75	65	74	84	82	72	86	64	79	65	77	77	97	58	103	100	61	59	57	60
+Roseomonas aestuarii	81	46	78	105	60	133	61	61	51	66	111	80	78	65	78	97	60	52	73	60
+Thioalkalivibrio denitrificans	64	61	0	52	54	45	46	0	67	58	39	67	147	60	238	102	68	66	124	139
+Acidobacterium capsulatum	58	52	0.00E+00	57	47	42	0	0	0	52	94	222	86	150	106	181	84	95	94	78
+Geodermatophilus obscurus	121	82	65	69	64	74	94	71	78	97	107	97	56	31	73	90	47	50	61	71
+Bradyrhizobium sp. ORS 375	117	70	86	167	77	141	79	46	60	62	148	50	72	50	50	63	47	28	41	45
+Cupriavidus plantarum	72	76	57	70	72	65	77	73	78	62	52	65	117	34	144	129	57	41	67	92
+Jiangella alkaliphila	105	73	63	70	75	78	82	71	68	56	136	87	84	38	67	135	40	45	68	61
+Streptomyces thermoautotrophicus	109	89	104	99	95	92	102	79	98	84	75	88	63	29	48	65	51	43	55	44
+Mitsuaria sp. 7	82	72	56	64	81	89	76	56	83	55	65	79	122	40	109	112	72	79	50	72
+Bradyrhizobium jicamae	136	90	98	198	85	173	81	71	66	70	50	50	68	29	47	38	35	45	45	45
+Umezawaea tangerina	143	79	58	79	77	58	123	59	76	65	91	59	127	21	67	179	26	30	45	59
+Leptothrix cholodnii	88	61	51	52	70	63	93	87	86	76	63	60	106	48	127	127	59	60	67	78
+[Polyangium] brachysporum	71	69	53	55	81	61	60	67	101	62	52	98	133	61	129	100	67	65	69	73
+Actinoplanes globisporus	98	78	59	74	81	81	94	56	74	91	114	82	74	46	52	111	51	65	80	68
+Rhodobium orientis	122	81	110	128	82	180	52	93	0	58	101	77	71	32	83	64	53	49	40	54
+Saccharopolyspora flava	581	128	39	56	157	42	51	0	0	0	66	39	54	34	34	84	0	54	40	83
+Sulfuritalea hydrogenivorans	91	61	65	59	81	79	124	80	107	87	52	56	103	47	99	125	64	65	46	54
+Streptomyces atratus	202	110	87	134	117	104	148	116	138	119	40	65	0	23	33	42	0	0	41	26
+Aquisalimonas asiatica	0	45	0	0	52	42	48	48	57	66	47	77	140	67	272	126	69	57	141	192
+Massilia namucuonensis	57	74	49	61	58	64	75	63	72	76	66	97	132	68	104	144	60	76	79	72
+Mycobacterium avium	131	119	54	97	69	87	86	70	74	73	79	87	69	44	54	91	50	53	95	66
+Aromatoleum tolulyticum	0	68	55	62	60	60	69	60	67	63	70	76	124	53	181	175	67	69	72	101
+Candidatus Promineofilum breve	0	49	69	58	0	56	0	38	0	0	123	172	147	127	104	154	100	109	135	117
+Streptomyces cinnamoneus	184	125	116	150	155	84	181	122	148	144	34	35	0	0	0	31	0	0	37	25
+Bosea sp. RAC05	136	92	117	155	92	199	61	70	0	102	47	67	83	30	67	72	45	24	53	61
+Amycolatopsis albispora	117	62	42	64	96	52	72	68	75	58	91	70	155	22	55	223	30	124	54	50
+Methylibium sp. CF059	94	71	65	56	55	72	73	65	75	85	52	63	135	52	161	118	82	51	68	92
+Actinokineospora bangkokensis	117	70	38	60	65	53	84	52	67	58	116	48	210	30	34	329	26	56	34	38
+Rhodomicrobium vannielii	147	100	127	187	97	193	50	92	47	58	60	49	63	32	47	52	35	38	58	60
+Polymorphum gilvum	142	87	103	122	72	175	85	67	51	77	85	75	80	39	80	68	38	48	43	58
+Marinactinospora thermotolerans	155	140	110	120	132	89	129	121	154	150	35	52	35	0	0	45	34	24	47	26
+Acidisphaera rubrifaciens	69	62	71	107	58	121	63	54	59	65	131	97	104	62	106	103	54	63	71	79
+Methylibium petroleiphilum	116	79	68	82	64	79	69	68	88	112	44	66	80	39	155	113	64	56	69	90
+Mesorhizobium ciceri	73	54	54	86	53	120	58	80	0	49	55	62	97	57	284	72	55	51	89	157
+Amycolatopsis mediterranei	104	88	57	74	90	84	115	79	74	75	92	76	113	37	63	172	28	68	65	58
+Rubrobacter xylanophilus	0	0	88	0	0	56	47	48	45	0	139	187	85	97	123	160	93	130	181	134
+Microvirga ossetica	102	69	127	187	75	194	0	71	59	80	94	92	71	54	86	84	37	33	47	54
+Thiocapsa sp. KS1	73	62	0	0	56	70	47	0	55	55	51	89	171	48	282	140	75	99	104	144
+Belnapia rosea	78	60	87	93	81	122	77	73	61	72	104	96	72	60	117	74	61	77	79	88
+Aquincola tertiaricarbonis	79	69	60	75	79	80	82	67	80	64	67	66	113	62	146	150	68	61	75	89
+Rugamonas rubra	85	104	52	70	79	58	76	69	67	80	64	74	107	51	165	160	68	70	63	73
+Xanthomonas arboricola	78	57	50	59	65	62	55	57	54	62	45	94	132	87	179	120	112	61	98	111
+Frateuria sp. Soil773	81	45	0	0	54	62	0	54	64	66	57	81	217	72	261	150	79	89	91	123
+Pseudonocardia asaccharolytica	105	55	70	81	61	70	78	65	63	92	129	104	96	42	125	143	63	77	58	75
+Crossiella equi	182	93	72	78	139	77	106	80	111	87	101	59	86	28	50	164	37	38	31	35
+Azorhizobium doebereinerae	129	82	125	164	79	160	81	50	47	86	104	75	86	37	82	87	53	42	43	54
+Thioalkalivibrio paradoxus	73	49	0	57	44	57	47	38	49	66	44	86	185	40	290	142	59	100	98	150
+Burkholderia cepacia	83	73	61	59	69	77	56	67	69	82	60	79	175	71	164	137	77	72	73	77
+Oleiagrimonas soli	0	64	37	0	83	72	49	50	80	65	43	68	176	85	271	158	69	67	110	135
+Piscinibacter caeni	83	72	98	73	69	65	84	99	103	85	76	71	113	37	146	167	68	44	54	88
+Lysobacter maris	0	62	40	0	48	67	59	56	69	67	66	83	155	56	283	148	105	67	122	142
+Frankia saprophytica	88	67	98	93	73	98	70	69	88	98	170	103	85	44	78	93	57	56	94	75
+Kibdelosporangium phytohabitans	112	49	55	74	61	47	162	121	102	57	133	57	189	27	0	318	19	35	34	45
+Saccharothrix espanaensis	138	77	78	89	88	77	132	71	96	89	128	50	131	25	47	217	29	47	49	40
+Allochromatium vinosum	0	64	48	0	59	52	48	44	66	69	45	81	201	82	300	138	70	69	106	170
+Bradyrhizobium icense	112	78	153	176	84	177	75	83	59	95	72	54	98	36	81	58	65	48	54	74
+Tistrella mobilis	79	58	77	76	48	87	58	40	424	82	114	81	77	44	86	73	52	59	63	69
+Alloactinosynnema sp. L-07	111	73	70	69	63	82	107	60	70	55	160	69	217	27	58	320	24	36	37	39
+Lysobacter sp. URHA0019	65	68	39	0	82	67	64	53	69	66	48	90	193	70	182	174	121	81	102	115
+Fontimonas thermophila	63	69	51	0	65	59	0	41	70	64	34	72	218	72	277	177	85	66	113	161
+Silanimonas lenta	58	55	0	0	66	47	46	41	74	66	50	92	215	72	308	141	63	62	143	160
+Kribbella flavida	136	63	69	70	72	76	84	68	57	86	114	168	205	28	30	254	43	42	55	39
+Methylobacterium nodulans	95	93	118	120	80	156	75	56	50	81	76	98	109	56	132	101	58	72	58	76
+Bradyrhizobium valentinum	137	99	128	212	84	170	85	67	47	103	64	70	65	26	100	70	56	55	48	75
+Achromobacter xylosoxidans	189	68	102	74	67	80	85	72	95	96	79	86	110	50	103	110	80	73	68	74
+Streptomyces sp. IMTB 2501	213	164	131	169	150	114	160	177	185	201	0	28	0	0	0	0	0	0	43	30
+Bosea sp. Root483D1	127	102	126	145	108	224	72	173	85	78	61	60	67	42	41	56	53	42	51	53
+Variovorax sp. WDL1	87	93	62	68	59	76	91	107	80	78	93	76	99	48	179	149	43	70	99	121
+Thermaerobacter marianensis	0	0	67	0	0	58	0	0	0	0	209	279	130	113	143	186	120	107	207	160
+Azoarcus sp. DN11	91	56	56	72	69	64	72	62	63	82	85	78	126	68	192	173	81	54	106	132
+Rhodospirillum centenum	0	68	65	98	58	92	55	57	58	44	199	126	158	68	125	155	102	90	89	94
+Acidobacteriaceae bacterium URHE0068	71	65	58	82	57	79	0	52	0	66	94	227	119	158	101	185	102	99	105	83
+Burkholderia multivorans	94	78	64	88	60	60	78	66	79	80	82	84	138	56	213	143	70	70	91	118
+Comamonadaceae bacterium URHA0028	114	73	65	85	66	83	94	80	91	99	79	70	163	46	149	158	80	77	60	81
+Kibdelosporangium aridum	95	52	64	72	52	64	255	100	112	58	106	86	220	30	45	265	24	35	36	50
+Ohtaekwangia koreensis	58	42	49	77	59	64	91	64	61	64	0	985	0	0	0	157	0	0	33	24
+Pseudoxanthomonas wuyuanensis	58	76	41	0	62	48	72	49	81	49	46	144	288	48	180	211	94	107	82	94
+Luteimonas mephitis	72	49	47	51	61	54	128	55	83	61	68	80	208	69	218	136	102	58	110	124
+Murinocardiopsis flavida	196	126	96	142	133	118	144	119	127	174	65	60	31	26	43	58	38	43	47	51
+Rubritepida flocculans	102	70	86	99	61	104	61	62	51	70	135	115	110	83	155	119	73	94	86	103
+Embleya scabrispora	180	135	71	117	127	111	153	122	140	147	83	69	54	31	37	69	44	35	70	46
+Frateuria terrea	65	59	38	62	69	64	54	50	60	70	45	114	222	78	219	173	79	84	108	130
+Chthoniobacter flavus	84	114	82	86	75	92	79	77	68	100	81	110	131	100	106	134	52	95	90	90
+Thermithiobacillus tepidarius	0	41	66	58	52	61	64	43	52	81	81	123	178	68	270	157	82	88	126	162
+Hyphomicrobium sp. 99	196	108	201	299	153	311	52	84	0	130	31	39	53	20	38	36	19	0	33	51
+Aromatoleum aromaticum	83	70	58	78	78	78	84	75	105	103	49	72	122	62	222	158	85	74	82	119
+Yuhushiella deserti	144	104	67	76	94	67	97	66	73	74	130	68	234	23	63	265	19	98	51	47
+Azoarcus sp. KH32C	82	69	63	79	81	82	91	70	92	67	74	62	171	58	207	192	87	76	72	99
+Castellaniella defragrans	304	0	311	210	49	93	57	90	0	113	44	52	107	51	86	83	48	56	56	67
+Blastochloris viridis	136	96	116	192	99	175	91	74	52	80	94	108	89	58	100	68	74	48	60	75
+Silvibacterium bohemicum	76	96	59	78	44	76	0	64	47	80	84	216	110	154	125	150	102	129	97	105
+Hydrocarboniphaga daqingensis	78	64	57	64	90	78	0	62	75	86	58	85	168	68	246	167	125	87	108	126
+Kutzneria sp. 744	185	111	68	101	78	88	122	96	104	117	111	64	148	37	46	218	46	48	61	50
+Pseudomonas syringae	235	182	48	209	69	87	81	63	63	119	42	84	91	95	85	79	89	71	64	55
+Aromatoleum toluclasticum	73	91	71	67	77	89	93	65	79	94	79	94	122	76	190	186	127	79	74	92
+Burkholderia thailandensis	89	67	63	74	60	74	86	62	73	88	54	95	188	64	255	149	75	79	95	129
+Xenophilus azovorans	109	73	77	70	81	207	84	127	108	81	123	97	112	43	116	149	65	72	70	60
+Starkeya novella	141	108	126	176	83	165	90	90	58	102	117	74	105	67	96	85	72	45	68	59
+Streptomyces clavuligerus	232	133	106	197	165	140	178	115	175	160	44	53	30	0	0	72	20	21	59	32
+Stenotrophomonas maltophilia	77	84	37	64	63	99	60	71	73	87	66	99	182	89	235	143	92	77	117	119
+Kutzneria albida	224	111	99	125	121	92	121	105	123	105	94	57	134	25	34	227	19	29	49	40
+Limnochorda pilosa	0	0	77	55	0	52	0	0	0	51	189	299	133	121	139	197	130	148	200	150
+Roseiarcus fermentans	122	80	109	148	81	150	61	65	67	92	99	102	119	52	155	107	77	66	88	102
+Microvirga massiliensis	86	85	111	266	84	207	82	102	49	106	98	86	100	54	101	88	55	68	63	89
+Luteimonas sp. J29	64	62	44	60	58	71	77	51	80	78	67	104	216	75	253	180	108	93	105	136
+Arenimonas caeni	79	80	0	56	77	72	54	55	73	71	53	105	193	81	300	160	100	65	150	164
+Pseudonocardia sp. CNS-139	167	103	101	135	97	85	162	104	106	111	88	105	92	53	74	127	57	75	63	83
+Alloactinosynnema album	117	60	58	89	64	72	109	61	57	65	227	61	262	32	64	452	22	44	40	34
+Paraburkholderia caballeronis	91	77	76	116	84	80	100	93	91	79	62	104	187	53	172	178	105	87	72	92
+Variibacter gotjawalensis	183	128	136	227	124	234	100	72	76	109	46	72	98	38	101	48	61	46	49	54
+Polaromonas sp. JS666	65	60	124	113	90	121	84	67	80	93	115	110	92	81	159	119	99	1.16E+02	113	103
+Anaeromyxobacter sp. K	61	45	82	59	57	84	67	55	52	85	131	194	154	98	128	232	119	108	105	88
+Rhizobacter gummiphilus	89	113	86	94	91	89	91	89	93	88	96	95	171	69	121	195	85	95	77	83
+Aquimonas voraii	68	71	36	0	55	50	55	57	85	106	62	100	233	81	309	182	99	84	120	157
+Burkholderiales bacterium	72	65	59	78	85	100	71	66	94	84	76	98	120	84	286	156	88	70	107	158
+Solimonas aquatica	115	71	55	72	94	73	64	54	99	93	78	97	198	102	176	143	121	81	109	129
+Thioflavicoccus mobilis	0	72	50	58	49	57	60	39	67	63	60	127	217	79	341	185	105	85	121	194
+Thauera sp. MZ1T	92	78	71	79	67	64	126	112	107	98	72	89	130	48	255	161	75	84	114	119
+Xanthomonas campestris	66	75	57	64	88	85	60	90	74	112	65	115	182	81	234	159	115	76	121	126
+Bradyrhizobium sp. URHD0069	112	99	111	213	93	205	65	65	52	93	118	77	70	60	192	63	58	70	98	138
+Acidobacteriaceae bacterium KBS 83	77	92	71	82	63	68	0	72	0	63	110	268	125	167	130	200	135	121	115	102
+Chloracidobacterium thermophilum	106	124	59	136	42	71	0	78	0	81	65	285	198	101	108	111	131	192	104	69
+Thauera sp. K11	109	89	75	88	76	72	119	91	95	88	70	122	156	56	195	174	83	104	89	110
+Patulibacter minatonensis	57	90	73	57	42	113	101	90	74	55	158	121	95	97	138	116	73	179	205	135
+Lysobacter capsici	90	83	40	66	78	78	68	60	87	91	46	103	246	80	255	144	149	91	98	117
+Derxia gummosa	99	111	78	80	81	103	98	90	104	112	62	87	135	66	215	194	74	77	107	122
+Burkholderia ubonensis	95	114	64	83	79	118	74	87	83	93	90	118	167	68	219	155	82	89	105	123
+Bordetella petrii	108	95	97	98	83	91	117	144	160	115	73	79	130	81	153	152	85	65	85	96
+Streptomyces mirabilis	228	187	116	165	216	101	168	129	184	144	56	63	52	28	34	59	34	33	62	49
+Pseudonocardia sp. MH-G8	211	125	69	97	98	99	171	93	86	117	108	143	92	51	104	151	50	53	100	91
+Phenylobacterium zucineum	71	73	73	98	60	119	69	70	57	89	184	136	171	57	217	151	108	118	91	102
+Hyphomicrobium sp. MC1	198	127	196	356	173	366	91	102	56	153	26	31	71	0	46	42	0	29	24	34
+Mesorhizobium plurifarium	120	86	119	123	72	165	118	167	74	96	132	81	116	42	144	112	76	63	100	117
+Streptomyces sp. SM1	291	209	164	215	182	119	203	183	242	238	0	34	0	0	0	0	0	23	37	0
+Actinomadura atramentaria	205	140	116	191	150	132	206	134	136	180	70	90	53	24	37	69	28	44	82	54
+Schlegelella thermodepolymerans	112	98	91	102	96	96	120	111	123	106	69	97	135	75	167	190	63	99	76	116
+Opitutus sp. GAS368	66	65	71	67	84	91	58	94	62	71	119	150	149	87	149	204	107	117	194	140
+Pseudomonas aeruginosa	98	81	72	90	70	96	85	70	65	87	75	135	178	81	226	139	112	101	130	156
+Chelatococcus sp. CO-6	139	99	153	226	122	195	106	97	63	104	107	90	112	54	122	87	61	61	63	87
+Geothrix fermentans	0	0	60	77	50	79	0	41	0	75	165	226	111	140	137	446	148	145	133	116
+Acidihalobacter prosperus	62	59	42	59	58	56	45	61	81	73	75	101	167	79	411	165	120	73	158	208
+Azohydromonas australica	98	79	97	100	83	95	103	102	103	95	96	124	114	71	226	185	72	81	100	138
+Melittangium boletus	87	66	96	69	76	106	86	59	64	85	130	224	123	97	138	242	118	81	117	114
+Geminicoccus roseus	89	71	94	92	83	137	82	67	78	100	248	113	158	71	167	140	96	98	90	106
+Streptomyces sp. RTd22	295	189	178	217	203	157	196	184	225	214	0	30	0	0	0	0	0	18	57	31
+Rubrivivax gelatinosus	102	88	69	102	84	84	113	101	110	102	93	97	145	66	244	195	96	5.60E+01	121	131
+Fulvimonas soli	102	78	43	71	76	53	56	63	100	81	71	103	213	77	294	236	111	109	146	139
+Salinispora arenicola	200	130	130	167	171	154	163	157	175	168	77	100	58	30	42	92	37	48	75	52
+Saccharopolyspora shandongensis	480	155	71	89	162	88	100	76	91	76	101	99	97	48	52	145	54	72	66	108
+Opitutus terrae	75	95	52	72	74	105	64	75	70	101	83	166	187	93	199	239	106	122	127	135
+Rubrivirga marina	58	56	68	53	56	83	65	50	47	75	170	187	181	107	226	209	116	124	167	156
+Myxococcus stipitatus	84	69	89	83	96	113	68	72	70	101	107	197	157	95	130	280	134	124	116	99
+Cupriavidus taiwanensis	106	111	79	93	93	89	106	92	115	108	97	106	183	77	237	189	100	91	98	123
+Variovorax sp. HW608	130	101	95	81	78	97	84	104	114	117	120	101	131	85	233	184	130	109	92	107
+Salinarimonas rosea	128	95	158	168	97	213	100	93	57	120	137	111	125	81	142	108	105	71	89	109
+Streptomyces scabiei	239	162	128	162	149	125	182	152	183	161	95	94	64	50	49	77	41	46	96	66
+Kaistia adipata	164	101	133	198	104	201	99	91	56	105	127	119	168	90	150	102	81	72	95	70
+Bosea sp. 117	157	92	137	195	117	209	103	113	68	95	160	78	130	78	159	99	93	68	81	103
+Actinomadura sp. RB29	254	134	162	179	183	168	205	144	197	178	81	68	41	43	46	57	30	39	87	53
+Rhodothermus marinus	0	67	59	72	62	78	0	59	60	92	165	260	168	156	204	246	149	148	172	144
+Caenispirillum bisanense	118	93	117	122	88	136	96	91	81	86	199	131	176	101	184	148	116	92	69	126
+Azospirillum halopraeferens	93	76	110	118	95	147	109	91	90	84	244	144	167	87	185	159	93	89	100	97
+Woeseia oceani	64	69	40	51	81	68	56	42	85	73	52	88	259	110	452	194	115	78	197	221
+Mycobacterium tuberculosis	498	193	85	504	93	61	167	117	98	79	45	94	33	33	35	72	38	39	82	39
+Candidatus Koribacter versatilis	73	81	60	90	49	81	47	63	0	86	129	353	148	233	125	256	147	154	138	124
+Actinomadura flavalba	238	190	149	191	173	174	207	153	214	224	61	74	56	32	42	69	25	25	98	49
+Rhodopila globiformis	122	78	143	215	100	184	84	79	95	116	120	147	153	89	114	120	145	140	101	109
+Kibdelosporangium sp. MJ126-NF4	205	112	101	110	136	111	257	146	172	118	137	77	230	30	45	344	24	34	45	38
+Actinomadura rifamycini	225	150	148	189	168	159	172	175	187	225	82	87	66	33	67	80	55	50	99	61
+Salinispora pacifica	210	154	128	144	152	135	164	143	170	168	115	144	87	47	74	139	47	76	100	91
+Sulfurisoma sediminicola	142	122	116	80	117	94	184	165	138	133	86	109	143	65	216	200	86	84	101	128
+Sinorhizobium fredii	131	103	119	213	91	362	158	83	93	110	120	108	147	64	158	141	97	67	61	100
+Actinomadura oligospora	252	206	135	210	195	166	223	209	211	227	73	74	39	35	31	65	21	37	81	37
+Chryseolinea serpens	108	78	73	195	139	151	149	137	105	153	0	765	0	0	34	272	0	23	89	59
+Solimonas variicoloris	105	106	54	73	113	84	69	84	83	127	74	119	292	104	299	176	140	98	141	191
+Nitratireductor indicus	0	0	0	0	0	0	0	0	2539	0	0	0	0	0	0	0	0	0	0	0
+Pseudolabrys sp. Root1462	195	184	188	229	107	228	153	125	73	154	86	105	111	50	117	87	123	53	74	97
+Thiohalobacter thiocyanaticus	90	97	57	64	70	85	67	60	78	93	81	97	239	107	448	192	115	111	173	237
+Phreatobacter cathodiphilus	208	137	200	331	160	357	99	122	73	142	94	76	117	62	74	83	65	48	58	66
+Mesorhizobium loti	140	95	119	160	118	226	132	194	74	120	148	117	177	96	156	126	82	95	108	124
+Prosthecomicrobium hirschii	198	136	180	260	120	292	106	109	96	130	144	107	163	83	128	79	71	50	70	95
+Actinomadura pelletieri	284	196	158	211	231	172	251	197	212	222	37	83	32	30	0	47	21	47	139	63
+Thermoleophilum album	83	111	89	97	47	110	201	119	54	46	263	148	106	122	204	108	115	187	300	123
+Pseudomonas stutzeri	99	106	84	103	72	110	78	54	95	111	108	125	245	143	324	210	143	106	148	178
+Saccharopolyspora erythraea	886	223	60	93	277	64	82	85	83	100	76	55	71	52	39	129	30	65	41	141
+Allonocardiopsis opalescens	314	194	162	223	206	173	217	168	209	198	60	104	55	39	56	100	34	47	78	47
+Actinomadura sp. CNU-125	251	157	138	207	182	186	260	189	221	223	80	88	61	42	39	93	40	49	102	86
+Planctomyces sp. SH-PL14	91	109	136	100	115	163	92	92	84	105	167	210	155	165	125	208	174	140	138	140
+Stigmatella aurantiaca	85	88	92	104	94	145	83	78	91	115	171	225	176	127	176	322	142	133	138	126
+Thermomonospora curvata	321	197	187	216	245	194	256	166	255	208	75	63	40	19	47	60	23	56	90	41
+Plasticicumulans acidivorans	125	115	78	58	88	72	104	78	110	123	84	105	274	105	403	215	154	132	130	207
+Sinorhizobium meliloti	125	118	153	214	127	257	119	119	93	137	160	145	137	73	201	165	112	96	113	109
+Immundisolibacter cernigliae	105	114	64	82	77	79	82	72	99	111	92	149	275	114	398	199	137	90	192	258
+Arhodomonas aquaeolei	97	80	68	63	101	66	91	74	103	100	80	153	288	89	426	207	146	112	209	246
+Solimonas flava	119	131	47	84	102	100	77	84	109	122	90	145	347	106	307	229	133	152	159	166
+Gemmatimonas phototrophica	0	50	59	0	83	67	68	42	50	104	247	202	323	208	368	239	282	70	216	193
+Thioalkalivibrio sulfidiphilus	107	79	51	97	87	98	75	83	89	103	71	115	261	130	453	244	136	118	219	273
+Variovorax sp. CF079	150	138	122	151	100	144	114	114	112	115	121	133	173	69	334	253	109	151	135	159
+Ralstonia solanacearum	208	147	88	142	124	137	115	137	110	156	108	155	219	118	228	200	121	120	142	146
+Dokdonella immobilis	105	100	48	52	88	99	76	82	112	98	95	162	347	107	422	247	165	127	202	207
+Singulisphaera acidiphila	130	157	198	152	76	151	100	117	79	114	191	223	150	167	134	222	159	170	135	137
+Rhizobacter sp. Root404	159	143	117	127	121	143	157	140	160	142	98	121	239	72	248	279	131	115	102	151
+Pseudonocardia acaciae	245	133	140	165	151	155	199	118	149	171	174	136	194	67	125	254	75	115	109	90
+Vulgatibacter incomptus	88	90	126	122	100	164	112	88	110	116	199	260	185	135	169	291	133	176	188	130
+Chitinimonas koreensis	174	141	85	104	116	109	176	145	156	151	111	141	240	100	271	217	125	118	144	163
+Cystobacter fuscus	89	119	99	106	111	134	88	93	99	136	177	286	170	143	193	316	141	147	193	147
+Sphaerobacter thermophilus	71	58	139	112	60	103	70	93	79	95	217	317	201	158	209	236	177	226	194	181
+Chondromyces crocatus	101	102	127	124	96	162	119	85	116	110	187	309	161	147	173	240	154	132	175	178
+Elioraea tepidiphila	139	99	152	206	99	250	135	128	104	133	225	182	178	100	175	183	121	124	112	155
+Sulfuricaulis limicola	120	109	138	100	98	115	114	75	96	113	88	136	246	130	471	227	138	139	201	246
+Gemmata sp. SH-PL17	85	123	193	167	146	194	158	387	91	139	170	168	153	126	111	214	158	121	160	131
+Arenimonas composti	115	101	73	74	90	98	95	87	135	133	93	150	413	115	455	288	200	178	147	196
+Lysobacter antibioticus	132	114	85	97	109	136	115	114	132	144	78	195	436	156	344	217	165	161	153	168
+Burkholderia gladioli	156	135	98	118	123	142	161	106	143	163	142	149	256	144	304	247	158	160	152	202
+Pseudorhodoplanes sinuspersici	253	193	160	286	123	291	296	104	110	128	134	183	208	93	176	60	329	37	58	73
+Bradyrhizobium lablabi	242	159	206	330	158	336	138	127	114	144	149	130	167	87	191	124	122	120	111	146
+Methyloceanibacter caenitepidi	310	317	213	273	140	519	223	230	149	78	45	125	110	52	89	70	154	91	58	59
+Thioalbus denitrificans	91	101	85	95	90	87	93	69	107	140	91	153	250	117	611	267	129	139	267	324
+Pseudoxanthomonas suwonensis	127	113	99	131	110	123	114	111	155	139	116	156	330	108	376	304	196	111	173	217
+Actinomadura madurae	305	195	193	268	232	214	312	252	266	256	136	106	78	59	71	119	41	63	207	85
+Actinomadura meyerae	485	193	186	232	250	193	272	300	219	235	98	106	72	39	67	101	38	80	194	117
+Edaphobacter aggregans	125	154	118	151	87	165	73	118	56	135	156	377	201	394	167	288	175	200	209	129
+Nonomuraea pusilla	416	325	256	357	332	289	389	268	345	340	32	48	0	0	0	0	0	0	66	35
+Thiobacillus denitrificans	154	160	131	126	127	131	210	150	125	156	105	122	282	123	420	297	148	139	190	231
+Planctomyces sp. SH-PL62	129	146	214	172	119	174	117	141	114	143	229	273	159	228	203	257	178	159	184	209
+Nevskia soli	164	152	70	117	126	109	117	80	153	162	120	166	389	130	480	300	163	157	222	239
+Herbidospora sakaeratensis	437	275	241	348	304	293	352	277	371	342	51	60	28	21	0	37	20	41	63	61
+Rhodoplanes piscinae	242	193	231	462	146	347	172	142	118	163	154	162	182	107	202	137	154	92	115	137
+Lysobacter enzymogenes	152	184	90	130	130	126	117	135	167	167	126	202	370	252	378	294	181	144	194	216
+Actinomadura viridilutea	416	248	267	321	285	234	362	264	318	312	87	114	66	37	68	116	42	67	123	74
+Solirubrobacter pauli	142	178	177	135	62	148	241	157	124	114	336	265	173	160	221	199	184	278	340	216
+Rudaea cellulosilytica	130	166	66	85	165	131	139	131	167	118	133	189	490	130	445	370	194	207	171	264
+Rhodoplanes elegans	311	227	277	457	195	325	191	169	113	162	154	150	210	92	172	188	179	97	94	131
+Ramlibacter tataouinensis	204	164	169	163	164	185	222	180	193	184	240	205	241	124	285	316	157	159	173	176
+Gemmatimonas aurantiaca	84	69	69	70	119	98	112	86	86	149	348	267	425	245	419	283	375	86	304	254
+Actinomadura amylolytica	440	315	234	336	326	276	344	290	344	347	80	72	90	22	48	117	44	59	102	68
+Burkholderia pseudomallei	190	224	153	154	171	182	145	143	147	191	135	179	301	157	419	215	222	189	207	252
+Pseudolabrys taiwanensis	369	282	249	444	188	327	250	167	150	171	131	146	190	98	206	137	186	60	109	162
+Hyphomicrobium sulfonivorans	385	311	463	733	271	661	151	253	126	284	62	0	102	52	52	0	29	24	33	46
+Dongia sp. URHE0060	173	120	112	174	102	205	152	144	130	126	775	242	322	170	260	243	213	88	137	188
+Paludisphaera borealis	167	179	237	185	130	198	147	136	103	168	279	304	235	224	192	321	232	224	224	191
+Gemmata obscuriglobus	122	157	272	213	183	282	162	388	107	178	241	279	183	198	189	256	234	148	171	137
+Xanthomonas translucens	169	160	113	150	142	153	136	133	213	188	121	223	442	160	509	299	181	164	241	269
+Enhydrobacter aerosaccus	183	133	165	309	152	292	217	142	108	163	222	408	201	87	173	197	112	146	453	304
+Sinimarinibacterium flocculans	184	151	94	105	160	129	131	107	174	179	120	190	516	137	544	355	237	198	210	277
+Dokdonella koreensis	152	153	82	100	142	140	170	110	165	135	123	216	468	183	587	359	212	177	241	284
+Variovorax paradoxus	205	197	184	183	184	220	192	199	170	221	219	201	313	120	328	344	152	169	188	230
+Hyphomicrobium nitrativorans	463	232	422	758	311	766	197	230	90	262	59	51	111	37	53	44	29	33	33	76
+Rhodoplanes roseus	324	250	286	461	215	342	251	175	138	191	161	188	190	105	199	215	169	136	126	156
+Solimonas soli	207	176	72	106	175	158	116	126	156	207	127	228	580	144	561	297	208	232	189	221
+Hyphomicrobium denitrificans	419	265	440	770	359	762	127	234	108	280	60	61	130	33	59	72	47	55	42	75
+Solirubrobacterales bacterium URHD0059	144	229	202	148	109	207	319	215	138	105	408	254	187	179	283	174	178	305	384	254
+Myxococcus fulvus	133	156	157	162	136	202	158	139	130	200	256	425	319	185	286	545	224	248	212	187
+Bradyrhizobium erythrophlei	322	254	272	455	238	398	213	158	128	206	210	168	193	125	304	187	146	101	183	216
+Rhizobium leguminosarum	301	202	237	340	228	404	200	185	161	217	213	208	275	174	239	251	172	149	176	192
+Solirubrobacter soli	149	212	192	174	105	203	292	216	144	130	387	302	196	179	269	248	181	349	384	288
+Niastella yeongjuensis	547	267	241	460	253	446	164	287	403	374	34	499	46	19	80	34	0	0	378	127
+Herbidospora daliensis	575	403	333	438	440	338	446	378	475	456	55	76	30	17	0	41	19	31	91	42
+Niastella koreensis	621	289	230	432	293	436	149	300	469	378	43	448	39	0	77	51	0	26	370	114
+Actinomadura echinospora	571	410	314	430	437	364	454	339	474	420	112	108	72	25	72	113	35	41	123	104
+Reyranella massiliensis	236	172	162	342	213	399	233	242	183	200	206	542	170	106	163	172	101	155	661	376
+Archangium gephyra	165	177	170	177	165	192	165	167	161	206	244	480	438	214	351	612	276	312	283	257
+Herbidospora yilanensis	621	445	358	511	437	384	523	425	561	518	55	96	32	32	40	43	25	54	107	61
+Anaeromyxobacter dehalogenans	164	132	221	176	173	242	179	128	168	192	332	502	293	268	455	583	324	321	317	302
+Mizugakiibacter sediminis	219	202	101	145	186	180	158	127	186	178	139	269	624	147	888	475	253	264	342	445
+Bradyrhizobium japonicum	372	283	309	515	246	495	229	230	188	256	274	212	305	177	474	260	217	158	239	270
+Azospirillum brasilense	295	221	293	313	182	370	261	242	187	235	570	309	356	232	368	355	247	236	212	232
+Haliangium ochraceum	281	224	314	227	192	543	257	216	298	293	281	356	281	206	343	483	192	252	233	248
+Anaeromyxobacter sp. Fw109-5	160	143	253	179	148	225	193	164	158	215	418	529	359	303	476	600	291	360	335	355
+Bradyrhizobium elkanii	419	265	398	583	287	522	287	235	190	262	280	268	326	159	343	278	243	159	218	247
+Herbidospora mongoliensis	750	521	451	573	563	450	613	461	668	639	47	63	34	24	38	65	20	47	144	49
+Solirubrobacter sp. URHD0082	246	310	274	190	127	266	364	256	166	156	591	362	275	268	407	286	287	513	599	313
+Rhodoplanes sp. Z2-YC6860	494	438	405	787	314	466	479	325	218	277	218	215	275	172	279	245	308	145	195	239
+Herbidospora cretacea	853	583	445	646	604	487	694	517	649	577	47	75	36	0	44	55	0	47	131	73
+Candidatus Solibacter usitatus	253	362	219	325	180	249	106	199	112	218	278	782	331	880	317	548	306	409	341	255
+Sulfurifustis variabilis	218	215	249	219	167	194	224	197	221	239	211	301	625	189	1065	639	282	324	415	588
+Thermobispora bispora	803	525	492	624	571	549	670	532	647	689	92	126	49	41	45	89	29	58	163	90
+Nannocystis exedens	534	317	282	295	287	410	285	258	260	265	328	520	441	247	446	539	262	327	312	316
+Nitrospira defluvii	241	252	181	315	390	291	351	270	345	494	311	413	555	249	313	850	398	371	174	214
+Hyphomicrobium zavarzinii	808	465	793	1405	533	1203	272	390	184	502	85	67	146	36	87	124	48	42	65	125
+Sandaracinus amylolyticus	261	285	321	254	297	437	471	235	352	345	368	635	455	373	495	561	283	312	351	365
+Tistlia consotensis	333	280	333	372	284	400	294	289	193	260	913	546	520	275	580	514	332	299	328	305
+Rhodopseudomonas palustris	581	389	513	760	366	661	342	353	298	407	305	347	433	204	456	369	337	238	259	274
+Candidatus Nitrospira inopinata	403	473	218	283	411	473	403	296	409	681	275	418	510	296	352	871	350	411	186	214
+Betaproteobacteria bacterium GR16-43	541	399	311	300	312	325	500	465	1059	363	203	266	488	190	615	649	280	291	259	335
+Rhodospirillales bacterium URHD0088	362	299	356	561	356	591	359	319	242	329	988	484	487	264	476	461	435	333	253	298
+Candidatus Nitrosotenuis aquarius	0	0	87	49	0	82	46	0	50	71	1134	1255	619	1013	1240	133	1073	1218	192	408
+Candidatus Nitrosotenuis cloacae	0	0	83	56	0	93	51	0	0	76	1136	1263	625	1039	1146	148	1179	1343	205	469
+Inquilinus limosus	411	309	354	473	310	509	330	294	250	289	1162	532	670	317	622	524	412	339	363	498
+Microtetraspora fusca	1264	924	737	964	946	857	1007	751	1001	946	66	139	27	26	41	58	0	67	156	81
+Nonomuraea coxensis	1255	904	717	987	903	798	1014	843	1075	987	87	123	65	25	46	86	27	72	186	99
+Nitrospira japonica	471	479	299	457	575	490	755	450	505	854	407	615	787	346	357	1307	455	504	187	271
+Microtetraspora malaysiensis	1391	904	729	1081	997	803	1205	928	1119	1109	60	136	27	36	47	56	23	69	189	99
+Nonomuraea maritima	1304	984	782	1144	988	867	1135	821	1143	1041	108	138	63	25	79	92	28	80	170	126
+Conexibacter woesei	388	590	445	343	214	515	750	512	361	243	943	554	441	403	703	464	492	1001	1147	690
+Nonomuraea sp. ATCC 55076	1525	1065	810	1150	1105	855	1277	870	1225	1125	147	180	63	48	64	121	60	82	184	121
+Nonomuraea wenchangensis	1668	1082	822	1184	1179	904	1354	1010	1225	1243	104	155	59	33	62	92	43	72	203	116
+Nonomuraea solani	1511	1088	886	1127	1096	1022	1284	968	1243	1189	115	176	150	44	86	143	50	102	232	143
+Nonomuraea jiangxiensis	1623	1110	797	1199	1098	1034	1249	917	1327	1241	98	205	69	42	86	125	42	97	237	162
+Microtetraspora niveoalba	1653	1116	891	1244	1223	923	1370	950	1377	1314	95	164	41	26	62	75	24	87	228	110
+Rhodospirillales bacterium URHD0017	494	514	486	837	504	927	645	455	313	456	543	1619	487	288	459	528	304	551	1897	1054
+Microbispora rosea	1685	1182	1028	1340	1308	1125	1483	1131	1553	1412	107	200	56	39	93	91	30	73	235	123
+Microbispora sp. GMKU363	1786	1148	1026	1357	1273	1131	1610	1108	1536	1416	104	185	47	34	82	105	38	87	263	141
+Microbispora sp. ATCC PTA-5024	1787	1273	1.02E+03	1438	1342	1182	1560	1107	1479	1453	122	193	73	55	80	139	54	1.22E+02	273	147
+Nonomuraea candida	1979	1445	1170	1553	1506	1197	1665	1212	1660	1493	116	202	75	56	97	118	63	94	268	179
+Microtetraspora glauca	2186	1409	1206	1604	1527	1231	1709	1358	1742	1586	129	214	43	37	55	79	28	124	283	116
+Nitrospira moscoviensis	694	701	543	669	843	866	759	569	728	1368	702	977	1376	765	810	2079	848	877	441	513
+Nitrososphaera viennensis	222	196	510	261	525	780	201	5248	219	543	1010	2943	495	285	253	744	698	187	372	1495
+Nonomuraea indica	2277	1598	1235	1716	1568	1346	1893	1503	1798	1727	124	231	53	31	87	108	37	103	330	156
+Sinosporangium album	2404	1590	1299	1860	1712	1447	1936	1535	1968	1833	97	200	46	23	64	80	28	83	287	158
+Nonomuraea sp. SBT364	2492	1738	1293	1771	1760	1368	1863	1386	1929	1777	134	205	80	34	68	154	35	140	313	156
+Thermoactinospora rubra	2503	1708	1403	1963	1928	1565	2169	1587	2117	2005	170	287	93	54	128	172	63	149	384	203
+Sorangium cellulosum	890	721	895	940	661	1053	777	658	684	867	1258	2157	1271	1086	1362	1714	994	978	1335	1318
+Nitrospira cf. moscoviensis SBR1015	1609	2158	673	881	1295	1690	1342	910	1533	2445	404	638	1372	501	470	2481	619	695	236	289
+Luteitalea pratensis	608	1321	518	912	980	1258	585	612	620	789	1237	1872	2071	759	1518	2685	671	1135	1232	1289
+Gemmatirosa kalamazoonesis	415	553	534	489	636	655	655	544	532	1047	2053	1840	2864	1591	3218	2358	2129	788	1935	1664
+Sphaerisporangium album	3203	2243	3353	3700	4331	8064	6104	2378	3666	4922	197	296	89	74	128	295	72	171	724	488
+Steroidobacter denitrificans	3115	2630	718	1475	2019	2096	1222	1253	2294	2685	1189	2477	8360	3618	6085	4591	4013	3405	1726	2012
+Streptosporangium canum	8520	5864	4119	6163	5800	4197	6467	4967	6355	5857	189	501	50	30	145	112	0	224	803	413
+Homo sapiens	28689	5605	2466	32588	3018	351	6087	5031	2651	1309	78	1830	439	34	273	922	52	789	1903	654
+Planobispora rosea	16612	11153	8426	12065	11214	8136	12625	9854	12945	11977	444	1126	136	125	287	278	64	491	1805	864
+Streptosporangium subroseum	20837	14430	10787	15673	14317	10391	16258	12683	16829	15417	623	1533	118	119	429	384	81	704	2366	1143
+Streptosporangium roseum	25548	17223	12534	18347	16919	12163	19013	14222	19180	17470	555	1518	152	120	426	355	74	731	2463	1144

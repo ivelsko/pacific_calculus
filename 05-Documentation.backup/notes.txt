@@ -1,0 +1,33 @@
+###Notes for analysis of Pacific calculus - Zandra Fagernäs
+
+2018-09-22
+All raw data symlinked to project folder, separated into folders per sample.
+EAGER with HG19, no map quality filter. 
+	NOTE: L1 R1 of S30 is broken, ends suddenly. S30 cannot be processed for now!
+	Unmapped reads extracted.
+	FastQC run on all files and damage patterns created.
+All unmapped reads (fatsq.gz files) are symlinked to data/non_human.
+Started MALT-run against fullNT database.
+
+2018-09-23
+EAGER with HG19 and map quality filter of 37 (output in eager_human_mapqual37).
+EAGER with Pseudopropionibacterium propionicum and map quality filter of 37 (output in eager_PsePro_mapqual37).
+MALT run finished.
+
+2018-09-25
+Ran MaltEx and postprocessing (part of HOPS) with 95% identity threshold with list of all eukaryotes and viruses+pathogens.
+
+2018-10-02
+Generated cumulative frequency plots.
+Mapped to Silva 16S database with bwa aln and samtools (script run_mapping.sh)
+
+2018-10-04
+Ran 16s closed-reference clustering in QIIME according to James' Sourcetracker tutorial (script run_qiime.sh). 
+	Note: Permissions need to be changed on outdir for some reason (775)
+Prepared everything necessary for running Sourcetracker.
+
+2018-10-10
+Re-ran Sourcetracker with new set of sources, which include bone and sediment
+	Note: There is always a ' in the otu table, which needs to be manually removed for Sourcetracker to run
+Created barcharts in R to replace the piechart that are the default output in Sourcetracker
+Filtered away samples with >70% skin+sediment+bone (default from James is 50%, but this removes 21 samples)

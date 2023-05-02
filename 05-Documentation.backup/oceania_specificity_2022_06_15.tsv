@@ -1,0 +1,649 @@
+FeatureID	Pval	Spec	Variable
+Luteitalea pratensis	0.551845161290323	-0.0472	Lab
+Candidatus Saccharibacteria oral taxon TM7x	0.269217391304348	-0.0706	Lab
+Bacteroides heparinolyticus	0.131016393442623	-0.3535	Lab
+Bacteroides zoogleoformans	0.0210731707317073	-0.6437	Lab
+Phocaeicola abscessus	0.00664615384615385	-0.4535	Lab
+Porphyromonas gingivalis	0.00664615384615385	-0.7012	Lab
+Porphyromonas gulae	0.00664615384615385	-0.8708	Lab
+Prevotella intermedia	0.00664615384615385	-0.5011	Lab
+Prevotella nigrescens	0.00664615384615385	-1	Lab
+Prevotella saccharolytica	0.214375939849624	-0.4189	Lab
+Tannerella forsythia	0.00664615384615385	-0.3471	Lab
+Tannerella sp. oral taxon HOT-286	0.827389830508475	0.3034	Lab
+Capnocytophaga ochracea	0.408648648648649	-0.1447	Lab
+Capnocytophaga sputigena	0.597735849056604	-0.0479	Lab
+Capnocytophaga sp. oral taxon 338	0.729317647058823	0.2208	Lab
+Bacteroidetes oral taxon 274	0.0508235294117647	-0.1652	Lab
+Candidatus Kryptonium thompsoni	1	0.672	Lab
+Fusobacterium naviforme	0.00664615384615385	-0.3103	Lab
+Fusobacterium necrophorum	0.00664615384615385	-0.4042	Lab
+Fusobacterium nucleatum	0.0123428571428571	-0.3543	Lab
+Fusobacterium sp. oral taxon 203	0.142838709677419	-0.3082	Lab
+Leptotrichia buccalis	0.0939130434782609	-0.3535	Lab
+Leptotrichia trevisanii	0.0508235294117647	-0.3957	Lab
+Streptobacillus moniliformis	0.00664615384615385	-0.4031	Lab
+Mesorhizobium sp. ORS 3324	0.00664615384615385	-0.3836	Lab
+Rhodospirillales bacterium URHD0017	0.982632124352332	0.7009	Lab
+Lautropia mirabilis	0.42912	-0.237	Lab
+Brachymonas chironomi	0.0545242718446602	-0.5853	Lab
+Brachymonas denitrificans	0.0413617021276596	-0.5887	Lab
+Ottowia sp. oral taxon 894	0.170790697674419	-0.3036	Lab
+Eikenella corrodens	0.799075144508671	0.1334	Lab
+Eikenella sp. HMSC061C02	0.649309090909091	-0.0216	Lab
+Neisseria elongata	0.488842105263158	-0.2224	Lab
+Neisseria sp. oral taxon 014	0.212727272727273	-0.3945	Lab
+Propionivibrio dicarboxylicus	0.333957446808511	-0.1897	Lab
+Desulfobulbus oralis	0.276604316546763	-0.0677	Lab
+Desulfomicrobium orale	0.0792660550458716	-0.305	Lab
+Geobacter sulfurreducens	0.414604026845638	-0.071	Lab
+Sorangium cellulosum	0.901565217391304	0.4871	Lab
+Syntrophobacter fumaroxidans	0.569579617834395	-0.0321	Lab
+Campylobacter concisus	0.096	-0.2089	Lab
+Campylobacter gracilis	0.11253781512605	-0.1459	Lab
+Campylobacter showae	0.0210731707317073	-0.2384	Lab
+Cardiobacterium hominis	0.405551020408163	-0.2218	Lab
+Cardiobacterium valvarum	0.648	-0.0069	Lab
+Aggregatibacter actinomycetemcomitans	0.654467065868263	0.0497	Lab
+Aggregatibacter aphrophilus	0.638608695652174	0.0404	Lab
+Pseudomonas aeruginosa	0.00664615384615385	-0.9661	Lab
+Pseudomonas alcaligenes	0.00664615384615385	-0.9613	Lab
+Pseudomonas guariconensis	0.00664615384615385	-1	Lab
+Pseudomonas syringae	0.6264	0.0062	Lab
+Pseudomonas sp. 24 E 13	0.0413617021276596	-0.3814	Lab
+Treponema denticola	0.00664615384615385	-0.367	Lab
+Treponema lecithinolyticum	0.00664615384615385	-0.3694	Lab
+Treponema maltophilum	0.00664615384615385	-0.3154	Lab
+Treponema medium	0.00664615384615385	-0.4283	Lab
+Treponema pedis	0.0210731707317073	-0.375	Lab
+Treponema putidum	0.00664615384615385	-0.4698	Lab
+Treponema socranskii	0.00664615384615385	-0.3122	Lab
+Treponema vincentii	0.0123428571428571	-0.4064	Lab
+Treponema sp. OMZ 838	0.00664615384615385	-0.3955	Lab
+Aminobacterium colombiense	0.0123428571428571	-0.3767	Lab
+Aminomonas paucivorans	0.00664615384615385	-0.224	Lab
+Cloacibacillus porcorum	0.402206896551724	-0.0534	Lab
+Jonquetella anthropi	0.00664615384615385	-0.2995	Lab
+Thermanaerovibrio acidaminovorans	0.0336	-0.2201	Lab
+Actinobaculum sp. oral taxon 183	1	0.7993	Lab
+Actinomyces culturomici	1	0.9302	Lab
+Actinomyces dentalis	1	0.7046	Lab
+Actinomyces gerencseriae	1	0.827	Lab
+Actinomyces israelii	0.00664615384615385	-0.3422	Lab
+Actinomyces johnsonii	0.868747252747253	0.3586	Lab
+Actinomyces massiliensis	1	0.8897	Lab
+Actinomyces naeslundii	0.997766497461929	0.6671	Lab
+Actinomyces oris	1	0.9003	Lab
+Actinomyces radicidentis	0.824727272727273	0.1681	Lab
+Actinomyces ruminicola	0.128528925619835	-0.3597	Lab
+Actinomyces slackii	0.148608	-0.1395	Lab
+Actinomyces timonensis	0.654467065868263	-0.0013	Lab
+Actinomyces urogenitalis	0.903483870967742	0.2806	Lab
+Actinomyces viscosus	0.979350785340314	0.5939	Lab
+Actinomyces sp. HMSC035G02	0.678857142857143	-0.0303	Lab
+Actinomyces sp. HMSC062G12	1	0.6857	Lab
+Actinomyces sp. HMSC075C01	0.189415384615385	-0.2007	Lab
+Actinomyces sp. HMSC08A09	0.970863157894737	0.604	Lab
+Actinomyces sp. oral taxon 170	0.989632653061224	0.6271	Lab
+Actinomyces sp. oral taxon 171	1	0.8658	Lab
+Actinomyces sp. oral taxon 172	0.405369863013699	-0.2428	Lab
+Actinomyces sp. oral taxon 178	0.942545454545454	0.5242	Lab
+Actinomyces sp. oral taxon 414	1	0.8282	Lab
+Actinomyces sp. oral taxon 448	1	0.4041	Lab
+Actinomyces sp. oral taxon 848	0.170790697674419	-0.3279	Lab
+Actinomyces sp. oral taxon 849	0.864	0.3883	Lab
+Actinomyces sp. oral taxon 877	1	0.6433	Lab
+Schaalia cardiffensis	0.852	0.2807	Lab
+Schaalia georgiae	0.824727272727273	0.2944	Lab
+Schaalia meyeri	0.903483870967742	0.4281	Lab
+Schaalia odontolytica	0.648	-0.0772	Lab
+Schaalia turicensis	1	0.9555	Lab
+Corynebacterium matruchotii	0.988061538461539	0.6659	Lab
+Kytococcus sedentarius	0.446304635761589	-0.2607	Lab
+Sanguibacter keddieii	0.781116279069767	0.0441	Lab
+Cutibacterium acnes	1	0.8733	Lab
+Propionibacterium acidifaciens	1	0.8069	Lab
+Propionibacterium australiense	0.0917522123893805	-0.9147	Lab
+Propionibacterium freudenreichii	0.740210526315789	0.228	Lab
+Propionibacterium sp. oral taxon 192	0.835039106145251	0.2713	Lab
+Pseudopropionibacterium propionicum	1	0.9486	Lab
+Atopobium sp. oral taxon 199	0.00664615384615385	-0.7705	Lab
+Atopobium sp. oral taxon 810	0.0508235294117647	-0.5971	Lab
+Olsenella phocaeensis	0.037978021978022	-0.366	Lab
+Olsenella provencensis	0.096	-0.2915	Lab
+Olsenella uli	0.0817297297297297	-0.1547	Lab
+Olsenella umbonata	0.648	0.0576	Lab
+Olsenella urininfantis	0.0581538461538462	-0.2028	Lab
+Olsenella sp. DNF00959	0.153070866141732	-0.2532	Lab
+Olsenella sp. HMSC062G07	0.0484897959183673	-0.3034	Lab
+Olsenella sp. oral taxon 807	0.970863157894737	0.3108	Lab
+Olsenella sp. oral taxon 809	0.153070866141732	-0.3829	Lab
+Olsenella sp. SIT9	0.824727272727273	0.3013	Lab
+Senegalimassilia anaerobia	0.00664615384615385	-0.3049	Lab
+Coriobacteriaceae bacterium 68-1-3	0.00664615384615385	-0.2657	Lab
+Adlercreutzia equolifaciens	0.0123428571428571	-0.3023	Lab
+Arabia massiliensis	0.00664615384615385	-0.2859	Lab
+Asaccharobacter celatus	0.00664615384615385	-0.3517	Lab
+Denitrobacterium detoxificans	0.0210731707317073	-0.268	Lab
+Eggerthella lenta	0.00664615384615385	-0.2353	Lab
+Eggerthella sp. YY7918	0.0257142857142857	-0.2754	Lab
+Enterorhabdus caecimuris	0.00664615384615385	-0.2989	Lab
+Enterorhabdus mucosicola	0.00664615384615385	-0.2651	Lab
+Gordonibacter massiliensis	0.00664615384615385	-0.2889	Lab
+Gordonibacter pamelaeae	0.00664615384615385	-0.2774	Lab
+Gordonibacter urolithinfaciens	0.00664615384615385	-0.2997	Lab
+Paraeggerthella hongkongensis	0.00664615384615385	-0.4024	Lab
+Raoultibacter massiliensis	0.0210731707317073	-0.2184	Lab
+Raoultibacter timonensis	0.0170526315789474	-0.2132	Lab
+Slackia exigua	0.00664615384615385	-0.2488	Lab
+Slackia heliotrinireducens	0.00664615384615385	-0.3075	Lab
+Slackia isoflavoniconvertens	0.0170526315789474	-0.4225	Lab
+Slackia piriformis	0.0726728971962617	-0.3314	Lab
+Eggerthellaceae bacterium AT8	0.0336	-0.1966	Lab
+Conexibacter woesei	0.0301395348837209	-0.4169	Lab
+Solirubrobacter sp. URHD0082	0.0301395348837209	-0.6063	Lab
+Anaerolineaceae bacterium oral taxon 439	1	0.3663	Lab
+Gemella morbillorum	0.126	-0.5536	Lab
+Enterococcus faecium	0.00664615384615385	-0.9788	Lab
+Streptococcus anginosus	0.0939130434782609	-0.3141	Lab
+Streptococcus constellatus	0.00664615384615385	-0.4147	Lab
+Streptococcus intermedius	0.0484897959183673	-0.2495	Lab
+Streptococcus cristatus	0.564923076923077	-0.0659	Lab
+Streptococcus equi	0.00664615384615385	-0.3986	Lab
+Streptococcus gordonii	0.835039106145251	0.1567	Lab
+Streptococcus oralis	0.729317647058823	0.0357	Lab
+Streptococcus pseudopneumoniae	0.988061538461539	0.7145	Lab
+Streptococcus salivarius	1	0.91	Lab
+Streptococcus sanguinis	0.967404255319149	0.546	Lab
+Streptococcus sp. DD04	0.0484897959183673	-0.4142	Lab
+Streptococcus sp. HMSC061D01	0.0726728971962617	-0.3493	Lab
+[Eubacterium] brachy	0.00664615384615385	-0.36	Lab
+[Eubacterium] infirmum	0.00664615384615385	-0.267	Lab
+[Eubacterium] minutum	0.00664615384615385	-0.2435	Lab
+[Eubacterium] saphenum	0.0210731707317073	-0.2632	Lab
+[Eubacterium] sulci	0.00664615384615385	-0.388	Lab
+Anaerovorax odorimutans	0.00664615384615385	-0.2992	Lab
+Emergencia timonensis	0.0170526315789474	-0.2484	Lab
+Mogibacterium diversum	0.00664615384615385	-0.2717	Lab
+Mogibacterium pumilum	0.00664615384615385	-0.2603	Lab
+Eubacterium pyruvativorans	0.00664615384615385	-0.3928	Lab
+Pseudoramibacter alactolyticus	0.00664615384615385	-0.3979	Lab
+Catonella morbi	0.00664615384615385	-0.2946	Lab
+Johnsonella ignava	0.0336	-0.2764	Lab
+Lachnoanaerobaculum saburreum	0.0170526315789474	-0.3453	Lab
+Lachnoanaerobaculum sp. OBRC5-5	0.076	-0.3748	Lab
+Oribacterium sp. oral taxon 078	0.0336	-0.1707	Lab
+Shuttleworthia satelles	0.00664615384615385	-0.3881	Lab
+Stomatobaculum longum	0.0887142857142857	-0.3569	Lab
+Lachnospiraceae bacterium	0.00664615384615385	-0.6884	Lab
+Lachnospiraceae bacterium oral taxon 500	0.00664615384615385	-0.2391	Lab
+Filifactor alocis	0.00664615384615385	-0.3577	Lab
+[Eubacterium] yurii	0.256	-0.2502	Lab
+Peptoanaerobacter stomatis	0.00664615384615385	-0.3162	Lab
+Peptostreptococcus anaerobius	0.00664615384615385	-0.4022	Lab
+Peptostreptococcaceae bacterium oral taxon 113	0.00664615384615385	-0.2752	Lab
+Peptostreptococcaceae bacterium pGA-8	0.00664615384615385	-0.2208	Lab
+Ruminococcaceae bacterium	0.00664615384615385	-0.7356	Lab
+Clostridiales bacterium KA00274	0.00664615384615385	-0.5451	Lab
+Eggerthia catenaformis	0.00664615384615385	-0.3083	Lab
+Solobacterium moorei	0.136975609756098	-0.1331	Lab
+Ndongobacter massiliensis	0.245014925373134	-0.1667	Lab
+Selenomonas infelix	0.982632124352332	0.6287	Lab
+Selenomonas noxia	0.597735849056604	-0.0085	Lab
+Selenomonas sputigena	0.0123428571428571	-0.3122	Lab
+Selenomonas sp. oral taxon 126	0.369	-0.1105	Lab
+Selenomonas sp. oral taxon 138	1	0.7523	Lab
+Selenomonas sp. oral taxon 920	0.880524590163934	0.4308	Lab
+Anaeroglobus geminatus	0.00664615384615385	-0.5294	Lab
+Dialister invisus	0.0508235294117647	-0.2554	Lab
+Dialister pneumosintes	0.204458015267176	-0.3014	Lab
+Finegoldia magna	0.0170526315789474	-0.4846	Lab
+Murdochiella vaginalis	0.490909090909091	-0.0819	Lab
+Parvimonas micra	0.0413617021276596	-0.3172	Lab
+Parvimonas sp. KA00067	0.0658285714285714	-0.3776	Lab
+Peptoniphilus indolicus	0.11253781512605	-0.347	Lab
+Peptoniphilus sp. oral taxon 386	0.00664615384615385	-0.2739	Lab
+Anaerosalibacter massiliensis	0.263647058823529	-0.1056	Lab
+Tissierella praeacuta	0.00664615384615385	-0.7836	Lab
+Tissierellia bacterium KA00581	0.0170526315789474	-0.4221	Lab
+Firmicutes bacterium	0.00664615384615385	-0.774	Lab
+Candidatus Methanomethylophilus alvus	0.33769014084507	-0.1108	Lab
+Thermoplasmatales archaeon BRNA1	0.305485714285714	-0.1222	Lab
+methanogenic archaeon ISO4-H5	0.347412587412587	-0.1079	Lab
+Methanobrevibacter millerae	0.269217391304348	-0.2331	Lab
+Methanobrevibacter olleyae	0.0454736842105263	-0.4379	Lab
+Methanobrevibacter oralis	0.0257142857142857	-0.3854	Lab
+Methanobrevibacter smithii	0.0817297297297297	-0.3143	Lab
+Methanobrevibacter sp. YE315	0.490909090909091	-0.1326	Lab
+Luteitalea pratensis	0.966857142857143	0.4681	Rainfall
+Candidatus Saccharibacteria oral taxon TM7x	0.048	-0.3691	Rainfall
+Bacteroides heparinolyticus	0.646088495575221	-0.1098	Rainfall
+Bacteroides zoogleoformans	0.30658064516129	-0.3699	Rainfall
+Phocaeicola abscessus	0.646088495575221	-0.0623	Rainfall
+Porphyromonas gingivalis	0.104727272727273	-0.4499	Rainfall
+Porphyromonas gulae	0.048	-0.8027	Rainfall
+Prevotella intermedia	0.646088495575221	-0.1416	Rainfall
+Prevotella nigrescens	0.048	-1	Rainfall
+Prevotella saccharolytica	0.924674157303371	0.1787	Rainfall
+Tannerella forsythia	0.829208053691275	0.0457	Rainfall
+Tannerella sp. oral taxon HOT-286	0.96552	0.3375	Rainfall
+Capnocytophaga ochracea	0.925714285714286	0.2217	Rainfall
+Capnocytophaga sputigena	0.966857142857143	0.5983	Rainfall
+Capnocytophaga sp. oral taxon 338	0.931718918918919	0.2808	Rainfall
+Bacteroidetes oral taxon 274	0.733395348837209	-0.01	Rainfall
+Candidatus Kryptonium thompsoni	0.520767123287671	-0.1145	Rainfall
+Fusobacterium naviforme	0.835578947368421	0.0519	Rainfall
+Fusobacterium necrophorum	0.902343195266272	0.1131	Rainfall
+Fusobacterium nucleatum	0.784340425531915	0.0227	Rainfall
+Fusobacterium sp. oral taxon 203	0.773217391304348	-0.0137	Rainfall
+Leptotrichia buccalis	0.85853164556962	0.1027	Rainfall
+Leptotrichia trevisanii	0.482086956521739	-0.2379	Rainfall
+Streptobacillus moniliformis	0.784340425531915	0.0111	Rainfall
+Mesorhizobium sp. ORS 3324	0.646088495575221	-0.0346	Rainfall
+Rhodospirillales bacterium URHD0017	0.811102040816327	0.0466	Rainfall
+Lautropia mirabilis	0.96420618556701	0.3301	Rainfall
+Brachymonas chironomi	0.305379310344828	-0.443	Rainfall
+Brachymonas denitrificans	0.260830188679245	-0.4506	Rainfall
+Ottowia sp. oral taxon 894	0.924674157303371	0.1867	Rainfall
+Eikenella corrodens	0.966857142857143	0.4724	Rainfall
+Eikenella sp. HMSC061C02	0.966857142857143	0.572	Rainfall
+Neisseria elongata	0.931718918918919	0.2173	Rainfall
+Neisseria sp. oral taxon 014	0.902343195266272	0.1732	Rainfall
+Propionivibrio dicarboxylicus	0.811102040816327	0.0467	Rainfall
+Desulfobulbus oralis	0.646088495575221	-0.0413	Rainfall
+Desulfomicrobium orale	0.319015384615385	-0.2852	Rainfall
+Geobacter sulfurreducens	0.861283018867924	0.1082	Rainfall
+Sorangium cellulosum	0.525405405405405	-0.1976	Rainfall
+Syntrophobacter fumaroxidans	0.804413793103448	0.0503	Rainfall
+Campylobacter concisus	0.924674157303371	0.161	Rainfall
+Campylobacter gracilis	0.267054545454545	-0.1662	Rainfall
+Campylobacter showae	0.902343195266272	0.1353	Rainfall
+Cardiobacterium hominis	0.96075	0.2963	Rainfall
+Cardiobacterium valvarum	0.966857142857143	0.4149	Rainfall
+Aggregatibacter actinomycetemcomitans	0.980150943396226	0.5231	Rainfall
+Aggregatibacter aphrophilus	0.966857142857143	0.6119	Rainfall
+Pseudomonas aeruginosa	0.245647058823529	-0.6294	Rainfall
+Pseudomonas alcaligenes	0.264	-0.6191	Rainfall
+Pseudomonas guariconensis	0.260830188679245	-0.6393	Rainfall
+Pseudomonas syringae	0.541367088607595	-0.0711	Rainfall
+Pseudomonas sp. 24 E 13	0.30658064516129	-0.2936	Rainfall
+Treponema denticola	0.902343195266272	0.1103	Rainfall
+Treponema lecithinolyticum	0.791496503496503	0.0199	Rainfall
+Treponema maltophilum	0.924674157303371	0.1431	Rainfall
+Treponema medium	0.752	-0.0032	Rainfall
+Treponema pedis	0.733395348837209	-0.014	Rainfall
+Treponema putidum	0.924674157303371	0.1495	Rainfall
+Treponema socranskii	0.956732984293194	0.2002	Rainfall
+Treponema vincentii	0.791496503496503	0.0255	Rainfall
+Treponema sp. OMZ 838	0.741046153846154	-0.0108	Rainfall
+Aminobacterium colombiense	0.74381954887218	-0.0026	Rainfall
+Aminomonas paucivorans	0.733395348837209	-0.0081	Rainfall
+Cloacibacillus porcorum	0.486760563380282	-0.1192	Rainfall
+Jonquetella anthropi	0.528631578947368	-0.0806	Rainfall
+Thermanaerovibrio acidaminovorans	0.646088495575221	-0.0358	Rainfall
+Actinobaculum sp. oral taxon 183	0.319015384615385	-0.2709	Rainfall
+Actinomyces culturomici	0.081	-0.4929	Rainfall
+Actinomyces dentalis	0.1248	-0.1422	Rainfall
+Actinomyces gerencseriae	0.0893793103448276	-0.2695	Rainfall
+Actinomyces israelii	0.835390728476821	0.0632	Rainfall
+Actinomyces johnsonii	0.925714285714286	0.2049	Rainfall
+Actinomyces massiliensis	0.682487394957983	-0.0569	Rainfall
+Actinomyces naeslundii	0.646088495575221	-0.071	Rainfall
+Actinomyces oris	0.646088495575221	-0.134	Rainfall
+Actinomyces radicidentis	0.646088495575221	-0.0397	Rainfall
+Actinomyces ruminicola	0.072	-0.526	Rainfall
+Actinomyces slackii	0.646088495575221	-0.0565	Rainfall
+Actinomyces timonensis	0.83232	0.0514	Rainfall
+Actinomyces urogenitalis	0.528631578947368	-0.0779	Rainfall
+Actinomyces viscosus	0.666947368421053	-0.068	Rainfall
+Actinomyces sp. HMSC035G02	0.939829787234043	0.2141	Rainfall
+Actinomyces sp. HMSC062G12	0.104727272727273	-0.407	Rainfall
+Actinomyces sp. HMSC075C01	0.1248	-0.389	Rainfall
+Actinomyces sp. HMSC08A09	0.877416149068323	0.1274	Rainfall
+Actinomyces sp. oral taxon 170	0.72	-0.0349	Rainfall
+Actinomyces sp. oral taxon 171	0.646088495575221	-0.0889	Rainfall
+Actinomyces sp. oral taxon 172	0.96552	0.3051	Rainfall
+Actinomyces sp. oral taxon 178	0.852993630573248	0.101	Rainfall
+Actinomyces sp. oral taxon 414	0.072	-0.2259	Rainfall
+Actinomyces sp. oral taxon 448	0.30658064516129	-0.0907	Rainfall
+Actinomyces sp. oral taxon 848	0.96552	0.3934	Rainfall
+Actinomyces sp. oral taxon 849	0.939829787234043	0.245	Rainfall
+Actinomyces sp. oral taxon 877	0.717619834710744	-0.023	Rainfall
+Schaalia cardiffensis	0.646088495575221	-0.0576	Rainfall
+Schaalia georgiae	0.048	-0.5105	Rainfall
+Schaalia meyeri	0.0893793103448276	-0.4485	Rainfall
+Schaalia odontolytica	0.941305263157895	0.2729	Rainfall
+Schaalia turicensis	0.0893793103448276	-0.5974	Rainfall
+Corynebacterium matruchotii	0.902343195266272	0.16	Rainfall
+Kytococcus sedentarius	0.96552	0.2926	Rainfall
+Sanguibacter keddieii	0.925714285714286	0.1604	Rainfall
+Cutibacterium acnes	0.30658064516129	-0.287	Rainfall
+Propionibacterium acidifaciens	0.105081081081081	-0.6323	Rainfall
+Propionibacterium australiense	0.048	-0.9693	Rainfall
+Propionibacterium freudenreichii	0.243	-0.4051	Rainfall
+Propionibacterium sp. oral taxon 192	0.96552	0.3262	Rainfall
+Pseudopropionibacterium propionicum	0.048	-0.4293	Rainfall
+Atopobium sp. oral taxon 199	0.0893793103448276	-0.5258	Rainfall
+Atopobium sp. oral taxon 810	0.718819672131148	-0.0914	Rainfall
+Olsenella phocaeensis	0.393313432835821	-0.2087	Rainfall
+Olsenella provencensis	0.57276404494382	-0.1253	Rainfall
+Olsenella uli	0.672	-0.0323	Rainfall
+Olsenella umbonata	0.74381954887218	-2e-04	Rainfall
+Olsenella urininfantis	0.319015384615385	-0.1716	Rainfall
+Olsenella sp. DNF00959	0.646088495575221	-0.0656	Rainfall
+Olsenella sp. HMSC062G07	0.081	-0.4517	Rainfall
+Olsenella sp. oral taxon 807	0.6876	-0.0289	Rainfall
+Olsenella sp. oral taxon 809	0.277714285714286	-0.4752	Rainfall
+Olsenella sp. SIT9	0.733395348837209	-0.0209	Rainfall
+Senegalimassilia anaerobia	0.113684210526316	-0.2288	Rainfall
+Coriobacteriaceae bacterium 68-1-3	0.0893793103448276	-0.1956	Rainfall
+Adlercreutzia equolifaciens	0.1248	-0.2356	Rainfall
+Arabia massiliensis	0.0893793103448276	-0.2079	Rainfall
+Asaccharobacter celatus	0.104727272727273	-0.2539	Rainfall
+Denitrobacterium detoxificans	0.081	-0.3063	Rainfall
+Eggerthella lenta	0.1188	-0.1678	Rainfall
+Eggerthella sp. YY7918	0.140869565217391	-0.2166	Rainfall
+Enterorhabdus caecimuris	0.0893793103448276	-0.2433	Rainfall
+Enterorhabdus mucosicola	0.183829787234043	-0.1917	Rainfall
+Gordonibacter massiliensis	0.0893793103448276	-0.2082	Rainfall
+Gordonibacter pamelaeae	0.0893793103448276	-0.1957	Rainfall
+Gordonibacter urolithinfaciens	0.0893793103448276	-0.2139	Rainfall
+Paraeggerthella hongkongensis	0.048	-0.3967	Rainfall
+Raoultibacter massiliensis	0.105081081081081	-0.211	Rainfall
+Raoultibacter timonensis	0.104727272727273	-0.1982	Rainfall
+Slackia exigua	0.333818181818182	-0.1187	Rainfall
+Slackia heliotrinireducens	0.072	-0.2753	Rainfall
+Slackia isoflavoniconvertens	0.0893793103448276	-0.462	Rainfall
+Slackia piriformis	0.105081081081081	-0.4486	Rainfall
+Eggerthellaceae bacterium AT8	0.0893793103448276	-0.2534	Rainfall
+Conexibacter woesei	0.998	0.6516	Rainfall
+Solirubrobacter sp. URHD0082	0.991774647887324	0.6445	Rainfall
+Anaerolineaceae bacterium oral taxon 439	0.1188	-0.1208	Rainfall
+Gemella morbillorum	0.924674157303371	0.1199	Rainfall
+Enterococcus faecium	0.560571428571429	-0.5653	Rainfall
+Streptococcus anginosus	0.0893793103448276	-0.497	Rainfall
+Streptococcus constellatus	0.081	-0.4055	Rainfall
+Streptococcus intermedius	0.048	-0.437	Rainfall
+Streptococcus cristatus	0.646088495575221	-0.1559	Rainfall
+Streptococcus equi	0.74381954887218	-0.0031	Rainfall
+Streptococcus gordonii	0.966857142857143	0.5344	Rainfall
+Streptococcus oralis	0.966857142857143	0.5282	Rainfall
+Streptococcus pseudopneumoniae	0.852993630573248	0.1083	Rainfall
+Streptococcus salivarius	0.672	-0.2785	Rainfall
+Streptococcus sanguinis	0.646088495575221	-0.279	Rainfall
+Streptococcus sp. DD04	0.57276404494382	-0.177	Rainfall
+Streptococcus sp. HMSC061D01	0.646088495575221	-0.0679	Rainfall
+[Eubacterium] brachy	0.682487394957983	-0.0628	Rainfall
+[Eubacterium] infirmum	0.852993630573248	0.0695	Rainfall
+[Eubacterium] minutum	0.57276404494382	-0.0485	Rainfall
+[Eubacterium] saphenum	0.646088495575221	-0.0478	Rainfall
+[Eubacterium] sulci	0.541367088607595	-0.1084	Rainfall
+Anaerovorax odorimutans	0.57276404494382	-0.0712	Rainfall
+Emergencia timonensis	0.966857142857143	0.2774	Rainfall
+Mogibacterium diversum	0.57276404494382	-0.0698	Rainfall
+Mogibacterium pumilum	0.744716417910448	-0.0036	Rainfall
+Eubacterium pyruvativorans	0.96420618556701	0.2762	Rainfall
+Pseudoramibacter alactolyticus	0.541367088607595	-0.0854	Rainfall
+Catonella morbi	0.927737704918033	0.2217	Rainfall
+Johnsonella ignava	0.1248	-0.3587	Rainfall
+Lachnoanaerobaculum saburreum	0.486760563380282	-0.1368	Rainfall
+Lachnoanaerobaculum sp. OBRC5-5	0.938322580645161	0.2535	Rainfall
+Oribacterium sp. oral taxon 078	0.1248	-0.1791	Rainfall
+Shuttleworthia satelles	0.890503067484663	0.1168	Rainfall
+Stomatobaculum longum	0.646088495575221	-0.0876	Rainfall
+Lachnospiraceae bacterium	0.646088495575221	-0.0767	Rainfall
+Lachnospiraceae bacterium oral taxon 500	0.968417061611374	0.2705	Rainfall
+Filifactor alocis	0.925714285714286	0.1513	Rainfall
+[Eubacterium] yurii	0.924674157303371	0.1646	Rainfall
+Peptoanaerobacter stomatis	0.852993630573248	0.0695	Rainfall
+Peptostreptococcus anaerobius	0.646088495575221	-0.0519	Rainfall
+Peptostreptococcaceae bacterium oral taxon 113	0.966857142857143	0.2923	Rainfall
+Peptostreptococcaceae bacterium pGA-8	0.823135135135135	0.0454	Rainfall
+Ruminococcaceae bacterium	0.105081081081081	-0.5665	Rainfall
+Clostridiales bacterium KA00274	0.245647058823529	-0.2916	Rainfall
+Eggerthia catenaformis	0.783194244604317	0.0035	Rainfall
+Solobacterium moorei	0.546506024096385	-0.0916	Rainfall
+Ndongobacter massiliensis	0.419294117647059	-0.2262	Rainfall
+Selenomonas infelix	0.8721	0.1162	Rainfall
+Selenomonas noxia	0.941305263157895	0.2867	Rainfall
+Selenomonas sputigena	0.773217391304348	-0.0062	Rainfall
+Selenomonas sp. oral taxon 126	0.492	-0.1785	Rainfall
+Selenomonas sp. oral taxon 138	0.546506024096385	-0.1472	Rainfall
+Selenomonas sp. oral taxon 920	0.924674157303371	0.2001	Rainfall
+Anaeroglobus geminatus	0.245647058823529	-0.2885	Rainfall
+Dialister invisus	0.890503067484663	0.1202	Rainfall
+Dialister pneumosintes	0.733395348837209	-0.0486	Rainfall
+Finegoldia magna	0.672	-0.0548	Rainfall
+Murdochiella vaginalis	0.546506024096385	-0.2254	Rainfall
+Parvimonas micra	0.773217391304348	0.0031	Rainfall
+Parvimonas sp. KA00067	0.801	0.0253	Rainfall
+Peptoniphilus indolicus	0.902343195266272	0.2018	Rainfall
+Peptoniphilus sp. oral taxon 386	0.924674157303371	0.1291	Rainfall
+Anaerosalibacter massiliensis	0.998	0.5533	Rainfall
+Tissierella praeacuta	0.048	-0.6932	Rainfall
+Tissierellia bacterium KA00581	0.733395348837209	-0.0131	Rainfall
+Firmicutes bacterium	0.546506024096385	-0.1661	Rainfall
+Candidatus Methanomethylophilus alvus	0.646088495575221	-0.0815	Rainfall
+Thermoplasmatales archaeon BRNA1	0.646088495575221	-0.0845	Rainfall
+methanogenic archaeon ISO4-H5	0.646088495575221	-0.0744	Rainfall
+Methanobrevibacter millerae	0.646088495575221	-0.1572	Rainfall
+Methanobrevibacter olleyae	0.96552	0.3171	Rainfall
+Methanobrevibacter oralis	0.995214953271028	0.5598	Rainfall
+Methanobrevibacter smithii	0.852993630573248	0.0777	Rainfall
+Methanobrevibacter sp. YE315	0.305379310344828	-0.4422	Rainfall
+Luteitalea pratensis	0.892528301886792	0.3205	Evapotranspiration
+Candidatus Saccharibacteria oral taxon TM7x	0.054	-0.4027	Evapotranspiration
+Bacteroides heparinolyticus	0.71230534351145	-0.0024	Evapotranspiration
+Bacteroides zoogleoformans	0.43776	-0.3034	Evapotranspiration
+Phocaeicola abscessus	0.553976470588235	-0.1053	Evapotranspiration
+Porphyromonas gingivalis	0.297931034482759	-0.4572	Evapotranspiration
+Porphyromonas gulae	0.0785454545454545	-0.7918	Evapotranspiration
+Prevotella intermedia	0.619471698113208	-0.1127	Evapotranspiration
+Prevotella nigrescens	0.054	-1	Evapotranspiration
+Prevotella saccharolytica	0.791217391304348	0.0282	Evapotranspiration
+Tannerella forsythia	0.791217391304348	0.0682	Evapotranspiration
+Tannerella sp. oral taxon HOT-286	0.791217391304348	0.0595	Evapotranspiration
+Capnocytophaga ochracea	0.791217391304348	0.1073	Evapotranspiration
+Capnocytophaga sputigena	0.791217391304348	0.2191	Evapotranspiration
+Capnocytophaga sp. oral taxon 338	0.791217391304348	0.1194	Evapotranspiration
+Bacteroidetes oral taxon 274	0.699906976744186	-0.0068	Evapotranspiration
+Candidatus Kryptonium thompsoni	0.697322834645669	-0.03	Evapotranspiration
+Fusobacterium naviforme	0.809717277486911	0.1368	Evapotranspiration
+Fusobacterium necrophorum	0.688390243902439	-0.0349	Evapotranspiration
+Fusobacterium nucleatum	0.802285714285714	0.1295	Evapotranspiration
+Fusobacterium sp. oral taxon 203	0.791217391304348	0.125	Evapotranspiration
+Leptotrichia buccalis	0.791217391304348	0.1114	Evapotranspiration
+Leptotrichia trevisanii	0.506666666666667	-0.2106	Evapotranspiration
+Streptobacillus moniliformis	0.791217391304348	0.0425	Evapotranspiration
+Mesorhizobium sp. ORS 3324	0.738268656716418	-0.0133	Evapotranspiration
+Rhodospirillales bacterium URHD0017	0.663709090909091	-0.1164	Evapotranspiration
+Lautropia mirabilis	0.791217391304348	0.0781	Evapotranspiration
+Brachymonas chironomi	0.460421052631579	-0.3845	Evapotranspiration
+Brachymonas denitrificans	0.432	-0.3844	Evapotranspiration
+Ottowia sp. oral taxon 894	0.663709090909091	-0.1228	Evapotranspiration
+Eikenella corrodens	0.791217391304348	0.1671	Evapotranspiration
+Eikenella sp. HMSC061C02	0.791217391304348	0.1932	Evapotranspiration
+Neisseria elongata	0.791217391304348	0.0037	Evapotranspiration
+Neisseria sp. oral taxon 014	0.68151724137931	-0.1284	Evapotranspiration
+Propionivibrio dicarboxylicus	0.791217391304348	0.1252	Evapotranspiration
+Desulfobulbus oralis	0.837	0.1731	Evapotranspiration
+Desulfomicrobium orale	0.304524590163934	-0.3881	Evapotranspiration
+Geobacter sulfurreducens	0.853665071770335	0.2214	Evapotranspiration
+Sorangium cellulosum	0.304524590163934	-0.3773	Evapotranspiration
+Syntrophobacter fumaroxidans	0.837	0.2269	Evapotranspiration
+Campylobacter concisus	0.743294117647059	0.0032	Evapotranspiration
+Campylobacter gracilis	0.383323943661972	-0.1324	Evapotranspiration
+Campylobacter showae	0.791217391304348	0.0471	Evapotranspiration
+Cardiobacterium hominis	0.776978417266187	-0.0035	Evapotranspiration
+Cardiobacterium valvarum	0.791217391304348	0.0691	Evapotranspiration
+Aggregatibacter actinomycetemcomitans	0.802285714285714	0.1672	Evapotranspiration
+Aggregatibacter aphrophilus	0.791217391304348	0.2453	Evapotranspiration
+Pseudomonas aeruginosa	0.301090909090909	-0.7293	Evapotranspiration
+Pseudomonas alcaligenes	0.216	-0.8627	Evapotranspiration
+Pseudomonas guariconensis	0.297931034482759	-0.8139	Evapotranspiration
+Pseudomonas syringae	0.304524590163934	-0.1267	Evapotranspiration
+Pseudomonas sp. 24 E 13	0.697322834645669	-0.0169	Evapotranspiration
+Treponema denticola	0.833910447761194	0.1705	Evapotranspiration
+Treponema lecithinolyticum	0.791217391304348	0.1053	Evapotranspiration
+Treponema maltophilum	0.833910447761194	0.1861	Evapotranspiration
+Treponema medium	0.791217391304348	0.0711	Evapotranspiration
+Treponema pedis	0.516292682926829	-0.1381	Evapotranspiration
+Treponema putidum	0.791217391304348	0.0995	Evapotranspiration
+Treponema socranskii	0.837	0.2083	Evapotranspiration
+Treponema vincentii	0.791217391304348	0.1069	Evapotranspiration
+Treponema sp. OMZ 838	0.791217391304348	0.049	Evapotranspiration
+Aminobacterium colombiense	0.68151724137931	-0.039	Evapotranspiration
+Aminomonas paucivorans	0.694656	-0.0142	Evapotranspiration
+Cloacibacillus porcorum	0.349411764705882	-0.1539	Evapotranspiration
+Jonquetella anthropi	0.304524590163934	-0.1375	Evapotranspiration
+Thermanaerovibrio acidaminovorans	0.59069387755102	-0.0575	Evapotranspiration
+Actinobaculum sp. oral taxon 183	0.59069387755102	-0.1383	Evapotranspiration
+Actinomyces culturomici	0.054	-0.7554	Evapotranspiration
+Actinomyces dentalis	0.596571428571428	-0.041	Evapotranspiration
+Actinomyces gerencseriae	0.837	0.2004	Evapotranspiration
+Actinomyces israelii	0.837	0.1813	Evapotranspiration
+Actinomyces johnsonii	0.791217391304348	0.0554	Evapotranspiration
+Actinomyces massiliensis	0.525686746987952	-0.2311	Evapotranspiration
+Actinomyces naeslundii	0.304524590163934	-0.2537	Evapotranspiration
+Actinomyces oris	0.363130434782609	-0.2817	Evapotranspiration
+Actinomyces radicidentis	0.621757009345794	-0.0497	Evapotranspiration
+Actinomyces ruminicola	0.297931034482759	-0.4873	Evapotranspiration
+Actinomyces slackii	0.555428571428571	-0.0976	Evapotranspiration
+Actinomyces timonensis	0.956427906976744	0.3969	Evapotranspiration
+Actinomyces urogenitalis	0.59069387755102	-0.0631	Evapotranspiration
+Actinomyces viscosus	0.487384615384615	-0.1701	Evapotranspiration
+Actinomyces sp. HMSC035G02	0.770086956521739	-0.0641	Evapotranspiration
+Actinomyces sp. HMSC062G12	0.297931034482759	-0.3456	Evapotranspiration
+Actinomyces sp. HMSC075C01	0.301090909090909	-0.3512	Evapotranspiration
+Actinomyces sp. HMSC08A09	0.707815384615385	-0.0189	Evapotranspiration
+Actinomyces sp. oral taxon 170	0.555428571428571	-0.1265	Evapotranspiration
+Actinomyces sp. oral taxon 171	0.349411764705882	-0.2689	Evapotranspiration
+Actinomyces sp. oral taxon 172	0.791217391304348	0.0183	Evapotranspiration
+Actinomyces sp. oral taxon 178	0.68151724137931	-0.0434	Evapotranspiration
+Actinomyces sp. oral taxon 414	0.304524590163934	-0.1198	Evapotranspiration
+Actinomyces sp. oral taxon 448	0.770086956521739	-0.0027	Evapotranspiration
+Actinomyces sp. oral taxon 848	0.791217391304348	0.1411	Evapotranspiration
+Actinomyces sp. oral taxon 849	0.791217391304348	0.0927	Evapotranspiration
+Actinomyces sp. oral taxon 877	0.596571428571428	-0.0639	Evapotranspiration
+Schaalia cardiffensis	0.304524590163934	-0.2334	Evapotranspiration
+Schaalia georgiae	0.054	-0.5297	Evapotranspiration
+Schaalia meyeri	0.297931034482759	-0.3289	Evapotranspiration
+Schaalia odontolytica	0.791217391304348	-0.0156	Evapotranspiration
+Schaalia turicensis	0.0785454545454545	-0.8722	Evapotranspiration
+Corynebacterium matruchotii	0.596571428571428	-0.1239	Evapotranspiration
+Kytococcus sedentarius	0.791217391304348	0.0363	Evapotranspiration
+Sanguibacter keddieii	0.688390243902439	-0.1596	Evapotranspiration
+Cutibacterium acnes	0.503088607594937	-0.2012	Evapotranspiration
+Propionibacterium acidifaciens	0.054	-0.9406	Evapotranspiration
+Propionibacterium australiense	0.054	-0.9802	Evapotranspiration
+Propionibacterium freudenreichii	0.304524590163934	-0.3931	Evapotranspiration
+Propionibacterium sp. oral taxon 192	0.791217391304348	0.0807	Evapotranspiration
+Pseudopropionibacterium propionicum	0.054	-0.5019	Evapotranspiration
+Atopobium sp. oral taxon 199	0.297931034482759	-0.4605	Evapotranspiration
+Atopobium sp. oral taxon 810	0.68151724137931	-0.1789	Evapotranspiration
+Olsenella phocaeensis	0.596571428571428	-0.1023	Evapotranspiration
+Olsenella provencensis	0.68151724137931	-0.0499	Evapotranspiration
+Olsenella uli	0.791217391304348	0.0446	Evapotranspiration
+Olsenella umbonata	0.791217391304348	0.0373	Evapotranspiration
+Olsenella urininfantis	0.555428571428571	-0.0932	Evapotranspiration
+Olsenella sp. DNF00959	0.791217391304348	0.0912	Evapotranspiration
+Olsenella sp. HMSC062G07	0.297931034482759	-0.3839	Evapotranspiration
+Olsenella sp. oral taxon 807	0.7392	-0.0078	Evapotranspiration
+Olsenella sp. oral taxon 809	0.39	-0.4337	Evapotranspiration
+Olsenella sp. SIT9	0.791217391304348	0.0392	Evapotranspiration
+Senegalimassilia anaerobia	0.304524590163934	-0.1907	Evapotranspiration
+Coriobacteriaceae bacterium 68-1-3	0.308571428571429	-0.1387	Evapotranspiration
+Adlercreutzia equolifaciens	0.304524590163934	-0.2041	Evapotranspiration
+Arabia massiliensis	0.304524590163934	-0.1489	Evapotranspiration
+Asaccharobacter celatus	0.304524590163934	-0.2084	Evapotranspiration
+Denitrobacterium detoxificans	0.297931034482759	-0.2408	Evapotranspiration
+Eggerthella lenta	0.390575342465753	-0.1099	Evapotranspiration
+Eggerthella sp. YY7918	0.312369230769231	-0.186	Evapotranspiration
+Enterorhabdus caecimuris	0.297931034482759	-0.2139	Evapotranspiration
+Enterorhabdus mucosicola	0.312369230769231	-0.156	Evapotranspiration
+Gordonibacter massiliensis	0.304524590163934	-0.1483	Evapotranspiration
+Gordonibacter pamelaeae	0.304524590163934	-0.1375	Evapotranspiration
+Gordonibacter urolithinfaciens	0.304524590163934	-0.1491	Evapotranspiration
+Paraeggerthella hongkongensis	0.132923076923077	-0.3331	Evapotranspiration
+Raoultibacter massiliensis	0.304524590163934	-0.1531	Evapotranspiration
+Raoultibacter timonensis	0.333818181818182	-0.1367	Evapotranspiration
+Slackia exigua	0.688390243902439	-0.0173	Evapotranspiration
+Slackia heliotrinireducens	0.301090909090909	-0.2056	Evapotranspiration
+Slackia isoflavoniconvertens	0.297931034482759	-0.45	Evapotranspiration
+Slackia piriformis	0.297931034482759	-0.4609	Evapotranspiration
+Eggerthellaceae bacterium AT8	0.304524590163934	-0.1877	Evapotranspiration
+Conexibacter woesei	0.937014084507042	0.3934	Evapotranspiration
+Solirubrobacter sp. URHD0082	0.892528301886792	0.3525	Evapotranspiration
+Anaerolineaceae bacterium oral taxon 439	0.297931034482759	-0.1232	Evapotranspiration
+Gemella morbillorum	0.796645161290323	0.0816	Evapotranspiration
+Enterococcus faecium	0.243	-0.9437	Evapotranspiration
+Streptococcus anginosus	0.108	-0.564	Evapotranspiration
+Streptococcus constellatus	0.0785454545454545	-0.4455	Evapotranspiration
+Streptococcus intermedius	0.054	-0.4784	Evapotranspiration
+Streptococcus cristatus	0.304524590163934	-0.4333	Evapotranspiration
+Streptococcus equi	0.506666666666667	-0.0885	Evapotranspiration
+Streptococcus gordonii	0.791217391304348	0.1907	Evapotranspiration
+Streptococcus oralis	0.833910447761194	0.2262	Evapotranspiration
+Streptococcus pseudopneumoniae	0.59069387755102	-0.1834	Evapotranspiration
+Streptococcus salivarius	0.304524590163934	-0.6987	Evapotranspiration
+Streptococcus sanguinis	0.304524590163934	-0.6848	Evapotranspiration
+Streptococcus sp. DD04	0.30658064516129	-0.409	Evapotranspiration
+Streptococcus sp. HMSC061D01	0.304524590163934	-0.3515	Evapotranspiration
+[Eubacterium] brachy	0.791217391304348	0.0212	Evapotranspiration
+[Eubacterium] infirmum	0.791217391304348	0.0824	Evapotranspiration
+[Eubacterium] minutum	0.688390243902439	-0.0249	Evapotranspiration
+[Eubacterium] saphenum	0.791217391304348	0.0578	Evapotranspiration
+[Eubacterium] sulci	0.59069387755102	-0.0832	Evapotranspiration
+Anaerovorax odorimutans	0.304524590163934	-0.1639	Evapotranspiration
+Emergencia timonensis	0.791217391304348	0.0583	Evapotranspiration
+Mogibacterium diversum	0.791217391304348	0.0838	Evapotranspiration
+Mogibacterium pumilum	0.791217391304348	0.1219	Evapotranspiration
+Eubacterium pyruvativorans	0.796645161290323	0.168	Evapotranspiration
+Pseudoramibacter alactolyticus	0.738268656716418	-0.0064	Evapotranspiration
+Catonella morbi	0.837	0.1858	Evapotranspiration
+Johnsonella ignava	0.304524590163934	-0.2625	Evapotranspiration
+Lachnoanaerobaculum saburreum	0.688390243902439	-0.0418	Evapotranspiration
+Lachnoanaerobaculum sp. OBRC5-5	0.833910447761194	0.1932	Evapotranspiration
+Oribacterium sp. oral taxon 078	0.644	-0.0507	Evapotranspiration
+Shuttleworthia satelles	0.791217391304348	0.0539	Evapotranspiration
+Stomatobaculum longum	0.791217391304348	0.0746	Evapotranspiration
+Lachnospiraceae bacterium	0.534857142857143	-0.1389	Evapotranspiration
+Lachnospiraceae bacterium oral taxon 500	0.81675	0.12	Evapotranspiration
+Filifactor alocis	0.830769230769231	0.1602	Evapotranspiration
+[Eubacterium] yurii	0.892528301886792	0.2273	Evapotranspiration
+Peptoanaerobacter stomatis	0.688390243902439	-0.0133	Evapotranspiration
+Peptostreptococcus anaerobius	0.694656	-0.0248	Evapotranspiration
+Peptostreptococcaceae bacterium oral taxon 113	0.830769230769231	0.1733	Evapotranspiration
+Peptostreptococcaceae bacterium pGA-8	0.572869565217391	-0.049	Evapotranspiration
+Ruminococcaceae bacterium	0.301090909090909	-0.5477	Evapotranspiration
+Clostridiales bacterium KA00274	0.297931034482759	-0.4445	Evapotranspiration
+Eggerthia catenaformis	0.596571428571428	-0.0455	Evapotranspiration
+Solobacterium moorei	0.304524590163934	-0.2181	Evapotranspiration
+Ndongobacter massiliensis	0.304524590163934	-0.3634	Evapotranspiration
+Selenomonas infelix	0.555428571428571	-0.1937	Evapotranspiration
+Selenomonas noxia	0.791217391304348	0.1164	Evapotranspiration
+Selenomonas sputigena	0.738268656716418	-0.0067	Evapotranspiration
+Selenomonas sp. oral taxon 126	0.555428571428571	-0.1355	Evapotranspiration
+Selenomonas sp. oral taxon 138	0.304524590163934	-0.3695	Evapotranspiration
+Selenomonas sp. oral taxon 920	0.596571428571428	-0.1268	Evapotranspiration
+Anaeroglobus geminatus	0.304524590163934	-0.293	Evapotranspiration
+Dialister invisus	0.802610526315789	0.1424	Evapotranspiration
+Dialister pneumosintes	0.791217391304348	0.0934	Evapotranspiration
+Finegoldia magna	0.59069387755102	-0.1232	Evapotranspiration
+Murdochiella vaginalis	0.364114285714286	-0.3604	Evapotranspiration
+Parvimonas micra	0.802285714285714	0.1481	Evapotranspiration
+Parvimonas sp. KA00067	0.791217391304348	0.1059	Evapotranspiration
+Peptoniphilus indolicus	0.68151724137931	-0.0539	Evapotranspiration
+Peptoniphilus sp. oral taxon 386	0.596571428571428	-0.0577	Evapotranspiration
+Anaerosalibacter massiliensis	0.996	0.5727	Evapotranspiration
+Tissierella praeacuta	0.243	-0.5067	Evapotranspiration
+Tissierellia bacterium KA00581	0.688390243902439	-0.0283	Evapotranspiration
+Firmicutes bacterium	0.476883116883117	-0.2255	Evapotranspiration
+Candidatus Methanomethylophilus alvus	0.833910447761194	0.1709	Evapotranspiration
+Thermoplasmatales archaeon BRNA1	0.830769230769231	0.1585	Evapotranspiration
+methanogenic archaeon ISO4-H5	0.837	0.2024	Evapotranspiration
+Methanobrevibacter millerae	0.555428571428571	-0.2474	Evapotranspiration
+Methanobrevibacter olleyae	0.833910447761194	0.1912	Evapotranspiration
+Methanobrevibacter oralis	0.950803738317757	0.3978	Evapotranspiration
+Methanobrevibacter smithii	0.699906976744186	-0.0434	Evapotranspiration
+Methanobrevibacter sp. YE315	0.304524590163934	-0.5312	Evapotranspiration

@@ -1,0 +1,156 @@
+Library_ID	LibraryID2	SampleID	ArchID_burial	Type	Island	Site	Age_BP	Age_mean	Lab	Lat	Long	Study	SourceSink	Env	Sample_or_Control
+EXB037.A2901	EXB037.A2901	NA	NA	blank	NA	NA	NA	NA	Jena	NA	NA	thisStudy	sink	blank	control
+EXB037.A3001	EXB037.A3001	NA	NA	blank	NA	NA	NA	NA	Jena	NA	NA	thisStudy	sink	blank	control
+EXB037.A3101	EXB037.A3101	RN-N	NA	blank	NA	NA	NA	NA	Oklahoma	NA	NA	thisStudy	sink	blank	control
+EXB037.A3201	EXB037.A3201	NRN-N	NA	blank	NA	NA	NA	NA	Oklahoma	NA	NA	thisStudy	sink	blank	control
+EXB037.A3301	EXB037.A3301	NA	NA	blank	NA	NA	NA	NA	Jena	NA	NA	thisStudy	sink	blank	control
+EXB037.A3401	EXB037.A3401	NA	NA	blank	NA	NA	NA	NA	Jena	NA	NA	thisStudy	sink	blank	control
+HCLVMBCX2-3505-13-00-01_S13	HCLVMBCX2-3505-13-00-01.S13	S13	NA	blank	NA	NA	0	0	Otago	NA	NA	NA	NA	NA	control
+HCLVMBCX2-3505-19-00-01_S19	HCLVMBCX2-3505-19-00-01.S19	S19	NA	blank	NA	NA	0	0	Otago	NA	NA	thisStudy	sink	blank	control
+HCLVMBCX2-3505-32-00-01_S32	HCLVMBCX2-3505-32-00-01.S32	S32	NA	blank	NA	NA	0	0	Otago	NA	NA	thisStudy	sink	blank	control
+LIB027.A0136	LIB027.A0136	NA	NA	blank	NA	NA	NA	NA	Jena	NA	NA	thisStudy	sink	blank	control
+LIB030.A0112	LIB030.A0112	NA	NA	blank	NA	NA	NA	NA	Jena	NA	NA	thisStudy	sink	blank	control
+LIB030.A0113	LIB030.A0113	NA	NA	blank	NA	NA	NA	NA	Jena	NA	NA	thisStudy	sink	blank	control
+LIB030.A0114	LIB030.A0114	NA	NA	blank	NA	NA	NA	NA	Jena	NA	NA	thisStudy	sink	blank	control
+LIB030.A0115	LIB030.A0115	NA	NA	blank	NA	NA	NA	NA	Jena	NA	NA	thisStudy	sink	blank	control
+HPD001.A0101	HPD001.A0101.SG1.1		NA	bone	NA	NA	NA	NA	Jena	NA	NA	NA	NA	NA	control
+HPD002.A0101	HPD002.A0101.SG1.1		NA	bone	NA	NA	NA	NA	Jena	NA	NA	NA	NA	NA	control
+HPD003.A0101	HPD003.A0101.SG1.1		NA	bone	NA	NA	NA	NA	Jena	NA	NA	NA	NA	NA	control
+HPD004.A0101	HPD004.A0101.SG1.1		NA	bone	NA	NA	NA	NA	Jena	NA	NA	NA	NA	NA	control
+NMU001.A0101	NMU001.A0101.SG1.1		NA	bone	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	Naegele	source	archBone	control
+NMU009.A0101	NMU009.A0101.SG1.1		NA	bone	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	Naegele	source	archBone	control
+NMU014.A0101	NMU014.A0101.SG1.1		NA	bone	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	Naegele	source	archBone	control
+NMU020.A0101	NMU020.A0101.SG1.1		NA	bone	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	Naegele	source	archBone	control
+NMU021.A0101	NMU021.A0101.SG1.1		NA	bone	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	Naegele	source	archBone	control
+NMU047.A0101	NMU047.A0101.SG1.1		NA	bone	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	Naegele	source	archBone	control
+NMU059.A0101	NMU059.A0101.SG1.1		NA	bone	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	Naegele	source	archBone	control
+NMU065.A0101	NMU065.A0101.SG1.1		NA	bone	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	Naegele	source	archBone	control
+NMU067.A0101	NMU067.A0101.SG1.1		NA	bone	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	Naegele	source	archBone	control
+NMU089.A0101	NMU089.A0101.SG1.1		NA	bone	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	Naegele	source	archBone	control
+SIG001.A0101	SIG001.A0101.SG1.1		NA	bone	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	Naegele	source	archBone	control
+SIG002.A0101	SIG002.A0101.SG1.1		NA	bone	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	Naegele	source	archBone	control
+SIG004.A0101	SIG004.A0101.SG1.1		NA	bone	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	Naegele	source	archBone	control
+SIG005.A0101	SIG005.A0101.SG1.1		NA	bone	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	Naegele	source	archBone	control
+SIG010.A0101	SIG010.A0101.SG1.1		NA	bone	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	Naegele	source	archBone	control
+SIG018.A0101	SIG018.A0101.SG1.1		NA	bone	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	Naegele	source	archBone	control
+SIG021.A0101	SIG021.A0101.SG1.1		NA	bone	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	Naegele	source	archBone	control
+SIG024.A0101	SIG024.A0101.SG1.1		NA	bone	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	Naegele	source	archBone	control
+SIG025.A0101	SIG025.A0101.SG1.1		NA	bone	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	Naegele	source	archBone	control
+SIG026.A0101	SIG026.A0101.SG1.1		NA	bone	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	Naegele	source	archBone	control
+AHK001.A0101	AHK001.A0101	AHK001	RN50	calculus	Rapa_Nui	Akahanga_Karava	620-80	350	Oklahoma	-27.105794	-109.363193	NA	NA	NA	sample
+AKI001.A0101	AKI001.A0101	AKI001	RN14	calculus	Rapa_Nui	Ahu_Kihi_Kihi_Rau_Mea	620-80	350	Oklahoma	-27.105794	-109.363193	NA	NA	NA	sample
+AKI002.A0101	AKI002.A0101	AKI002	RN28	calculus	Rapa_Nui	Ahu_Kihi_Kihi_Rau_Mea	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+AMH001.A0101	AMH001.A0101	AMH001	RN20	calculus	Rapa_Nui	Ahu_Mahatua	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+AMH002.A0101	AMH002.A0101	AMH002	RN30	calculus	Rapa_Nui	Ahu_Mahatua	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+AMH003.A0101	AMH003.A0101	AMH003	RN36	calculus	Rapa_Nui	Ahu_Mahatua	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+AMH004.A0101	AMH004.A0101	AMH004	RN39	calculus	Rapa_Nui	Ahu_Mahatua	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+ANK001.A0101	ANK001.A0101	ANK001	RN58	calculus	Rapa_Nui	Ana_Koe_Hoko	620-80	350	Oklahoma	-27.105794	-109.363193	NA	NA	NA	sample
+ANN001.A0101	ANN001.A0101	ANN001	RN70	calculus	Rapa_Nui	Ahu_Nau_Nau	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+ANN002.A0101	ANN002.A0101	ANN002	RN93	calculus	Rapa_Nui	Ahu_Nau_Nau	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+ANN003.A0101	ANN003.A0101	ANN003	RN09_NRN_1	calculus	Rapa_Nui	Ahu_Nau_Nau	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+ANN004.A0101	ANN004.A0101	ANN004	RN91_NRN_2	calculus	Rapa_Nui	Ahu_Nau_Nau	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+AON001.A0101	AON001.A0101	AON001	RN65	calculus	Rapa_Nui	Ahu_Onero	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+AON002.A0101	AON002.A0101	AON002	RN66	calculus	Rapa_Nui	Ahu_Onero	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+ATT001.A0101	ATT001.A0101	ATT001	RN02	calculus	Rapa_Nui	Ahu_Tautira	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+ATT002.A0101	ATT002.A0101	ATT002	RNAT_NRN_5	calculus	Rapa_Nui	Ahu_Tautira	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+EFE002.B0101	EFE002.B0101	EFE002	Mangaliliu_TP3	calculus	Efate	Mangaliliu	NA	NA	Jena	-17.6358	168.2048	thisStudy	sink	calculus	sample
+EFE003.B0101	EFE003.B0101	EFE003	Pangpang	calculus	Efate	Pangpang	990-152	NA	Jena	-17.6747	168.5449	thisStudy	sink	calculus	sample
+EFE004.B0101	EFE004.B0101	EFE004	Banana Bay	calculus	Efate	Banana Bay	NA	NA	Jena	-17.7994	168.5396	thisStudy	sink	calculus	sample
+EFE005.B0101	EFE005.B0101	EFE005	Banana Bay	calculus	Efate	Banana Bay	990-152	NA	Jena	-17.7994	168.5396	thisStudy	sink	calculus	sample
+EFE006.B0101	EFE006.B0101	EFE006	Banana Bay	calculus	Efate	Banana Bay	NA	NA	Jena	-17.7994	168.5396	thisStudy	sink	calculus	sample
+FUT018.B0101	FUT018.B0101	FUT018	Furs 2, TR1 24-30"	calculus	Futuna	Vanuatu	1100	NA	Jena	-19.5116	170.23	NA	NA	NA	sample
+FUT021.B0101	FUT021.B0101	FUT021	Furs 9, 78	calculus	Futuna	Vanuatu	1100	NA	Jena	-19.5116	170.23	thisStudy	sink	calculus	sample
+FUT024.B0101	FUT024.B0101	FUT024	Furs 11	calculus	Futuna	Vanuatu	1100	NA	Jena	-19.5116	170.23	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-01-00-01_S1	HCLVMBCX2-3505-01-00-01.S1	S1	B08	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-02-00-01_S2	HCLVMBCX2-3505-02-00-01.S2	S2	B16	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-03-00-01_S3	HCLVMBCX2-3505-03-00-01.S3	S3	B19	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	NA	NA	NA	sample
+HCLVMBCX2-3505-04-00-01_S4	HCLVMBCX2-3505-04-00-01.S4	S4	7c_B2b	calculus	Efate_3000	Teouma	2400	2400	Otago	-17.7957	168.3661	NA	NA	NA	sample
+HCLVMBCX2-3505-05-00-01_S5	HCLVMBCX2-3505-05-00-01.S5	S5	B10B	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-06-00-01_S6	HCLVMBCX2-3505-06-00-01.S6	S6	B30A	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-07-00-01_S7	HCLVMBCX2-3505-07-00-01.S7	S7	B10C	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-08-00-01_S8	HCLVMBCX2-3505-08-00-01.S8	S8	B29M	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-09-00-01_S9	HCLVMBCX2-3505-09-00-01.S9	S9	B29W	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	NA	NA	NA	sample
+HCLVMBCX2-3505-10-00-01_S10	HCLVMBCX2-3505-10-00-01.S10	S10	B30C	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	NA	NA	NA	sample
+HCLVMBCX2-3505-11-00-01_S11	HCLVMBCX2-3505-11-00-01.S11	S11	B02	calculus	Uripiv	Uripiv	2400	2400	Otago	-16.0899	167.458	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-12-00-01_S12	HCLVMBCX2-3505-12-00-01.S12	S12	B8	calculus	Uripiv	Uripiv	2500	2500	Otago	-16.0899	167.458	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-14-00-01_S14	HCLVMBCX2-3505-14-00-01.S14	S14	B05	calculus	Vao	Vao	2100	2100	Otago	-15.8979	167.3091	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-15-00-01_S15	HCLVMBCX2-3505-15-00-01.S15	S15	B05	calculus	Vao	Vao	2100	2100	Otago	-15.8979	167.3091	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-16-00-01_S16	HCLVMBCX2-3505-16-00-01.S16	S16	B06	calculus	Vao	Vao	2100	2100	Otago	-15.8979	167.3091	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-17-00-01_S17	HCLVMBCX2-3505-17-00-01.S17	S17	B14	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-17-00-01_S26	HCLVMBCX2-3505-17-00-01.S26	S26	B02b	calculus	Vao	Vao	2100	2100	Otago	-15.8979	167.3091	NA	NA	NA	sample
+HCLVMBCX2-3505-18-00-01_S18	HCLVMBCX2-3505-18-00-01.S18	S18	B19	calculus	Uripiv	Uripiv	2500	2500	Otago	-16.0899	167.458	NA	NA	NA	sample
+HCLVMBCX2-3505-20-00-01_S20	HCLVMBCX2-3505-20-00-01.S20	S20	B23	calculus	Uripiv	Uripiv	2300	2300	Otago	-16.0899	167.458	NA	NA	NA	sample
+HCLVMBCX2-3505-21-00-01_S21	HCLVMBCX2-3505-21-00-01.S21	S21	B18	calculus	Uripiv	Uripiv	2190	2190	Otago	-16.0899	167.458	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-22-00-01_S22	HCLVMBCX2-3505-22-00-01.S22	S22	B3	calculus	Watom	Watom	2500	2500	Otago	-4.1148	152.0679	NA	NA	NA	sample
+HCLVMBCX2-3505-23-00-01_S23	HCLVMBCX2-3505-23-00-01.S23	S23	B53	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	NA	NA	NA	sample
+HCLVMBCX2-3505-24-00-01_S24	HCLVMBCX2-3505-24-00-01.S24	S24	7c_B4	calculus	Efate_3000	Teouma	2400	2400	Otago	-17.7957	168.3661	NA	NA	NA	sample
+HCLVMBCX2-3505-25-00-01_S25	HCLVMBCX2-3505-25-00-01.S25	S25	B76	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	NA	NA	NA	sample
+HCLVMBCX2-3505-27-00-01_S27	HCLVMBCX2-3505-27-00-01.S27	S27	B04	calculus	Vao	Vao	2100	2100	Otago	-15.8979	167.3091	NA	NA	NA	sample
+HCLVMBCX2-3505-28-00-01_S28	HCLVMBCX2-3505-28-00-01.S28	S28	B8	calculus	Watom	Watom	2500	2500	Otago	-4.1148	152.0679	thisStudy	sink	calculus	sample
+HCLVMBCX2-3505-29-00-01_S29	HCLVMBCX2-3505-29-00-01.S29	S29	B59	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	NA	NA	NA	sample
+HCLVMBCX2-3505-31-00-01_S31	HCLVMBCX2-3505-31-00-01.S31	S31	B60	calculus	Efate_3000	Teouma	3000	3000	Otago	-17.7957	168.3661	NA	NA	NA	sample
+HCLVMBCX2-3505-33-00-01_S33	HCLVMBCX2-3505-33-00-01.S33	S33	B33	calculus	Uripiv	Uripiv	2100	2100	Otago	-16.0899	167.458	NA	NA	NA	sample
+HPD005.B0101	HPD005.B0101	HPD006	Heping_Dao_B	calculus	Taiwan	Heping_Dao	NA	NA	Jena	25.1579	121.7654	NA	NA	NA	sample
+HPD006.B0101	HPD006.B0101	HPD007	Heping_Dao_B	calculus	Taiwan	Heping_Dao	NA	NA	Jena	25.1579	121.7654	NA	NA	NA	sample
+HPD007.B0101	HPD007.B0101	HPD005	Heping_Dao_B	calculus	Taiwan	Heping_Dao	NA	NA	Jena	25.1579	121.7654	NA	NA	NA	sample
+NMU115.A0101	NMU115.A0101	NMU115	B1_1	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU116.A0101	NMU116.A0101	NMU116	B2	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	NA	NA	NA	sample
+NMU117.A0101	NMU117.A0101	NMU117	B11_1	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU118.A0101	NMU118.A0101	NMU118	B20	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU119.A0101	NMU119.A0101	NMU119	B21	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU120.A0101	NMU120.A0101	NMU120	B34	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU121.A0101	NMU121.A0101	NMU121	B54	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU122.A0101	NMU122.A0101	NMU122	B68	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU123.A0101	NMU123.A0101	NMU123	B70	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU124.A0101	NMU124.A0101	NMU124	B84	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU125.A0101	NMU125.A0101	NMU125	B88	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU126.A0101	NMU126.A0101	NMU126	B91	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU127.A0101	NMU127.A0101	NMU127	B104	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU128.A0101	NMU128.A0101	NMU128	B108	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU129.A0101	NMU129.A0101	NMU129	B109	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU130.A0101	NMU130.A0101	NMU130	B159	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	thisStudy	sink	calculus	sample
+NMU131.A0101	NMU131.A0101	NMU131	B194	calculus	Taumako_Duff_Islands	Namu	675-295	485	Jena	-9.8778	167.1772	NA	NA	NA	sample
+PAH001.A0102	PAH001.A0102	PAH001	PH16 (B23)	calculus	Flores	Pain_Haka	3000	3000	Oklahoma	-8.6224	120.9186	NA	NA	NA	sample
+PAH002.A0101	PAH002.A0101	PAH002	PH27_B7	calculus	Flores	Pain_Haka	3000	3000	Oklahoma	-8.6224	120.9186	thisStudy	sink	calculus	sample
+PAH003.A0101	PAH003.A0101	PAH003	PH06_B47a	calculus	Flores	Pain_Haka	3000	3000	Oklahoma	-8.6224	120.9186	thisStudy	sink	calculus	sample
+PVD001.A0101	PVD001.A0101	PVD001	A08	calculus	Rurutu	Peva_Dune	1020-570	795	Oklahoma	-22.4826	-151.3406	thisStudy	sink	calculus	sample
+RAP001.A0101	RAP001.A0101	RAP001	RNA937_NRN_3	calculus	Rapa_Nui	NA	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+RAP002.A0101	RAP002.A0101	RAP002	RNA944_NRN_4	calculus	Rapa_Nui	NA	620-80	350	Oklahoma	-27.105794	-109.363193	thisStudy	sink	calculus	sample
+SIG031.A0101	SIG031.A0101	SIG031	SVF01	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	thisStudy	sink	calculus	sample
+SIG032.A0101	SIG032.A0101	SIG032	SVF02	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	thisStudy	sink	calculus	sample
+SIG033.A0101	SIG033.A0101	SIG033	SVF03	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	thisStudy	sink	calculus	sample
+SIG034.A0101	SIG034.A0101	SIG034	SVF08	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	NA	NA	NA	sample
+SIG035.A0101	SIG035.A0101	SIG035	SVF14	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	thisStudy	sink	calculus	sample
+SIG036.A0101	SIG036.A0101	SIG036	SVF19	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Oklahoma	-18.1421	177.5077	NA	NA	NA	sample
+SIG037.A0101	SIG037.A0101	SIG037	03_1	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG038.A0101	SIG038.A0101	SIG038	17_3	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG039.A0101	SIG039.A0101	SIG039	21	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG040.A0101	SIG040.A0101	SIG040	26_1	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG040.A0201	SIG040.A0201	SIG040	26_1	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG041.A0101	SIG041.A0101	SIG041	29_1	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG042.A0101	SIG042.A0101	SIG042	32_2	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG043.A0101	SIG043.A0101	SIG043	60_1	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG044.A0101	SIG044.A0101	SIG044	65	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG045.A0101	SIG045.A0101	SIG045	69_1	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG046.A0101	SIG046.A0101	SIG046	72_1	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG046.A0201	SIG046.A0201	SIG046	72_1	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+SIG047.A0101	SIG047.A0101	SIG047	79_1	calculus	Viti_Levu	Sigatoka_Dunes	1700-1300	1500	Jena	-18.1421	177.5077	NA	NA	NA	sample
+TAP001.B0101	TAP001.B0101	TAP001	Pieve d' investiture, Haurari?	calculus	Raiatea	Taputapuatea	NA	NA	Jena	-16.8424	-151.3873	thisStudy	sink	calculus	sample
+TAP003.B0101	TAP003.B0101	TAP003	Pieve d' investiture, Piquet 33	calculus	Raiatea	Taputapuatea	270-0	135	Jena	-16.8424	-151.3873	thisStudy	sink	calculus	sample
+TON001.C0101	TON001.C0101	TON001	SK3_1	calculus	Tongatapu	Talasiu	2670-2320	2495	Jena	-21.191	-175.1922	NA	NA	NA	sample
+TON003.B0101	TON003.B0101	TON003	SK9_3	calculus	Tongatapu	Talasiu	NA	NA	Jena	-21.191	-175.1922	NA	NA	NA	sample
+TON004.B0101	TON004.B0101	TON004	SK10	calculus	Tongatapu	Talasiu	2680-2340	2510	Jena	-21.191	-175.1922	thisStudy	sink	calculus	sample
+TON005.B0101	TON005.B0101	TON005	SK12	calculus	Tongatapu	Talasiu	NA	NA	Jena	-21.191	-175.1922	thisStudy	sink	calculus	sample
+TON006.B0101	TON006.B0101	TON006	SK14	calculus	Tongatapu	Talasiu	NA	NA	Jena	-21.191	-175.1922	thisStudy	sink	calculus	sample
+TON007.B0101	TON007.B0101	TON007	BG3	calculus	Tongatapu	Talasiu	NA	NA	Jena	-21.191	-175.1922	thisStudy	sink	calculus	sample
+ARS001.A0101	NA	NA	NA	bone	NA	NA	NA	NA	NA	NA	NA	Kovsgol	source	archBone	control
+ARS004.A0101	NA	NA	NA	bone	NA	NA	NA	NA	NA	NA	NA	Kovsgol	source	archBone	control
+ARS005.A0101	NA	NA	NA	bone	NA	NA	NA	NA	NA	NA	NA	Kovsgol	source	archBone	control
+ARS020.A0101	NA	NA	NA	bone	NA	NA	NA	NA	NA	NA	NA	Kovsgol	source	archBone	control
+ARS010.A0101	NA	NA	NA	bone	NA	NA	NA	NA	NA	NA	NA	Kovsgol	source	archBone	control
+ARS011.A0101	NA	NA	NA	bone	NA	NA	NA	NA	NA	NA	NA	Kovsgol	source	archBone	control
+ARS012.A0101	NA	NA	NA	bone	NA	NA	NA	NA	NA	NA	NA	Kovsgol	source	archBone	control
+ARS013.A0101	NA	NA	NA	bone	NA	NA	NA	NA	NA	NA	NA	Kovsgol	source	archBone	control
+ARS015.A0101	NA	NA	NA	bone	NA	NA	NA	NA	NA	NA	NA	Kovsgol	source	archBone	control
+ARS017.A0101	NA	NA	NA	bone	NA	NA	NA	NA	NA	NA	NA	Kovsgol	source	archBone	control
+HCLVMBCX2-3505-26-00-01_S26	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	thisStudy	sink	calculus	sample
