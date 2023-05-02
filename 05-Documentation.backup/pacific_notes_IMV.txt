@@ -1,0 +1,1040 @@
+# Make a GitHub repository for publication
+# go online and make a repository called pacific_calculus
+# don't add a README file or a .gitignore file
+# now do on the command line in /mnt/archgen/microbiome_calculus/pacific_calculus
+echo "# Ancient dental calculus from Oceania" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:ivelsko/pacific_calculus.git
+git push -u origin main
+
+-------------------------------------------------------------------------------------------
+# Run the pacific data through HUMAnN3
+cd /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/humann2
+conda activate humann3
+
+# database location /r1/people/irina_marie_velsko/humann_dbs/utility_mapping
+
+humann2 --input $SAMPLE.fastq --output $OUTPUT_DIR
+
+# run humann3 with this
+snakemake -s ../../02-Scripts.backup/011-humann2_pacific.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 24 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 8 --latency-wait 20 -n
+
+# run humann3 with ancient parameter-mapped sam files from Alex's ancient parameter mapping for MetaPhlAn3
+# snakemake -s ../../02-Scripts.backup/011-humann2_anc_params_pacific.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 24 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 8 --latency-wait 20 -n
+
+# make a list of the samples for this snakemake file
+ls input/*.gz | sed 's/.unmapped.fastq.gz//g' | sed 's/input\///g' > ../../../05-Documentation.backup/samples_included.csv
+
+# Instead, run humann3 with ancient parameters from Alex's ancient parameter script for paleofeces
+snakemake -s ../../02-Scripts.backup/FUNC_HUMANN3_ancientSettings.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 24 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 8 --latency-wait 20 -n
+# and run the world samples here
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/humann3/world_samples
+snakemake -s ../../../02-Scripts.backup/FUNC_HUMANN3_ancientSettings_world.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 24 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 10 --latency-wait 20 --keep-going -n
+
+
+conda activate humann3
+
+# gene families
+# modern parameters
+humann_join_tables -i anc_params_output/ -o genefamilies_joined.tsv --file_name genefamilies
+humann_renorm_table --input genefamilies_joined.tsv --output genefamilies_joined_cpm.tsv --units cpm
+humann_regroup_table --input genefamilies_joined_cpm.tsv --output genefamilies_joined_cpm_ur90rxn.tsv --groups uniref90_rxn
+humann_rename_table --input genefamilies_joined_cpm_ur90rxn.tsv --output genefamilies_joined_cpm_ur90rxn_names.tsv -n metacyc-rxn
+
+# ancient parameters
+humann_join_tables -i anc_params_output/ -o genefamilies_anc_params_world_joined.tsv --file_name genefamilies
+humann_renorm_table --input genefamilies_anc_params_world_joined.tsv --output genefamilies_anc_params_world_joined_cpm.tsv --units cpm
+humann_regroup_table --input genefamilies_anc_params_world_joined_cpm.tsv --output genefamilies_anc_params_world_joined_cpm_ur90rxn.tsv --groups uniref90_rxn
+humann_regroup_table --input genefamilies_anc_params_world_joined_cpm.tsv --output genefamilies_anc_params_world_joined_cpm_ko.tsv --groups uniref90_ko
+humann_rename_table --input genefamilies_anc_params_world_joined_cpm_ur90rxn.tsv --output genefamilies_anc_params_world_joined_cpm_ur90rxn_names.tsv -n metacyc-rxn
+humann_rename_table --input genefamilies_anc_params_world_joined_cpm_ko.tsv --output genefamilies_anc_params_world_joined_cpm_ko_names.tsv -n kegg-orthology
+#  humann_rename_table --input genefamilies_anc_params_world_joined_cpm_ko.tsv --output genefamilies_anc_params_world_joined_cpm_kp_names.tsv -n kegg-pathway
+
+
+# pathway abundance
+humann_join_tables -i anc_params_output/ -o pathabundance_anc_params_world_joined.tsv --file_name pathabundance
+humann_renorm_table --input pathabundance_anc_params_world_joined.tsv --output pathabundance_anc_params_world_joined_cpm.tsv --units cpm
+#  humann_regroup_table --input pathabundance_anc_params_joined_cpm.tsv --output pathabundance_anc_params_joined_cpm_ko.tsv --groups uniref90_ko
+#  humann_rename_table --input pathabundance_anc_params_joined_cpm_ko.tsv --output pathabundance_anc_params_joined_cpm_kos_names.tsv -n kegg-pathway
+
+# to get some stats from this HUMANn3 run, find the read counts for reads >50bp here:
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/tmp/humann3_clippedreads/*.n
+# and their average GC content can ge gotten from 
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/tmp/humann3_clippedreads/*.fastq.gz
+
+# the humann3 mapping info is here:
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/humann3/anc_params_output/*/*/*_bowtie2_aligned.sam # reads taht aligned in the initial bowtie2 run
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/humann3/anc_params_output/*/*/*_aligned.tsv # only this file doesn't exist. reads that didn't align in the bowtie2 step but aligned in the translated alignment step
+
+############################
+To analyze the gene families information, do hierarchical clustering in the Rmd file
+Get a list of the KOs in each cluster from the file humann3_GFs_world_kegg_clustering.tsv
+Then copy the list of KOs into the KEGG Mapper Reconstruct tool (along with the additional "Gene#" column)
+https://www.kegg.jp/kegg/mapper/reconstruct.html
+
+The output page has a list like this
+Metabolism
+Global and overview maps
+01100 Metabolic pathways (196)
+01110 Biosynthesis of secondary metabolites (85)
+01120 Microbial metabolism in diverse environments (54)
+
+Copy this list and get the counts for each pathway
+Purposely exclude Human Diseases and Organismal Systems (b/c they're not microbial pathways)
+Put them into the file KEGG_color_humann3_GFs_world_list.tsv
+
+6:B  09101 Carbohydrate metabolism
+1433:B  09102 Energy metabolism
+57813 C    99981 Carbohydrate metabolism
+57840 C    99982 Energy metabolism
+
+# from here https://www.genome.jp/kegg-bin/get_htext?ko00001.keg
+# download the file from "Download htext"
+# and rename to kegg_pathway_KOs.tsv
+
+result <- fromJSON("~/Downloads/ko00001.json", flatten=TRUE)
+json_data_frame <- as.data.frame(result)
+
+###############################################
+# All DeepEvo data needs to be re-processed
+# /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/deep_evo_eager2
+
+# get a list of libraries from sidora.core
+library(sidora.core)
+library(data.table)
+library(tidyverse)
+
+con <- get_pandora_connection("/mnt/archgen/users/velsko/.credentials")
+df_list <- get_df_list(c(
+  "TAB_Library", "TAB_Capture", "TAB_Sequencing"
+), con = con)
+libseqinfo <- join_pandora_tables(df_list)
+
+libseqinfo <- convert_all_ids_to_values(libseqinfo, con)
+deepinfo <- filter_pr_tag(libseqinfo, "library.Tags", ins = "Deep_Evolution")
+deepinfo <- deepinfo %>% 
+  select(library.Full_Library_Id, capture.Full_Capture_Id, sequencing.Full_Sequencing_Id) %>%
+  filter(str_detect(sequencing.Full_Sequencing_Id, ".SG")) %>%
+  select(sequencing.Full_Sequencing_Id) %>%
+  arrange(sequencing.Full_Sequencing_Id)
+
+fwrite(deepinfo, "./deep_evo_libs.tsv", sep = "\t", quote = F)
+
+# and use Thesias' script to turn it into a table
+/mnt/archgen/tools/pandora2eager/0.2.1-beta/pandora2eager.sh deep_evo_libs.tsv > deepevo_eager2_input.tsv
+
+# Change all 'Unknown' in the UDG_treatment column to 'none'
+# check the file and delete any lines that are all NA
+# also delete the entries that have identical file names (delete the SG1 entries for:)
+ABM007.A0101_S0_L001_R1_001.fastq.gz (and L002, L003)
+ABM008.A0101_S0_L001_R1_001.fastq.gz (and L002, L003, L004)
+DJA006.A0101_S0_L001_R1_001.fastq.gz (and L002, L003, L004)
+EBO008.A0101_S0_L001_R1_001.fastq.gz (and L002, L003, L004)
+FDM001.A0101_S0_L001_R1_001.fastq.gz (and L002, L003, L004)
+PAN002 - Pan362.2.67_S0_L001_R1_001.fastq.gz (this is identical with PAN003, but the code Pan362.2.67 is for PAN003). 
+# There is no PAN002 shotgun data if this code is correctly entered. Otherwise this is a confusion I'm not touching
+BIT001.A0101_S0_L001_R1_001.fastq.gz
+DJA007.A0101_S0_L001_R1_001.fastq.gz
+EBO009.A0101_S0_L001_R1_001.fastq.gz
+IBA001.A0101_S0_L001_R1_001.fastq.gz
+IBA002.A0101_S0_L001_R1_001.fastq.gz
+Tube_9_KFB106_S0_L001_R1_001.fastq.gz
+MOA001.A0101_S0_L001_R1_001.fastq.gz
+MOA001.A0102_S0_L001_R1_001.fastq.gz
+TAF017.C0101_S0_L001_R1_001.fastq.gz
+TAF017.E0101_S0_L001_R1_001.fastq.gz
+WAL001.A0101_S0_L001_R1_001.fastq.gz
+
+
+
+# run through eager2
+
+NXF_VER="21.04.2" nextflow run nf-core/eager \
+-r 2.4.0 \
+-profile eva,archgen,big_data,malt_big \
+-c /mnt/archgen/users/velsko/nextflow/eva_big_malt.config \
+--outdir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/deep_evo_eager2/eager2 \
+-work-dir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/deep_evo_eager2/work \
+--input /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/deep_evo_eager2/deepevo_eager2_input.tsv \
+--complexity_filter_poly_g \
+--fasta /mnt/archgen/Reference_Genomes/Human/GRCh38/GRCh38.fa \
+--seq_dict /mnt/archgen/Reference_Genomes/Human/GRCh38/GRCh38.dict \
+--bwa_index /mnt/archgen/Reference_Genomes/Human/GRCh38/ \
+--bwaalnn 0.02 \
+--bwaalnl 1024 \
+--run_bam_filtering \
+--bam_unmapped_type fastq \
+--skip_damage_calculation \
+--skip_qualimap \
+--run_metagenomic_screening \
+--metagenomic_tool malt \
+--database /mnt/archgen/microbiome_sciences/reference_databases/built/refseq/bacteria_archea_homo_20181122/malt/refseq-bac-arch-homo-2018_11 \
+--email irina_marie_velsko@eva.mpg.de \
+-name deepevo_pac \
+-with-tower
+
+# resumed as admiring_mendel
+# resumed as jolly_yonath
+# malt job 1402144
+# hold off further resume until Cameroon_pq run is successful
+
+# Download Eisenhoffer 2020 Japan calculus data using aspera
+# /mnt/archgen/microbiome_sciences/raw_data/public/eisenhoffer2020
+bash /mnt/archgen/microbiome_sciences/raw_data/public/eisenhoffer2020/download_aspera.sh
+
+
+
+
+~/.aspera/cli/bin/ascp -QT -l 300m -P33001 -i ~/.aspera/cli/etc/asperaweb_id_dsa.openssh era-fasp@fasp.sra.ebi.ac.uk:/vol1/fastq/ERR164/ERR164407/ERR164407.fastq.gz /mnt/archgen/microbiome_sciences/raw_data/public/ottoni2021
+
+
+###################
+# Profile deep evo, Ottoni2021, and Eisenhoffer2020 calculus with MALT custom 
+# RefSeq database to compare to Pacific calculus
+
+###################
+
+# eisenhoffer2020 (/mnt/archgen/microbiome_calculus/pacific/03-Preprocessing/eisenhoffer2020_eager_malt/)
+snakemake -s ../../02-Scripts.backup/018-eisenhoffer2020_malt.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 112 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 20 -n
+
+
+nextflow run nf-core/eager -r 2.4.4 \
+-profile eva,archgen,big_data,malt_big \
+-c /mnt/archgen/users/velsko/nextflow/eva_big_malt.config \
+--input "/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eisenhoffer2020_eager_malt/eisenhoffer2020_eager.tsv" \
+--fasta '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa' \
+--fasta_index '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa.fai' \
+--bwa_index '/mnt/archgen/Reference_Genomes/Human/hs37d5' \
+--seq_dict '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.dict' \
+--skip_deduplication \
+--skip_damage_calculation \
+--skip_preseq \
+--skip_qualimap \
+--complexity_filter_poly_g \
+--bwaalnl 32 \
+--bwaalnn 0.01  \
+--run_bam_filtering \
+--bam_unmapped_type fastq \
+--run_metagenomic_screening \
+--metagenomic_tool malt \
+--database /mnt/archgen/microbiome_sciences/reference_databases/built/refseq/bacteria_archea_homo_20181122/malt/refseq-bac-arch-homo-2018_11/ \
+--malt_sam_output \
+--outdir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eisenhoffer2020_eager_malt/eager2_out \
+-work-dir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eisenhoffer2020_eager_malt/eager2_work \
+-name eisenhoffer2020_eager_malt \
+--email irina_marie_velsko@eva.mpg.de \
+-with-tower
+
+# had to move malt files from work to out by hand b/c run collapsed (but MALT finished ok)
+# mkdir eager2_out/metagenomic_screening/malt
+# then mkdir multiqc; cd multiqc; multiqc --config /r1/people/irina_marie_velsko/.nextflow/assets/nf-core/eager/assets/multiqc_config.yaml ..
+# and finally clean the folders  
+nextflow clean -f -k
+
+# ottoni2021 (/mnt/archgen/microbiome_calculus/pacific/03-Preprocessing/ottoni2021)
+snakemake -s ../../02-Scripts.backup/018-ottoni2021_malt.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 112 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 20 -n
+
+
+nextflow run nf-core/eager -r 2.4.4 \
+-profile eva,archgen,big_data,malt_big \
+-c /mnt/archgen/users/velsko/nextflow/eva_big_malt.config \
+--input "/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/ottoni2021_eager_malt/ottoni2021_eager.tsv" \
+--fasta '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa' \
+--fasta_index '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa.fai' \
+--bwa_index '/mnt/archgen/Reference_Genomes/Human/hs37d5' \
+--seq_dict '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.dict' \
+--skip_deduplication \
+--skip_damage_calculation \
+--skip_preseq \
+--skip_qualimap \
+--complexity_filter_poly_g \
+--bwaalnl 32 \
+--bwaalnn 0.01  \
+--run_bam_filtering \
+--bam_unmapped_type fastq \
+--run_metagenomic_screening \
+--metagenomic_tool malt \
+--database /mnt/archgen/microbiome_sciences/reference_databases/built/refseq/bacteria_archea_homo_20181122/malt/refseq-bac-arch-homo-2018_11/ \
+--malt_sam_output \
+--outdir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/ottoni2020_eager_malt/eager2_out \
+-work-dir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/ottoni2020_eager_malt/eager2_work \
+-name ottoni2020_eager_malt \
+--email irina_marie_velsko@eva.mpg.de \
+-with-tower
+
+
+
+# fellowsyates2021 (/mnt/archgen/microbiome_calculus/pacific/03-Preprocessing/fellowsyates2021)
+/mnt/archgen/tools/pandora2eager/0.2.2/pandora2eager.sh fellowsyates2021_list.tsv > fellowsyates2021_eager_clean.tsv
+snakemake -s ../../02-Scripts.backup/018-deep_evo_malt.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 112 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 20 -n
+
+nextflow run nf-core/eager -r 2.4.4 \
+-profile eva,archgen,big_data,malt_big \
+-c /mnt/archgen/users/velsko/nextflow/eva_big_malt.config \
+--input "/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/deep_evo_eager_malt/fellowsyates2021_eager.tsv" \
+--fasta '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa' \
+--fasta_index '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa.fai' \
+--bwa_index '/mnt/archgen/Reference_Genomes/Human/hs37d5' \
+--seq_dict '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.dict' \
+--skip_deduplication \
+--skip_damage_calculation \
+--skip_preseq \
+--skip_qualimap \
+--complexity_filter_poly_g \
+--bwaalnl 32 \
+--bwaalnn 0.01  \
+--run_bam_filtering \
+--bam_unmapped_type fastq \
+--run_metagenomic_screening \
+--metagenomic_tool malt \
+--database /mnt/archgen/microbiome_sciences/reference_databases/built/refseq/bacteria_archea_homo_20181122/malt/refseq-bac-arch-homo-2018_11/ \
+--malt_sam_output \
+--outdir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/deep_evo_eager_malt/eager2 \
+-work-dir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/deep_evo_eager_malt/work \
+-name deep_evo_eager_malt \
+--email irina_marie_velsko@eva.mpg.de \
+-with-tower
+
+
+# fellowsyates2021_missed
+
+nextflow run nf-core/eager -r 2.4.4 \
+-profile eva,archgen,big_data,malt_big \
+-c /mnt/archgen/users/velsko/nextflow/eva_big_malt.config \
+--input "/mnt/archgen/microbiome_calculus/strep_clades/03-preprocessing/fellowsyates2021_missed_eager.tsv" \
+--fasta '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa' \
+--fasta_index '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa.fai' \
+--bwa_index '/mnt/archgen/Reference_Genomes/Human/hs37d5' \
+--seq_dict '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.dict' \
+--skip_deduplication \
+--skip_damage_calculation \
+--skip_preseq \
+--skip_qualimap \
+--complexity_filter_poly_g \
+--bwaalnl 32 \
+--bwaalnn 0.01  \
+--run_bam_filtering \
+--bam_unmapped_type fastq \
+--run_metagenomic_screening \
+--metagenomic_tool malt \
+--database /mnt/archgen/microbiome_sciences/reference_databases/built/refseq/bacteria_archea_homo_20181122/malt/refseq-bac-arch-homo-2018_11 \
+--malt_sam_output \
+--outdir /mnt/archgen/microbiome_calculus/strep_clades/03-preprocessing/fellowsyates2021_missed/eager2 \
+-work-dir /mnt/archgen/microbiome_calculus/strep_clades/03-preprocessing/fellowsyates2021_missed/work \
+-name goymalt \
+--email irina_marie_velsko@eva.mpg.de \
+-with-tower
+
+# resumed as irreverent_solvay
+
+
+qalter 2309543 -q bigmem.q
+
+
+# mann2018_world
+
+nextflow run nf-core/eager -r 2.4.4 \
+-profile eva,archgen,big_data,malt_big \
+-c /mnt/archgen/users/velsko/nextflow/eva_big_malt.config \
+--input "/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/mann2018_world_eager.tsv" \
+--fasta '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa' \
+--fasta_index '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa.fai' \
+--bwa_index '/mnt/archgen/Reference_Genomes/Human/hs37d5' \
+--seq_dict '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.dict' \
+--skip_deduplication \
+--skip_damage_calculation \
+--skip_preseq \
+--skip_qualimap \
+--complexity_filter_poly_g \
+--bwaalnl 32 \
+--bwaalnn 0.01  \
+--run_bam_filtering \
+--bam_unmapped_type fastq \
+--run_metagenomic_screening \
+--metagenomic_tool malt \
+--database /mnt/archgen/microbiome_sciences/reference_databases/built/refseq/bacteria_archea_homo_20181122/malt/refseq-bac-arch-homo-2018_11/ \
+--malt_sam_output \
+--outdir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/mann2018_world/eager2_out \
+-work-dir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/mann2018_world/eager2_work \
+-name mann2018_world \
+--email irina_marie_velsko@eva.mpg.de \
+-with-tower
+
+
+
+
+
+
+
+###############################################
+# GC content and read length
+
+###############################################
+# run the eager-processed human-removed reads through FastQC, then run multiqc on the FastQC output to the a table with the average read length and GC content of the reads
+snakemake -s ../../02-Scripts.backup/017-pacific_fastqc_gc_rl.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 -n
+
+# then run multiqc here /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/sample_gc_rl/FastQC
+multiqc .
+
+# then add GC and read length averages per sample to the metadata sheet
+
+# Do the same for the DeepEvo data b/c eager didn't finish properly and multiqc didn't give a general_stats file
+# run the eager-processed human-removed reads through FastQC, then run multiqc on the FastQC output to the a table with the average read length and GC content of the reads
+snakemake -s ../../../../02-Scripts.backup/017-deepevo_fastqc_gc_rl.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 12 --latency-wait 20 --keep-going -n
+
+# Do the same for the Mann2018_world data b/c easier to get the GC and RL from here rather than from the multiqc generalstats table from eager
+
+
+
+
+
+
+
+
+
+
+###############################################
+# MetaPhlAn3
+
+###############################################
+# Run metaphlan3 and see if the slight horseshoe in the MALT refseq data resolves like it did for the MID paper
+# Expect this to be the case, wehre the Pacific calculus samples have again higher proportions of anaerobic taxa,
+# hence their clustering at one end of the PCA
+
+conda activate mpa3
+snakemake -s ../../02-Scripts.backup/019-metaphlan3_pacific.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 8 --latency-wait 40 --keep-going -n
+
+# merge the tables (make sure conda environment is activated)
+merge_metaphlan_tables.py *.metaphlan3.tsv > mpa3_pacific_abundance_table.tsv
+
+# try with Alex's modified script to account for ancient reads
+snakemake -s /mnt/archgen/users/huebner/tmp/COMP_MetaPhlAn3_ancientsettings.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 8 --latency-wait 40 --keep-going -n
+snakemake -s ../../../02-Scripts.backup/COMP_MetaPhlAn3_ancientsettings.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 8 --latency-wait 40 --keep-going -n
+# need to modify the input file paths to get all of the blanks and bones too, then run it again
+
+
+# merge the tables (make sure conda environment is activated)
+merge_metaphlan_tables.py *.metaphlan.profile.txt > mpa3_anc_params_pacific_abundance_table.tsv
+merge_metaphlan_tables.py NMU001.A0101.metaphlan.profile.txt NMU009.A0101.metaphlan.profile.txt NMU014.A0101.metaphlan.profile.txt NMU020.A0101.metaphlan.profile.txt NMU021.A0101.metaphlan.profile.txt NMU047.A0101.metaphlan.profile.txt NMU059.A0101.metaphlan.profile.txt NMU065.A0101.metaphlan.profile.txt NMU067.A0101.metaphlan.profile.txt NMU089.A0101.metaphlan.profile.txt ARS001.A0101.metaphlan.profile.txt ARS004.A0101.metaphlan.profile.txt ARS005.A0101.metaphlan.profile.txt ARS006.A0101.metaphlan.profile.txt ARS010.A0101.metaphlan.profile.txt ARS011.A0101.metaphlan.profile.txt ARS012.A0101.metaphlan.profile.txt ARS013.A0101.metaphlan.profile.txt ARS015.A0101.metaphlan.profile.txt ARS017.A0101.metaphlan.profile.txt KRA001.C0102.metaphlan.profile.txt KRA001.C0202.metaphlan.profile.txt KRA002.C0101.metaphlan.profile.txt KRA002.C0201.metaphlan.profile.txt KRA003.C0101.metaphlan.profile.txt KRA003.C0201.metaphlan.profile.txt KRA004.C0101.metaphlan.profile.txt KRA004.C0201.metaphlan.profile.txt KRA005.C0101.metaphlan.profile.txt KRA005.C0201.metaphlan.profile.txt KRA006.C0101.metaphlan.profile.txt KRA006.C0201.metaphlan.profile.txt KRA007.C0101.metaphlan.profile.txt KRA007.C0201.metaphlan.profile.txt KRA008.C0101.metaphlan.profile.txt KRA008.C0201.metaphlan.profile.txt KRA010.C0101.metaphlan.profile.txt KRA010.C0201.metaphlan.profile.txt KRA011.C0101.metaphlan.profile.txt KRA011.C0201.metaphlan.profile.txt SIG001.A0101.metaphlan.profile.txt SIG002.A0101.metaphlan.profile.txt SIG004.A0101.metaphlan.profile.txt SIG005.A0101.metaphlan.profile.txt SIG010.A0101.metaphlan.profile.txt SIG018.A0101.metaphlan.profile.txt SIG021.A0101.metaphlan.profile.txt SIG024.A0101.metaphlan.profile.txt SIG025.A0101.metaphlan.profile.txt SIG026.A0101.metaphlan.profile.txt > mpa3_bones_abundance_table.tsv
+
+
+
+###############################################
+Kraken2 RefSeq only or RefSeq + Pasolli MAGs
+
+###############################################
+
+# Try running the samples through the Kraken2 databases Alex made for me for the CMC project
+# with and without the MAGs from Pasolli2019
+# Maybe the Pacific samples have more taxa assigned when using the RefSeq+MAGs database
+
+# run here /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/kraken2
+# this runs with both RefSeq only databases and the RefSeq+Pasolli MAGs database
+conda activate kraken2
+snakemake -s ../../02-Scripts.backup/020-kraken2_pacific_RS_MAGs.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 32 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 8 --latency-wait 20 -n
+
+# combine the tables with a script from KrakenTools
+/mnt/archgen/users/velsko/bin/krakenTools/combine_mpa.py -i output/AHK001.A0101.kraken2.report_mpa.rs.tsv output/AKI001.A0101.kraken2.report_mpa.rs.tsv output/AKI002.A0101.kraken2.report_mpa.rs.tsv output/AMH001.A0101.kraken2.report_mpa.rs.tsv output/AMH002.A0101.kraken2.report_mpa.rs.tsv output/AMH003.A0101.kraken2.report_mpa.rs.tsv output/AMH004.A0101.kraken2.report_mpa.rs.tsv output/ANK001.A0101.kraken2.report_mpa.rs.tsv output/ANN001.A0101.kraken2.report_mpa.rs.tsv output/ANN002.A0101.kraken2.report_mpa.rs.tsv output/ANN003.A0101.kraken2.report_mpa.rs.tsv output/ANN004.A0101.kraken2.report_mpa.rs.tsv output/AON001.A0101.kraken2.report_mpa.rs.tsv output/AON002.A0101.kraken2.report_mpa.rs.tsv output/ATT001.A0101.kraken2.report_mpa.rs.tsv output/ATT002.A0101.kraken2.report_mpa.rs.tsv output/EFE002.B0101.kraken2.report_mpa.rs.tsv output/EFE003.B0101.kraken2.report_mpa.rs.tsv output/EFE004.B0101.kraken2.report_mpa.rs.tsv output/EFE005.B0101.kraken2.report_mpa.rs.tsv output/EFE006.B0101.kraken2.report_mpa.rs.tsv output/EXB037.A2901.kraken2.report_mpa.rs.tsv output/EXB037.A3001.kraken2.report_mpa.rs.tsv output/EXB037.A3101.kraken2.report_mpa.rs.tsv output/EXB037.A3201.kraken2.report_mpa.rs.tsv output/EXB037.A3301.kraken2.report_mpa.rs.tsv output/EXB037.A3401.kraken2.report_mpa.rs.tsv output/FUT018.B0101.kraken2.report_mpa.rs.tsv output/FUT021.B0101.kraken2.report_mpa.rs.tsv output/FUT024.B0101.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-01-00-01_S1.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-02-00-01_S2.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-03-00-01_S3.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-04-00-01_S4.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-05-00-01_S5.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-06-00-01_S6.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-07-00-01_S7.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-08-00-01_S8.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-09-00-01_S9.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-10-00-01_S10.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-11-00-01_S11.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-12-00-01_S12.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-13-00-01_S13.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-14-00-01_S14.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-15-00-01_S15.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-16-00-01_S16.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-17-00-01_S17.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-18-00-01_S18.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-19-00-01_S19.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-20-00-01_S20.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-21-00-01_S21.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-22-00-01_S22.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-23-00-01_S23.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-24-00-01_S24.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-25-00-01_S25.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-26-00-01_S26.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-27-00-01_S27.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-28-00-01_S28.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-29-00-01_S29.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-31-00-01_S31.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-32-00-01_S32.kraken2.report_mpa.rs.tsv output/HCLVMBCX2-3505-33-00-01_S33.kraken2.report_mpa.rs.tsv output/HPD001.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/HPD002.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/HPD003.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/HPD004.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/HPD005.B0101.kraken2.report_mpa.rs.tsv output/HPD006.B0101.kraken2.report_mpa.rs.tsv output/HPD007.B0101.kraken2.report_mpa.rs.tsv output/LIB027.A0136.kraken2.report_mpa.rs.tsv output/LIB030.A0112.kraken2.report_mpa.rs.tsv output/LIB030.A0113.kraken2.report_mpa.rs.tsv output/LIB030.A0114.kraken2.report_mpa.rs.tsv output/LIB030.A0115.kraken2.report_mpa.rs.tsv output/NMU001.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/NMU009.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/NMU014.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/NMU020.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/NMU021.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/NMU047.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/NMU059.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/NMU065.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/NMU067.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/NMU089.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/NMU115.A0101.kraken2.report_mpa.rs.tsv output/NMU116.A0101.kraken2.report_mpa.rs.tsv output/NMU117.A0101.kraken2.report_mpa.rs.tsv output/NMU118.A0101.kraken2.report_mpa.rs.tsv output/NMU119.A0101.kraken2.report_mpa.rs.tsv output/NMU120.A0101.kraken2.report_mpa.rs.tsv output/NMU121.A0101.kraken2.report_mpa.rs.tsv output/NMU122.A0101.kraken2.report_mpa.rs.tsv output/NMU123.A0101.kraken2.report_mpa.rs.tsv output/NMU124.A0101.kraken2.report_mpa.rs.tsv output/NMU125.A0101.kraken2.report_mpa.rs.tsv output/NMU126.A0101.kraken2.report_mpa.rs.tsv output/NMU127.A0101.kraken2.report_mpa.rs.tsv output/NMU128.A0101.kraken2.report_mpa.rs.tsv output/NMU129.A0101.kraken2.report_mpa.rs.tsv output/NMU130.A0101.kraken2.report_mpa.rs.tsv output/NMU131.A0101.kraken2.report_mpa.rs.tsv output/PAH001.A0102.kraken2.report_mpa.rs.tsv output/PAH002.A0101.kraken2.report_mpa.rs.tsv output/PAH003.A0101.kraken2.report_mpa.rs.tsv output/PVD001.A0101.kraken2.report_mpa.rs.tsv output/RAP001.A0101.kraken2.report_mpa.rs.tsv output/RAP002.A0101.kraken2.report_mpa.rs.tsv output/SIG001.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/SIG002.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/SIG004.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/SIG005.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/SIG010.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/SIG018.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/SIG021.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/SIG024.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/SIG025.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/SIG026.A0101.SG1.1.kraken2.report_mpa.rs.tsv output/SIG031.A0101.kraken2.report_mpa.rs.tsv output/SIG032.A0101.kraken2.report_mpa.rs.tsv output/SIG033.A0101.kraken2.report_mpa.rs.tsv output/SIG034.A0101.kraken2.report_mpa.rs.tsv output/SIG035.A0101.kraken2.report_mpa.rs.tsv output/SIG036.A0101.kraken2.report_mpa.rs.tsv output/SIG037.A0101.kraken2.report_mpa.rs.tsv output/SIG038.A0101.kraken2.report_mpa.rs.tsv output/SIG039.A0101.kraken2.report_mpa.rs.tsv output/SIG040.A0101.kraken2.report_mpa.rs.tsv output/SIG040.A0201.kraken2.report_mpa.rs.tsv output/SIG041.A0101.kraken2.report_mpa.rs.tsv output/SIG042.A0101.kraken2.report_mpa.rs.tsv output/SIG043.A0101.kraken2.report_mpa.rs.tsv output/SIG044.A0101.kraken2.report_mpa.rs.tsv output/SIG045.A0101.kraken2.report_mpa.rs.tsv output/SIG046.A0101.kraken2.report_mpa.rs.tsv output/SIG046.A0201.kraken2.report_mpa.rs.tsv output/SIG047.A0101.kraken2.report_mpa.rs.tsv output/TAP001.B0101.kraken2.report_mpa.rs.tsv output/TAP003.B0101.kraken2.report_mpa.rs.tsv output/TON001.C0101.kraken2.report_mpa.rs.tsv output/TON003.B0101.kraken2.report_mpa.rs.tsv output/TON004.B0101.kraken2.report_mpa.rs.tsv output/TON005.B0101.kraken2.report_mpa.rs.tsv output/TON006.B0101.kraken2.report_mpa.rs.tsv output/TON007.B0101.kraken2.report_mpa.rs.tsv -o ./pacific_combined.kraken2.report_mpa.rs.tsv
+/mnt/archgen/users/velsko/bin/krakenTools/combine_mpa.py -i output/AHK001.A0101.kraken2.report_mpa.rspm.tsv output/AKI001.A0101.kraken2.report_mpa.rspm.tsv output/AKI002.A0101.kraken2.report_mpa.rspm.tsv output/AMH001.A0101.kraken2.report_mpa.rspm.tsv output/AMH002.A0101.kraken2.report_mpa.rspm.tsv output/AMH003.A0101.kraken2.report_mpa.rspm.tsv output/AMH004.A0101.kraken2.report_mpa.rspm.tsv output/ANK001.A0101.kraken2.report_mpa.rspm.tsv output/ANN001.A0101.kraken2.report_mpa.rspm.tsv output/ANN002.A0101.kraken2.report_mpa.rspm.tsv output/ANN003.A0101.kraken2.report_mpa.rspm.tsv output/ANN004.A0101.kraken2.report_mpa.rspm.tsv output/AON001.A0101.kraken2.report_mpa.rspm.tsv output/AON002.A0101.kraken2.report_mpa.rspm.tsv output/ATT001.A0101.kraken2.report_mpa.rspm.tsv output/ATT002.A0101.kraken2.report_mpa.rspm.tsv output/EFE002.B0101.kraken2.report_mpa.rspm.tsv output/EFE003.B0101.kraken2.report_mpa.rspm.tsv output/EFE004.B0101.kraken2.report_mpa.rspm.tsv output/EFE005.B0101.kraken2.report_mpa.rspm.tsv output/EFE006.B0101.kraken2.report_mpa.rspm.tsv output/EXB037.A2901.kraken2.report_mpa.rspm.tsv output/EXB037.A3001.kraken2.report_mpa.rspm.tsv output/EXB037.A3101.kraken2.report_mpa.rspm.tsv output/EXB037.A3201.kraken2.report_mpa.rspm.tsv output/EXB037.A3301.kraken2.report_mpa.rspm.tsv output/EXB037.A3401.kraken2.report_mpa.rspm.tsv output/FUT018.B0101.kraken2.report_mpa.rspm.tsv output/FUT021.B0101.kraken2.report_mpa.rspm.tsv output/FUT024.B0101.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-01-00-01_S1.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-02-00-01_S2.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-03-00-01_S3.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-04-00-01_S4.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-05-00-01_S5.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-06-00-01_S6.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-07-00-01_S7.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-08-00-01_S8.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-09-00-01_S9.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-10-00-01_S10.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-11-00-01_S11.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-12-00-01_S12.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-13-00-01_S13.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-14-00-01_S14.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-15-00-01_S15.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-16-00-01_S16.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-17-00-01_S17.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-18-00-01_S18.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-19-00-01_S19.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-20-00-01_S20.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-21-00-01_S21.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-22-00-01_S22.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-23-00-01_S23.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-24-00-01_S24.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-25-00-01_S25.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-26-00-01_S26.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-27-00-01_S27.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-28-00-01_S28.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-29-00-01_S29.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-31-00-01_S31.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-32-00-01_S32.kraken2.report_mpa.rspm.tsv output/HCLVMBCX2-3505-33-00-01_S33.kraken2.report_mpa.rspm.tsv output/HPD001.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/HPD002.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/HPD003.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/HPD004.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/HPD005.B0101.kraken2.report_mpa.rspm.tsv output/HPD006.B0101.kraken2.report_mpa.rspm.tsv output/HPD007.B0101.kraken2.report_mpa.rspm.tsv output/LIB027.A0136.kraken2.report_mpa.rspm.tsv output/LIB030.A0112.kraken2.report_mpa.rspm.tsv output/LIB030.A0113.kraken2.report_mpa.rspm.tsv output/LIB030.A0114.kraken2.report_mpa.rspm.tsv output/LIB030.A0115.kraken2.report_mpa.rspm.tsv output/NMU001.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/NMU009.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/NMU014.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/NMU020.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/NMU021.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/NMU047.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/NMU059.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/NMU065.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/NMU067.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/NMU089.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/NMU115.A0101.kraken2.report_mpa.rspm.tsv output/NMU116.A0101.kraken2.report_mpa.rspm.tsv output/NMU117.A0101.kraken2.report_mpa.rspm.tsv output/NMU118.A0101.kraken2.report_mpa.rspm.tsv output/NMU119.A0101.kraken2.report_mpa.rspm.tsv output/NMU120.A0101.kraken2.report_mpa.rspm.tsv output/NMU121.A0101.kraken2.report_mpa.rspm.tsv output/NMU122.A0101.kraken2.report_mpa.rspm.tsv output/NMU123.A0101.kraken2.report_mpa.rspm.tsv output/NMU124.A0101.kraken2.report_mpa.rspm.tsv output/NMU125.A0101.kraken2.report_mpa.rspm.tsv output/NMU126.A0101.kraken2.report_mpa.rspm.tsv output/NMU127.A0101.kraken2.report_mpa.rspm.tsv output/NMU128.A0101.kraken2.report_mpa.rspm.tsv output/NMU129.A0101.kraken2.report_mpa.rspm.tsv output/NMU130.A0101.kraken2.report_mpa.rspm.tsv output/NMU131.A0101.kraken2.report_mpa.rspm.tsv output/PAH001.A0102.kraken2.report_mpa.rspm.tsv output/PAH002.A0101.kraken2.report_mpa.rspm.tsv output/PAH003.A0101.kraken2.report_mpa.rspm.tsv output/PVD001.A0101.kraken2.report_mpa.rspm.tsv output/RAP001.A0101.kraken2.report_mpa.rspm.tsv output/RAP002.A0101.kraken2.report_mpa.rspm.tsv output/SIG001.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/SIG002.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/SIG004.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/SIG005.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/SIG010.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/SIG018.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/SIG021.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/SIG024.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/SIG025.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/SIG026.A0101.SG1.1.kraken2.report_mpa.rspm.tsv output/SIG031.A0101.kraken2.report_mpa.rspm.tsv output/SIG032.A0101.kraken2.report_mpa.rspm.tsv output/SIG033.A0101.kraken2.report_mpa.rspm.tsv output/SIG034.A0101.kraken2.report_mpa.rspm.tsv output/SIG035.A0101.kraken2.report_mpa.rspm.tsv output/SIG036.A0101.kraken2.report_mpa.rspm.tsv output/SIG037.A0101.kraken2.report_mpa.rspm.tsv output/SIG038.A0101.kraken2.report_mpa.rspm.tsv output/SIG039.A0101.kraken2.report_mpa.rspm.tsv output/SIG040.A0101.kraken2.report_mpa.rspm.tsv output/SIG040.A0201.kraken2.report_mpa.rspm.tsv output/SIG041.A0101.kraken2.report_mpa.rspm.tsv output/SIG042.A0101.kraken2.report_mpa.rspm.tsv output/SIG043.A0101.kraken2.report_mpa.rspm.tsv output/SIG044.A0101.kraken2.report_mpa.rspm.tsv output/SIG045.A0101.kraken2.report_mpa.rspm.tsv output/SIG046.A0101.kraken2.report_mpa.rspm.tsv output/SIG046.A0201.kraken2.report_mpa.rspm.tsv output/SIG047.A0101.kraken2.report_mpa.rspm.tsv output/TAP001.B0101.kraken2.report_mpa.rspm.tsv output/TAP003.B0101.kraken2.report_mpa.rspm.tsv output/TON001.C0101.kraken2.report_mpa.rspm.tsv output/TON003.B0101.kraken2.report_mpa.rspm.tsv output/TON004.B0101.kraken2.report_mpa.rspm.tsv output/TON005.B0101.kraken2.report_mpa.rspm.tsv output/TON006.B0101.kraken2.report_mpa.rspm.tsv output/TON007.B0101.kraken2.report_mpa.rspm.tsv -o ./pacific_combined.kraken2.report_mpa.rspm.tsv
+
+# get read classification stats from the log files in 04-Analysis/kraken2
+cd snakemake_tmp
+cat snakejob.kraken_rspm.*.e > rspm_stats.tsv
+grep Run rspm_stats.tsv > rspm_names.tsv
+grep processed rspm_stats.tsv > rspm_tot_reads.tsv
+grep classified rspm_stats.tsv | grep -v unclassified > rspm_classified.tsv
+grep unclassified rspm_stats.tsv > rspm_unclassified.tsv
+paste rspm_names.tsv rspm_tot_reads.tsv rspm_classified.tsv rspm_unclassified.tsv > rspm_reads_stats.tsv
+cp rspm_reads_stats.tsv ../../../05-Documentation.backup/
+
+# see if Kraken assigns taxonomy to fewer shorter reads
+awk -F"\t" '{print $4}' PAH001.A0102.kraken2.output.rs.tsv | sort -n | uniq -c > PAH001.A0102.kraken2.output.rs.hist.tsv
+grep "^C" PAH001.A0102.kraken2.output.rs.tsv | grep -v "taxid 0" | awk -F"\t" '{print $4}' | sort -n | uniq -c > PAH001.A0102.kraken2.output.rs.classified.tsv
+grep "^U" PAH001.A0102.kraken2.output.rs.tsv | awk -F"\t" '{print $4}' | sort -n | uniq -c > PAH001.A0102.kraken2.output.rs.unclassified.tsv
+grep "^C" PAH001.A0102.kraken2.output.rs.tsv | grep "taxid 0" | awk -F"\t" '{print $4}' | sort -n | uniq -c > PAH001.A0102.kraken2.output.rs.classified0.tsv
+
+# classified
+for f in output/*.kraken2.output.rs.tsv; do grep "^C" $f | grep -v "taxid 0" | wc -l >> classified.kraken2.output.rs.tsv; done
+
+for f in *.kraken2.output.rs.tsv; do grep "^C" $f | grep -v "taxid 0" | awk -F"\t" '{print $4}' | sort -n | uniq -c > $(basename $f .tsv).classified.tsv; done
+for f in *.kraken2.output.rspm.tsv; do grep "^C" $f | grep -v "taxid 0" | awk -F"\t" '{print $4}' | sort -n | uniq -c > $(basename $f .tsv).classified.tsv; done
+
+
+# unclassified
+for f in output/*.kraken2.output.rs.tsv; do grep "^U" $f | wc -l >> unclassified.kraken2.output.rs.tsv; done
+
+for f in *.kraken2.output.rs.tsv; do grep "^U" $f | awk -F"\t" '{print $4}' | sort -n | uniq -c > $(basename $f .tsv).unclassified.tsv; done
+for f in *.kraken2.output.rspm.tsv; do grep "^U" $f | awk -F"\t" '{print $4}' | sort -n | uniq -c > $(basename $f .tsv).unclassified.tsv; done
+
+# marked classified but at the root (taxid 0) - add to unclassified
+for f in output/*.kraken2.output.rs.tsv; do grep "^C" $f | grep "taxid 0" | wc -l >> classified0.kraken2.output.rs.tsv; done
+
+for f in *.kraken2.output.rs.tsv; do grep "^C" $f | grep "taxid 0" | awk -F"\t" '{print $4}' | sort -n | uniq -c > $(basename $f .tsv).classified0.tsv; done
+for f in *.kraken2.output.rspm.tsv; do grep "^C" $f | grep "taxid 0" | awk -F"\t" '{print $4}' | sort -n | uniq -c > $(basename $f .tsv).classified0.tsv; done
+
+# get the sample names
+ls *.kraken2.output.rs.tsv | sed 's/\.kraken2\.output\.rs\.tsv//g' | sed 's/\.SG1//g' > ../sample_list_columns.tsv
+
+# cat files together?
+
+# paste files together
+paste sample_list_columns.tsv classified.kraken2.output.rs.tsv unclassified.kraken2.output.rs.tsv classified0.kraken2.output.rs.tsv > ../../../05-results.backup/read_classification_stats.rs.tsv
+paste sample_list_columns.tsv classified.kraken2.output.rspm.tsv unclassified.kraken2.output.rspm.tsv classified0.kraken2.output.rspm.tsv > ../../../05-results.backup/read_classification_stats.rspm.tsv
+
+
+###############################################
+# InStrain
+
+###############################################
+#########################
+# Benchmarking w/ gargammel and ZymoBIOMICS reference strains
+#########################
+# make a bed file from the reference genome fasta.fai
+awk 'BEGIN {FS="\t"}; {print $1 FS "0" FS $2}' pac_reference_genomes.fasta.fai > pac_reference_genomes.bed
+
+# Gargammel data simulation for ancient parameter testing of InStrain
+# use the strains in ZymoBIOMICS.STD.refseq.v2, which the InStrain publication used for their comparisons (although they did DNA extractions, and this is all in silico)
+
+# Simulate 10M reads with damage profiles that match the samples in the Pacific dataset (Jena/Oklahoma is udg-half, Otago is non-udg)
+
+# gargammel won't read Damageprofiler output files, so run mapdamage here /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage_profiles_for_gargammel/
+# EFE003.B0101
+bwa aln \
+-n 0.02 \
+-l 1024 \
+/mnt/archgen/microbiome_sciences/reference_genomes/Anaerolineaceae_b_oral_taxon_439/Anaerolineaceae_b_oral_taxon_439.fna \
+/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/screening_all_rerun/samtools/filter/EFE002.B0101.unmapped.fastq.gz > /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage/EFE002.B0101.sai
+
+bwa samse \
+/mnt/archgen/microbiome_sciences/reference_genomes/Anaerolineaceae_b_oral_taxon_439/Anaerolineaceae_b_oral_taxon_439.fna \
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage/EFE002.B0101.sai \
+/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/screening_all_rerun/samtools/filter/EFE002.B0101.unmapped.fastq.gz  | samtools view -Sb -F 4 - | samtools sort - -o /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage/EFE002.B0101.mapped.bam
+
+samtools index /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage/EFE002.B0101.mapped.bam
+
+mapDamage -i /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage/EFE002.B0101.mapped.bam \
+-r /mnt/archgen/microbiome_sciences/reference_genomes/Anaerolineaceae_b_oral_taxon_439/Anaerolineaceae_b_oral_taxon_439.fna
+
+
+# HCLVMBCX2-3505-07-00-01_S7
+bwa aln \
+-n 0.02 \
+-l 1024 \
+/mnt/archgen/microbiome_sciences/reference_genomes/Anaerolineaceae_b_oral_taxon_439/Anaerolineaceae_b_oral_taxon_439.fna \
+/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/screening_all_rerun/samtools/filter/HCLVMBCX2-3505-07-00-01_S7.unmapped.fastq.gz > /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage/HCLVMBCX2-3505-07-00-01_S7.sai
+
+bwa samse \
+/mnt/archgen/microbiome_sciences/reference_genomes/Anaerolineaceae_b_oral_taxon_439/Anaerolineaceae_b_oral_taxon_439.fna \
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage/HCLVMBCX2-3505-07-00-01_S7.sai \
+/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/screening_all_rerun/samtools/filter/HCLVMBCX2-3505-07-00-01_S7.unmapped.fastq.gz  | samtools view -Sb -F 4 - | samtools sort - -o /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage/HCLVMBCX2-3505-07-00-01_S7.mapped.bam
+
+samtools index /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage/HCLVMBCX2-3505-07-00-01_S7.mapped.bam
+
+mapDamage -i /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/mapdamage/HCLVMBCX2-3505-07-00-01_S7.mapped.bam \
+-r /mnt/archgen/microbiome_sciences/reference_genomes/Anaerolineaceae_b_oral_taxon_439/Anaerolineaceae_b_oral_taxon_439.fna
+
+
+# need to create the fragment length profile file from the mapDamage-produced lgdistribution.txt file
+# convert number of reads in lgdistribution.txt to frequency. No header.
+# do this in libreoffice and save the new file as *lgdist.txt
+# if not running in the conda environment, need to run this first: unset PERL5LIB
+snakemake -s ../../../../02-Scripts.backup/014-gargammel_udghalf_pacific.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 12 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 20 -n
+snakemake -s ../../../../02-Scripts.backup/014-gargammel_nonudg_pacific.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 12 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 20 -n
+
+# gargammel produced only 9.8M reads for each sample, not 10M like requested (9802043 udg-half; 9801807 non-udg)
+
+# now make the reference genome for testing inStrain from the ZymoBIOMICS reference genomes
+cat /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/*.fasta > /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/zymo_reference_genome/zymo_ref_genomes.fasta
+bwa index zymo_ref_genomes.fasta
+
+# then run to get the .stb file
+parse_stb.py --reverse -f /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Bacillus_subtilis_complete_genome.fasta \
+    /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Cryptococcus_neoformans_draft_genome.fasta \
+    /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Enterococcus_faecalis_complete_genome.fasta \
+    /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Escherichia_coli_complete_genome.fasta \
+    /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Lactobacillus_fermentum_complete_genome.fasta  \
+    /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Listeria_monocytogenes_complete_genome.fasta \
+    /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Pseudomonas_aeruginosa_complete_genome.fasta  \
+    /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Saccharomyces_cerevisiae_draft_genome.fasta \
+    /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Salmonella_enterica_complete_genome.fasta \
+    /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Staphylococcus_aureus_complete_genome.fasta \
+    -o zymo_ref_genomes.stb
+
+
+# then run prodigal to generate the genes files
+prodigal -i zymo_ref_genomes.fasta -o zymo_ref_genomes.genes -a zymo_ref_genomes.faa -d zymo_ref_genomes.fna -p meta
+
+
+# Now run gargammel reads through eager2 and Alex's script
+nextflow run nf-core/eager -r 2.4.4 \
+-profile eva,archgen \
+--input "/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/pac_gargammel_eager.tsv" \
+--fasta '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa' \
+--fasta_index '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa.fai' \
+--bwa_index '/mnt/archgen/Reference_Genomes/Human/hs37d5' \
+--seq_dict '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.dict' \
+--skip_fastqc \
+--skip_deduplication \
+--skip_damage_calculation \
+--skip_preseq \
+--skip_collapse \
+--complexity_filter_poly_g \
+--bwaalnl 32 \
+--bwaalnn 0.01  \
+--run_bam_filtering \
+--bam_unmapped_type fastq \
+--outdir /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/eager_output \
+-work-dir /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/eager_work \
+-name pac_gargammel \
+--email irina_marie_velsko@eva.mpg.de \
+-with-tower
+
+# got stuck on get_software_versions so cancelled and ran
+mkdir multiqc
+cd multiqc
+multiqc --config /r1/people/irina_marie_velsko/.nextflow/assets/nf-core/eager/assets/multiqc_config.yaml ..
+nextflow clean -f -k
+
+# Map the eager-processed gargammel reads against each of the Zymo reference genomes to be able to then run mapDamage and check damage for each genome
+snakemake -s ../../../../02-Scripts.backup/015-bwa_gargammel_nonudg_zymo_individual.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 -n
+snakemake -s ../../../../02-Scripts.backup/015-bwa_gargammel_udghalf_zymo_individual.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 -n
+# Cryptococcus neoformans mapping came out with entries from the other fastas so use this instead
+snakemake -s ../../../../02-Scripts.backup/cryptococcus_bwa_gargammel_zymo_individual.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 -n
+
+# something is very wrong with the Cryptococcus genome mapping (gets all genomes...)
+# this is still a problem, so I'm just going to ignore it since InStrain is only for bacteria, or prokaryotes
+cd zymo_individual_mapping/
+bwa aln \
+-n 0.02 \
+-l 1024 \
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Cryptococcus_neoformans_draft_genome.fasta \
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/eager_output/samtools/filter/udg_half.unmapped.fastq.gz > udg_half.Cryptococcus_neoformans_draft_genome.sai
+
+bwa samse \
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/ZymoBIOMICS.STD.refseq.v2/Genomes/Cryptococcus_neoformans_draft_genome.fasta \
+udg_half.Cryptococcus_neoformans_draft_genome.sai \
+/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/eager_output/samtools/filter/udg_half.unmapped.fastq.gz | samtools view -Sb -F 4 - | samtools sort - -o udg_half.Cryptococcus_neoformans_draft_genome.bam
+
+samtools index 
+udg_half.Cryptococcus_neoformans_draft_genome.bam
+
+
+# then run mapdamage on each of the individually-mapped files
+snakemake -s ../../../../../02-Scripts.backup/016-mapdamage_gargammel_udghalf_zymo_individual.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 -n
+snakemake -s ../../../../../02-Scripts.backup/016-mapdamage_gargammel_nonudg_zymo_individual.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 -n
+
+
+# Now continue with the main processing for InStrain 
+# run Alex's script to separate R1/R2 into individual fastq files
+cd /mnt/archgen/microbiome_calculus/pacific_calculus/
+snakemake -s 02-Scripts.backup/PREP_NextflowEAGER_extractUnmappedReadsToFastQ_gargammel.Snakefile --use-conda --conda-prefix conda --profile /home/irina_marie_velsko/.config/snakemake/cluster -j 4 -k -n
+
+# Map the eager-processed and Alex's script-separated R1/R2 gargammel reads against the cat'd Zymo reference genomes for InStrain, 
+# run in /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/zymo_all_mapping
+snakemake -s ../../../../../02-Scripts.backup/012-bwa_zymo_genomes_pac_gargammel.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 -n
+
+# run Alex's script mask read ends for InStrain
+# first sort and index the bams
+samtools sort non_udg.zymo_reference_genomes.bam -o non_udg.zymo_reference_genomes.sort.bam
+samtools index non_udg.zymo_reference_genomes.sort.bam
+
+samtools sort udg_half.zymo_reference_genomes.bam -o udg_half.zymo_reference_genomes.sort.bam
+samtools index udg_half.zymo_reference_genomes.sort.bam
+
+# work here: 04-Analysis/inStrain/benchmarking_ancient/gargammel/masked_mapped_bams
+# for UDG-half data (/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/zymo_all_mapping/udg_half.zymo_reference_genomes.bam)
+python /mnt/genotyping/sk_pipelines/projects/aDNA_Flores/scripts/maskTerminalDeam.py \
+-i /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/zymo_all_mapping/udg_half.zymo_reference_genomes.sort.bam \
+-l 1 \
+-r 1 \
+-o udg_half.zymo_reference_genomes.sort.mask_1_1.bam
+
+# for non-UDG data (/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/zymo_all_mapping/non_udg.zymo_reference_genomes.bam)
+python /mnt/genotyping/sk_pipelines/projects/aDNA_Flores/scripts/maskTerminalDeam.py \
+-i /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/zymo_all_mapping/non_udg.zymo_reference_genomes.sort.bam \
+-l 9 \
+-r 9 \
+-o non_udg.zymo_reference_genomes.sort.mask_9_9.bam
+
+python /mnt/genotyping/sk_pipelines/projects/aDNA_Flores/scripts/maskTerminalDeam.py \
+-i /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/zymo_all_mapping/non_udg.zymo_reference_genomes.sort.bam \
+-l 11 \
+-r 11 \
+-o non_udg.zymo_reference_genomes.sort.mask_11_11.bam
+
+python /mnt/genotyping/sk_pipelines/projects/aDNA_Flores/scripts/maskTerminalDeam.py \
+-i /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/zymo_all_mapping/non_udg.zymo_reference_genomes.sort.bam \
+-l 13 \
+-r 13 \
+-o non_udg.zymo_reference_genomes.sort.mask_13_13.bam
+
+python /mnt/genotyping/sk_pipelines/projects/aDNA_Flores/scripts/maskTerminalDeam.py \
+-i /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient/gargammel/zymo_all_mapping/non_udg.zymo_reference_genomes.sort.bam \
+-l 15 \
+-r 15 \
+-o non_udg.zymo_reference_genomes.sort.mask_15_15.bam
+
+# index them in case that's needed
+samtools index XXX.bam
+
+# first copy the bam files to have one input for each insert size
+# InStrain has issues withe the names being the same if the insert size isn't included in the bam file name, ie
+cp udg_half.zymo_reference_genomes.sort.bam udg_half.zymo_reference_genomes.sort.is12.bam
+cp udg_half.zymo_reference_genomes.sort.bam udg_half.zymo_reference_genomes.sort.is24.bam
+cp udg_half.zymo_reference_genomes.sort.bam udg_half.zymo_reference_genomes.sort.is36.bam
+cp udg_half.zymo_reference_genomes.sort.bam udg_half.zymo_reference_genomes.sort.is48.bam
+cp udg_half.zymo_reference_genomes.sort.mask_1_1.bam udg_half.zymo_reference_genomes.sort.mask_1_1.is12.bam
+cp udg_half.zymo_reference_genomes.sort.mask_1_1.bam udg_half.zymo_reference_genomes.sort.mask_1_1.is24.bam
+cp udg_half.zymo_reference_genomes.sort.mask_1_1.bam udg_half.zymo_reference_genomes.sort.mask_1_1.is36.bam
+cp udg_half.zymo_reference_genomes.sort.mask_1_1.bam udg_half.zymo_reference_genomes.sort.mask_1_1.is48.bam
+cp non_udg.zymo_reference_genomes.sort.bam non_udg.zymo_reference_genomes.sort.is12.bam
+cp non_udg.zymo_reference_genomes.sort.bam non_udg.zymo_reference_genomes.sort.is24.bam
+cp non_udg.zymo_reference_genomes.sort.bam non_udg.zymo_reference_genomes.sort.is36.bam
+cp non_udg.zymo_reference_genomes.sort.bam non_udg.zymo_reference_genomes.sort.is48.bam
+cp non_udg.zymo_reference_genomes.sort.mask_9_9.bam non_udg.zymo_reference_genomes.sort.mask_9_9.is12.bam
+cp non_udg.zymo_reference_genomes.sort.mask_9_9.bam non_udg.zymo_reference_genomes.sort.mask_9_9.is24.bam
+cp non_udg.zymo_reference_genomes.sort.mask_9_9.bam non_udg.zymo_reference_genomes.sort.mask_9_9.is36.bam
+cp non_udg.zymo_reference_genomes.sort.mask_9_9.bam non_udg.zymo_reference_genomes.sort.mask_9_9.is48.bam
+cp non_udg.zymo_reference_genomes.sort.mask_11_11.bam non_udg.zymo_reference_genomes.sort.mask_11_11.is12.bam
+cp non_udg.zymo_reference_genomes.sort.mask_11_11.bam non_udg.zymo_reference_genomes.sort.mask_11_11.is24.bam
+cp non_udg.zymo_reference_genomes.sort.mask_11_11.bam non_udg.zymo_reference_genomes.sort.mask_11_11.is36.bam
+cp non_udg.zymo_reference_genomes.sort.mask_11_11.bam non_udg.zymo_reference_genomes.sort.mask_11_11.is48.bam
+cp non_udg.zymo_reference_genomes.sort.mask_13_13.bam non_udg.zymo_reference_genomes.sort.mask_13_13.is12.bam
+cp non_udg.zymo_reference_genomes.sort.mask_13_13.bam non_udg.zymo_reference_genomes.sort.mask_13_13.is24.bam
+cp non_udg.zymo_reference_genomes.sort.mask_13_13.bam non_udg.zymo_reference_genomes.sort.mask_13_13.is36.bam
+cp non_udg.zymo_reference_genomes.sort.mask_13_13.bam non_udg.zymo_reference_genomes.sort.mask_13_13.is48.bam
+cp non_udg.zymo_reference_genomes.sort.mask_15_15.bam non_udg.zymo_reference_genomes.sort.mask_15_15.is12.bam
+cp non_udg.zymo_reference_genomes.sort.mask_15_15.bam non_udg.zymo_reference_genomes.sort.mask_15_15.is24.bam
+cp non_udg.zymo_reference_genomes.sort.mask_15_15.bam non_udg.zymo_reference_genomes.sort.mask_15_15.is36.bam
+cp non_udg.zymo_reference_genomes.sort.mask_15_15.bam non_udg.zymo_reference_genomes.sort.mask_15_15.is48.bam
+
+# run InStrain on udg-half and non-udg w/ and w/o masking, and with different insert lengths
+# run inStrain here: /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/benchmarking_ancient
+
+# run InStrain profile
+snakemake -s ../../../02-Scripts.backup/013-inStrain_profile_pac_gargammel.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 12 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 -n
+# delete all folders where .is#.bam isn't the same as .is#.IS (so keep all .is12.bam.is12.IS, but delete .is12.bam.is24.IS, is12.bam.is36.IS, is12.bam.is48.bam)
+
+# then run InStrain compare
+snakemake -s ../../../02-Scripts.backup/013-inStrain_compare_pac_gargammel.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 12 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 20 -n
+
+
+# also get the coverage on Abot439 and Tf for this mapping, to compare to the mapping done for polymut (here R1/R2, polymut collapsed)
+# in /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/bwa_mapping
+for f in *.bam; do bedtools coverage -a /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/reference_fasta/pac_reference_genomes.bed -b $f -hist > $(basename $f .bam).cov; done
+
+# then
+for f in *genomes.cov; do grep CP017039 $f > $(basename $f .cov).abot439.cov; done
+for f in *genomes.cov; do grep "NC_016610" $f > $(basename $f .cov).Tf.cov; done
+rm *genomes.cov
+
+#########################
+# Pacific samples
+#########################
+
+# Prepare the reference genomes for InStrain - cat all into 1 file
+# cat all reference genomes into a single file in reference_fasta
+cat /mnt/archgen/microbiome_sciences/reference_genomes/Actinomyces_dentalis/Actinomyces_dentalis_DSM_19115.fa \
+    /mnt/archgen/microbiome_sciences/reference_genomes/Anaerolineaceae_b_oral_taxon_439/Anaerolineaceae_b_oral_taxon_439.fna \
+    /mnt/archgen/microbiome_sciences/reference_genomes/Desulfobulbus_oralis/Desulfobulbus_oralis.fna \
+    /mnt/archgen/microbiome_sciences/reference_genomes/Eubacterium_minutum/Eubacterium_minutum_ATCC_700079.fna \
+    /mnt/archgen/microbiome_sciences/reference_genomes/Olsenella_oral_taxon_807/Olsenella_oral_taxon_807.fna \
+    /mnt/archgen/microbiome_sciences/reference_genomes/Tannerella_forsythia/Tannerella_forsythia_9212.fa > pac_reference_genomes.fasta
+
+# run this script from dREP
+parse_stb.py --reverse -f raw_data/S2_002_005G1_phage_Clostridioides_difficile.fasta  raw_data/S2_018_020G1_bacteria_Clostridioides_difficile.fasta  -o genomes.stb
+parse_stb.py --reverse -f /mnt/archgen/microbiome_sciences/reference_genomes/Actinomyces_dentalis/Actinomyces_dentalis_DSM_19115.fa \
+    /mnt/archgen/microbiome_sciences/reference_genomes/Anaerolineaceae_b_oral_taxon_439/Anaerolineaceae_b_oral_taxon_439.fna \
+    /mnt/archgen/microbiome_sciences/reference_genomes/Desulfobulbus_oralis/Desulfobulbus_oralis.fna \
+    /mnt/archgen/microbiome_sciences/reference_genomes/Eubacterium_minutum/Eubacterium_minutum_ATCC_700079.fna \
+    /mnt/archgen/microbiome_sciences/reference_genomes/Olsenella_oral_taxon_807/Olsenella_oral_taxon_807.fna \
+    /mnt/archgen/microbiome_sciences/reference_genomes/Tannerella_forsythia/Tannerella_forsythia_9212.fa \
+    -o pac_reference_genomes.stb
+
+
+# inStrain needs paired-end reads (adapter-removed and human-removed)
+
+# run in adapter_removed
+for f in ../raw_input/*R1_001.fastq.gz
+do
+AdapterRemoval --file1 $f --file2 ../raw_input/$(basename $f R1_001.fastq.gz)R2_001.fastq.gz --basename $(basename $f .fastq.gz) --gzip --threads 2 --qualitymax 41  --trimns --trimqualities --adapter1 AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC --adapter2 AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA --minlength 30 --minquality 20 --minadapteroverlap 1
+done &> ar.log &
+
+# then merge the lanes/sequencing runs (L001-004, SG1.1-1.2) in adapter_removed_lane_merge
+cat ../raw_input/list_unique.tsv | while read line; do
+cat ../adapter_removed/$line*pair1.truncated.gz > $line.R1.fq.gz
+cat ../adapter_removed/$line*pair2.truncated.gz > $line.R2.fq.gz
+done
+
+# run eager again with Zandra's sample input list, but don't collapse the reads
+
+nextflow run nf-core/eager -r 2.4.4 \
+-profile eva,archgen \
+--input "/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/oceania_eager_list_non_collapsed.tsv" \
+--fasta '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa' \
+--fasta_index '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa.fai' \
+--bwa_index '/mnt/archgen/Reference_Genomes/Human/hs37d5' \
+--seq_dict '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.dict' \
+--skip_fastqc \
+--skip_deduplication \
+--skip_damage_calculation \
+--skip_preseq \
+--skip_collapse \
+--complexity_filter_poly_g \
+--bwaalnl 32 \
+--bwaalnn 0.01  \
+--run_bam_filtering \
+--bam_unmapped_type fastq \
+--outdir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eager2_non_collapsed \
+-work-dir /mnt/archgen/microbiome_calculus/pacific/03-Preprocessing/ozga2019/work_non_collapsed \
+-name pacific_not_coll \
+--email irina_marie_velsko@eva.mpg.de \
+-with-tower
+
+
+# to use the non-human-removed files use /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eager2_non_collapsed/lanemerging/*.gz
+
+# to use human-removed reads, use the human-unmapped files here
+/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eager2_non_collapsed/samtools/filter/*.gz
+
+# and run Alex's pipeline (copied from the ABP project folder and paths modified for this one)
+cd /mnt/archgen/microbiome_calculus/pacific_calculus/
+snakemake -s 02-Scripts.backup/PREP_NextflowEAGER_extractUnmappedReadsToFastQ.Snakefile --use-conda --conda-prefix conda --profile /home/irina_marie_velsko/.config/snakemake/cluster -j 10 -k -n
+
+
+# run bwa in paired-end mode, then convert sam to bam
+# run prodigal to get a genes file for inStrain
+prodigal -i /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/pac_reference_genomes.fasta -o /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/pac_reference_genomes.genes -a /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/pac_reference_genomes.proteins.faa
+
+# run both steps above with this
+snakemake -s ../../../02-Scripts.backup/012-bwa_ref_genomes_pacific.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 10 --latency-wait 20 -n
+
+# then index the samples (forgot to add as a step in the snakemake file)
+
+# Alex's script to mask read ends in bam files to remove damage from consideration by InStrain
+# run here: /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain/masked_mapped_bams
+snakemake -s ../../../02-Scripts.backup/013a-mask_mapped_bams_pacific.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 -n
+# make sure to remove the unneeded files (all Otago-processed samples (HCLVMBCX2*) need only 13_13 masking b/c 
+# non-udg-treated and all Jena/Oklahoma-processed samples need only 1_1 masking b/c udg-half-treated)
+
+
+# run inStrain here: /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/inStrain
+snakemake -s ../../02-Scripts.backup/013-inStrain_profile_pacific.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 12 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 --keep-going -n
+snakemake -s ../../02-Scripts.backup/013-inStrain_compare_pacific.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 12 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 20 -n
+
+# the samples in these files have insufficient coverage for inStrain to run
+6 of 6 genomes have less than 1x estimated coverage
+97 of the original 97 scaffolds are removed (97 have a low coverage genome; 0 have no genome)
+No scaffolds passed initial filtering based on numbers of mapped reads
+
+snakemake_tmp/snakejob.dRep.69504620-efb3-5042-8394-c60b53f5a895.sh.2337743.e
+snakemake_tmp/snakejob.dRep.67f8a03a-fc4f-53e1-97b4-6840156e27d0.sh.2337740.e
+snakemake_tmp/snakejob.dRep.9cb6a85e-49eb-5fdd-b6f6-c58a2b1da86e.sh.2337744.e
+snakemake_tmp/snakejob.dRep.22864e3e-1bda-597f-8b22-61b6b084df3f.sh.2337741.e
+snakemake_tmp/snakejob.dRep.0a3b5425-7e58-5c9c-b8da-5a484e8d147c.sh.2337742.e
+snakemake_tmp/snakejob.dRep.59918472-37bb-593c-b99f-2e15233dc39d.sh.2337739.e
+snakemake_tmp/snakejob.dRep.e4c827f1-96fe-5b7f-b555-8b253100f03a.sh.2337734.e
+snakemake_tmp/snakejob.dRep.ca6a0326-365b-5e8c-90a4-d7b5ee1155ff.sh.2337738.e
+snakemake_tmp/snakejob.dRep.fece4889-0c7f-5d38-8e61-6e4ecf1d59ac.sh.2337736.e
+snakemake_tmp/snakejob.dRep.8c158261-1d43-54d0-8029-4b0588e2fd6d.sh.2337735.e
+snakemake_tmp/snakejob.dRep.0644e861-b2b1-5803-8102-10ac02b9a6e9.sh.2337737.e
+snakemake_tmp/snakejob.dRep.3b3cb3b7-c642-51e2-8bbe-238e92b2da10.sh.2337729.e
+snakemake_tmp/snakejob.dRep.e9224529-ddd3-56cd-b28f-7ea015d383e1.sh.2337728.e
+snakemake_tmp/snakejob.dRep.e11c0b3a-d1e5-5998-9fff-d2dc7544359c.sh.2337733.e
+snakemake_tmp/snakejob.dRep.6dead617-b146-52e5-9e4d-ae62f0fe5d24.sh.2337730.e
+snakemake_tmp/snakejob.dRep.d9972993-d74b-5870-842c-b9b1217e11ba.sh.2337731.e
+snakemake_tmp/snakejob.dRep.278ef969-0825-5800-af4e-3a4e145f6d16.sh.2337732.e
+snakemake_tmp/snakejob.dRep.e0df969c-5822-5e34-8ff9-f879cf50978c.sh.2337724.e
+snakemake_tmp/snakejob.dRep.821ed1f3-1826-56fc-9cfb-1cbba91a47b8.sh.2337723.e
+snakemake_tmp/snakejob.dRep.051fcfae-85a7-5c78-9c2e-1e4144384cc1.sh.2337719.e
+snakemake_tmp/snakejob.dRep.c8ae353a-49b9-5724-ab89-d41c86595ad3.sh.2337727.e
+snakemake_tmp/snakejob.dRep.fdf4bff1-6825-5182-879d-8ab5bad1b228.sh.2337726.e
+snakemake_tmp/snakejob.dRep.29a8a72e-c7af-5de1-aa5d-a1cb5b8f3c14.sh.2337725.e
+snakemake_tmp/snakejob.dRep.ede84021-075c-52a2-a70c-75051df6e851.sh.2337718.e
+snakemake_tmp/snakejob.dRep.2ebbe098-3224-597d-bbca-a2d28d5ecbbd.sh.2337717.e
+snakemake_tmp/snakejob.dRep.d4a45a63-f4f9-5f28-8f6a-d30c436085f0.sh.2337722.e
+snakemake_tmp/snakejob.dRep.65d7936f-6a4e-51d6-b50a-d83c34737e4f.sh.2337721.e
+snakemake_tmp/snakejob.dRep.01005700-6596-59a1-b971-02fe2eaa128d.sh.2337720.e
+
+###############################################
+# polymut
+
+###############################################
+# calculate the dN/dS for Abot439 to get an idea of whether there are multiple strains in each sample
+# more samples mapped to this genome than the other selected genomes for inStrain
+
+/mnt/archgen/microbiome_calculus/pacific/04-Analysis/polymut
+
+# first map the collapsed eager-processed fastqs agains the reference genome and mask the ends same as for inStrain
+snakemake -s ../../02-Scripts.backup/022-Abot439_reference_genome_mapping.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 10 --latency-wait 20 -n
+
+# make sure to remove the unneeded files (all Otago-processed samples (HCLVMBCX2*) need only 11_11 masking b/c 
+# non-udg-treated and all Jena/Oklahoma-processed samples need only 1_1 masking b/c udg-half-treated)
+# also remove the HPD samples
+
+# then run polymut on the masked bams
+snakemake -s ../../02-Scripts.backup/023-Abot439_polymut.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 10 --latency-wait 20 -n
+
+# put files together
+ls *.tsv | sed 's/.abot439.polymut.tsv//g' > ../samples.tsv
+cat *.tsv > ../poly.tsv
+cd ..
+paste samples.tsv poly.tsv > masked_abot439_polymut_out.tsv
+
+# And repeat for T. forsythia
+/mnt/archgen/microbiome_calculus/pacific/04-Analysis/polymut/T_forsythia
+
+# first map the collapsed eager-processed fastqs agains the reference genome and mask the ends same as for inStrain
+snakemake -s ../../../02-Scripts.backup/022-Tf_reference_genome_mapping.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 10 --latency-wait 20 --keep-going -n
+
+# make sure to remove the unneeded files (all Otago-processed samples (HCLVMBCX2*) need only 11_11 masking b/c 
+# non-udg-treated and all Jena/Oklahoma-processed samples need only 1_1 masking b/c udg-half-treated)
+# also remove the HPD samples
+# in masked_mapped_bams/
+rm HPD*.bam
+rm HCLVMBCX2*.mask_1_1.bam
+mkdir keepfiles
+mv *1_1.bam keepfiles
+mv HCLVMBCX2*.bam keepfiles
+rm *.bam
+mv keepfiles/* .
+rm -r keepfiles
+
+# now need to modify the gff file too have the fasta bit at the end, like prokka does
+# in /mnt/archgen/microbiome_sciences/reference_genomes/Tannerella_forsythia
+cat Tannerella_forsythia_9212.gff Tannerella_forsythia_9212.fa > Tannerella_forsythia_9212_proka_format.gff
+
+# then run polymut on the masked bams
+snakemake -s ../../../02-Scripts.backup/023-Tf_polymut.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 10 --latency-wait 20 --keep-going -n
+
+ls *.tsv | sed 's/.Tf.polymut.tsv//g' > ../samples.tsv
+cat *.tsv > ../poly.tsv
+cd ..
+paste samples.tsv poly.tsv > masked_Tf_polymut_out.tsv
+
+
+# Also test the values polymut gives with different strains of the same species by using 
+# F. nucleatum simulated genomes from the aDNA assembly paper, made by Alex
+
+# First convert the adapter-removed files from bam to fastq
+# files are /mnt/archgen/users/huebner/aDNA-DenovoAssembly/03-data/sim_shortread_data/deamSim/F_nucleatum_*
+# work here /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/polymut/F_nucleatum_gargammel/input
+
+for f in /mnt/archgen/users/huebner/aDNA-DenovoAssembly/03-data/sim_shortread_data/deamSim/F_nucleatum_*short*.bam; do
+samtools fastq $f  > $(basename $f .bam).fq
+pigz -p 4 $(basename $f .bam).fq
+done
+
+# now map these against the Fn genomes
+snakemake -s ../../../02-Scripts.backup/025-Fn_strain_gargammel_mapping.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 6 --latency-wait 20 --keep-going -n
+
+# now need to modify the gff file too have the fasta bit at the end, like prokka does
+# in /mnt/archgen/microbiome_calculus/pacific_calculus/01-Data/ref_genomes/fusobacterium_nucleatum/
+cat F_nucleatum_nucleatum.gff F_nucleatum_nucleatum.fna > F_nucleatum_nucleatum_proka_format.gff
+cat F_nucleatum_polymorphum.gff F_nucleatum_polymorphum.fna > F_nucleatum_polymorphum_proka_format.gff
+cat F_nucleatum_vincentii.gff F_nucleatum_vincentii.fna > F_nucleatum_vincentii_proka_format.gff
+
+# then add ##FASTA in the line between the gff file and the fasta file
+
+
+# Ok that didn't work, so instead run prokka on those genomes, map against the prokka-generated fna b/c
+# the accession changes and polymut can't match the NCBI accession in the bam file and the prokka accession
+# in the gff file
+# Then use the gff output from prokka for polymut with the prokka-generated fna-mapped bam files
+# run prokka
+snakemake -s ../../../02-Scripts.backup/prokka_Fnucleatum_genomes.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 8 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 3 --latency-wait 40 --keep-going -n
+
+
+# and run polymut
+snakemake -s ../../../02-Scripts.backup/026-Fn_strain_gargammel_polymut.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 10 --latency-wait 20 --keep-going -n
+
+
+# the above snakemake file runs all bam files against all reference genomes, although only need each 
+# bam file against the respective reference genome, so delete unneeded files when done (keep matched .F*.F*.)
+# or keep them and just filter them from the tables for analysis in R
+
+ls *.tsv | sed 's/.polymut.tsv//g' > ../samples.tsv
+cat *.tsv > ../poly.tsv
+cd ..
+paste samples.tsv poly.tsv > ../../../05-Documentation.backup/Fn_subspecies_polymut_out.tsv
+
+# Also run dRep on these genomes to get the ANI between them
+snakemake -s ../../../../02-Scripts.backup/dRep_Fn_subspecies.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 24 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 30 -n
+
+
+
+###############################################
+# SourceTracker
+
+###############################################
+# for sourcetracker, add this to your .bash_profile, and add the path to PATH
+export SOURCETRACKER_PATH=/projects1/users/velsko/bin/sourcetracker-1.0.1
+# then source the .bash_profile
+
+# too run, use:
+Rscript /mnt/archgen/projects1/users/velsko/bin/sourcetracker-1.0.1/sourcetracker_for_qiime.r
+
+snakemake -s ../../../../02-Scripts.backup/024-sourcetracker_species.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 4 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 -n
+
+
+###########################
+Trees
+###########################
+# ggtree page https://yulab-smu.top/treedata-book/chapter7.html
+# do model testing to figure out the best model to use for distance matrix
+# here /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/phylogenies/anaerolineaceae_bacterium_ot_439/modeltest_ng
+snakemake -s ../../../../02-Scripts.backup/027-abot439_modeltest-ng.Snakefile --use-conda --conda-prefix conda --profile ~/.config/snakemake/cluster/ --cluster "qsub -pe smp 32 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 -n
+
+modeltest-ng -i /mnt/archgen/microbiome_calculus/pacific_calculus/05-Documentation.backup/subset_abot439_snpAlignment.fasta \
+    --datatype nt \
+    --output /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/phylogenies/anaerolineaceae_bacterium_ot_439/modeltest_ng \
+    -p 4 \
+    -r 0 \
+    -s 11
+
+
+###########################
+/mnt/archgen/projects1/users/sabin/kilteasheen
+###########################
+
+# try StrainFacts for distinguishing different strains in the samples? 
+# Relies on GT_Pro, which requires at least 10 strains of each species in it's database
+# since we don't have that for most of the species we're interested in 
+# for this project, it looks like it won't work
+
+
+
+rename 's/refsesq/refseq/' *_refsesq_*
+rename 's/\.\.d/.d/' *.cov
+
+qalter 2309543 -q bigmem.q
+
+
+
+find . -name '*.rma6' -type f
+
+
+
+
+
+# fastq = "/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/metaphlan3/ancient_parameters/input_bones_blanks/{sample}.unmapped.fastq.gz",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
