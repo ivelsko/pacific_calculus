@@ -1,0 +1,8 @@
+name: modeltest
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::modeltest-ng=0.1.7
+

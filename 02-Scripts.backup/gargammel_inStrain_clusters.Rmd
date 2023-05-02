@@ -1,0 +1,624 @@
+---
+title: "Strep amylase-binding protein dRep clusters"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+```{r load_libraries, message = F}
+library(knitr)
+library(data.table)
+library(tidyverse)
+library(viridis)
+opts_chunk$set(eval=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+
+
+## popANI
+```{r}
+genome_wide_gm <- fread("./04-Analysis/inStrain/benchmarking_ancient/inStrain_output/zymo_reference_genomes.IS.COMPARE/output/zymo_reference_genomes.IS.COMPARE_genomeWide_compare.tsv")
+
+genome_wide_gm %>%
+  filter(name1 == "udg_half.zymo_reference_genomes.sort.is12.bam" & name2 == "non_udg.zymo_reference_genomes.sort.mask_15_15.is48.bam")
+
+
+comparison_table_gm <- fread("./04-Analysis/inStrain/benchmarking_ancient/inStrain_output/zymo_reference_genomes.IS.COMPARE/output/zymo_reference_genomes.IS.COMPARE_comparisonsTable.tsv")
+
+strain_clusters_gm <- fread("./04-Analysis/inStrain/benchmarking_ancient/inStrain_output/zymo_reference_genomes.IS.COMPARE/output/zymo_reference_genomes.IS.COMPARE_strain_clusters.tsv")
+
+```
+
+```{r}
+
+gw_dup_gm <- genome_wide_gm %>%
+  bind_rows(genome_wide_gm %>%
+              rename(name2 = 2,
+                     name1 = 3) %>%
+              select(genome, name1, name2, everything())) %>%
+  distinct()  %>%
+  arrange(genome, name1, name2)
+
+
+gw_dup_gm
+
+
+```
+
+
+```{r popANI_heatmap}
+
+shared_popani <- gw_dup_gm %>%
+  # filter(genome == "Bacillus_subtilis_complete_genome.fasta") %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam",""),
+         genome = str_replace_all(genome, "_complete_genome.fasta","")) %>%
+  mutate(name1 = fct_relevel(name1, "udg_half.is12","udg_half.is24","udg_half.is36","udg_half.is48",
+                             "udg_half.mask_1_1.is12","udg_half.mask_1_1.is24","udg_half.mask_1_1.is36","udg_half.mask_1_1.is48",
+                             "non_udg.is12","non_udg.is24","non_udg.is36","non_udg.is48",
+                             "non_udg.mask_9_9.is12","non_udg.mask_9_9.is24","non_udg.mask_9_9.is36","non_udg.mask_9_9.is48",
+                             "non_udg.mask_11_11.is12","non_udg.mask_11_11.is24","non_udg.mask_11_11.is36","non_udg.mask_11_11.is48",
+                             "non_udg.mask_13_13.is12","non_udg.mask_13_13.is24","non_udg.mask_13_13.is36","non_udg.mask_13_13.is48",
+                             "non_udg.mask_15_15.is12","non_udg.mask_15_15.is24","non_udg.mask_15_15.is36","non_udg.mask_15_15.is48"),
+         name2 = fct_relevel(name2, "udg_half.is12","udg_half.is24","udg_half.is36","udg_half.is48",
+                             "udg_half.mask_1_1.is12","udg_half.mask_1_1.is24","udg_half.mask_1_1.is36","udg_half.mask_1_1.is48",
+                             "non_udg.is12","non_udg.is24","non_udg.is36","non_udg.is48",
+                             "non_udg.mask_9_9.is12","non_udg.mask_9_9.is24","non_udg.mask_9_9.is36","non_udg.mask_9_9.is48",
+                             "non_udg.mask_11_11.is12","non_udg.mask_11_11.is24","non_udg.mask_11_11.is36","non_udg.mask_11_11.is48",
+                             "non_udg.mask_13_13.is12","non_udg.mask_13_13.is24","non_udg.mask_13_13.is36","non_udg.mask_13_13.is48",
+                             "non_udg.mask_15_15.is12","non_udg.mask_15_15.is24","non_udg.mask_15_15.is36","non_udg.mask_15_15.is48")) %>%
+  ggplot(., aes(name1, name2, fill = popANI)) +
+         geom_tile() +
+         # scale_fill_gradient(low = "#f5fbfc", high = "#272b77") +
+         scale_fill_viridis(option = "A", direction = -1) +
+         theme_minimal(base_size = 12) +
+         theme(plot.margin = margin(0, 0, 0, 0, "pt"),
+               axis.title.y = element_blank(),
+               legend.position = "right") +
+         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+         xlab("Data set") + 
+         labs(fill='popANI') +
+         facet_wrap(~genome, ncol = 2)
+
+shared_popani
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX4/inStrain_gargammel_shared_popani.svg", plot = shared_popani, device = "svg",
+#         scale = 1, width = 14, height = 18, units = c("in"), dpi = 300)
+
+```
+
+```{r}
+
+gw_dup_gm %>%  
+  filter(genome == "Enterococcus_faecalis_complete_genome.fasta") %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  mutate(name1 = fct_relevel(name1, "udg_half.is12","udg_half.is24","udg_half.is36","udg_half.is48",
+                             "udg_half.mask_1_1.is12","udg_half.mask_1_1.is24","udg_half.mask_1_1.is36","udg_half.mask_1_1.is48",
+                             "non_udg.is12","non_udg.is24","non_udg.is36","non_udg.is48",
+                             "non_udg.mask_9_9.is12","non_udg.mask_9_9.is24","non_udg.mask_9_9.is36","non_udg.mask_9_9.is48",
+                             "non_udg.mask_11_11.is12","non_udg.mask_11_11.is24","non_udg.mask_11_11.is36","non_udg.mask_11_11.is48",
+                             "non_udg.mask_13_13.is12","non_udg.mask_13_13.is24","non_udg.mask_13_13.is36","non_udg.mask_13_13.is48",
+                             "non_udg.mask_15_15.is12","non_udg.mask_15_15.is24","non_udg.mask_15_15.is36","non_udg.mask_15_15.is48"),
+         name2 = fct_relevel(name2, "udg_half.is12","udg_half.is24","udg_half.is36","udg_half.is48",
+                             "udg_half.mask_1_1.is12","udg_half.mask_1_1.is24","udg_half.mask_1_1.is36","udg_half.mask_1_1.is48",
+                             "non_udg.is12","non_udg.is24","non_udg.is36","non_udg.is48",
+                             "non_udg.mask_9_9.is12","non_udg.mask_9_9.is24","non_udg.mask_9_9.is36","non_udg.mask_9_9.is48",
+                             "non_udg.mask_11_11.is12","non_udg.mask_11_11.is24","non_udg.mask_11_11.is36","non_udg.mask_11_11.is48",
+                             "non_udg.mask_13_13.is12","non_udg.mask_13_13.is24","non_udg.mask_13_13.is36","non_udg.mask_13_13.is48",
+                             "non_udg.mask_15_15.is12","non_udg.mask_15_15.is24","non_udg.mask_15_15.is36","non_udg.mask_15_15.is48")) %>%
+  arrange(name1, name2)%>%
+  ggplot(., aes(name1, name2, fill = popANI)) +
+         geom_tile() +
+         scale_fill_gradient(low = "#f5fbfc", high = "#272b77") +
+         theme_minimal(base_size = 12) +
+         theme(plot.margin = margin(0, 0, 0, 0, "pt"),
+               axis.title.y = element_blank(),
+               legend.position = "right") +
+         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.05)) +
+         xlab("Data set") + 
+         labs(fill='popANI')
+
+```
+
+
+
+```{r shared_coverage_heatmap}
+
+shared_cov <- gw_dup_gm %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam",""),
+         genome = str_replace_all(genome, "_complete_genome.fasta","")) %>%
+  mutate(name1 = fct_relevel(name1, "udg_half.is12","udg_half.is24","udg_half.is36","udg_half.is48",
+                             "udg_half.mask_1_1.is12","udg_half.mask_1_1.is24","udg_half.mask_1_1.is36","udg_half.mask_1_1.is48",
+                             "non_udg.is12","non_udg.is24","non_udg.is36","non_udg.is48",
+                             "non_udg.mask_9_9.is12","non_udg.mask_9_9.is24","non_udg.mask_9_9.is36","non_udg.mask_9_9.is48",
+                             "non_udg.mask_11_11.is12","non_udg.mask_11_11.is24","non_udg.mask_11_11.is36","non_udg.mask_11_11.is48",
+                             "non_udg.mask_13_13.is12","non_udg.mask_13_13.is24","non_udg.mask_13_13.is36","non_udg.mask_13_13.is48",
+                             "non_udg.mask_15_15.is12","non_udg.mask_15_15.is24","non_udg.mask_15_15.is36","non_udg.mask_15_15.is48"),
+         name2 = fct_relevel(name2, "udg_half.is12","udg_half.is24","udg_half.is36","udg_half.is48",
+                             "udg_half.mask_1_1.is12","udg_half.mask_1_1.is24","udg_half.mask_1_1.is36","udg_half.mask_1_1.is48",
+                             "non_udg.is12","non_udg.is24","non_udg.is36","non_udg.is48",
+                             "non_udg.mask_9_9.is12","non_udg.mask_9_9.is24","non_udg.mask_9_9.is36","non_udg.mask_9_9.is48",
+                             "non_udg.mask_11_11.is12","non_udg.mask_11_11.is24","non_udg.mask_11_11.is36","non_udg.mask_11_11.is48",
+                             "non_udg.mask_13_13.is12","non_udg.mask_13_13.is24","non_udg.mask_13_13.is36","non_udg.mask_13_13.is48",
+                             "non_udg.mask_15_15.is12","non_udg.mask_15_15.is24","non_udg.mask_15_15.is36","non_udg.mask_15_15.is48")) %>%
+  ggplot(., aes(name1, name2, fill = coverage_overlap)) +
+         geom_tile() +
+         # scale_fill_gradient(low = "#f5fbfc", high = "#272b77") +
+         scale_fill_viridis(option = "A", direction = -1) +
+         theme_minimal(base_size = 12) +
+         theme(plot.margin = margin(0, 0, 0, 0, "pt"),
+               axis.title.y = element_blank(),
+               legend.position = "right") +
+         theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+         xlab("Gene cluster") + 
+         labs(fill='Coverage overlap') +
+         facet_wrap(~genome, ncol = 2)
+shared_cov
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX9/inStrain_gargammel_shared_cov.svg", plot = shared_cov, device = "svg",
+#         scale = 1, width = 14, height = 18, units = c("in"), dpi = 300)
+    
+```
+
+```{r corr_colors}
+colorset <- c("#ffffff","#e4f4fe","#c8e9fd","#addefc","#92d3fa","#77c8f9","#5bbdf8","#40b2f7","#25a8f6","#0a9cf4","#098BD9") # ,"#087dc3","#076fae","#066198","#055382"
+# colorset <- c("#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#098BD9") # ,"#087dc3","#076fae","#066198","#055382"
+
+```
+
+```{r bsubtilis}
+gw_wide <- gw_dup_gm %>%
+  filter(genome == "Bacillus_subtilis_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.99190) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+stars <- gw_dup_gm %>%
+  filter(genome == "Bacillus_subtilis_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  mutate(star = ifelse(popANI >= 99.999, 0.0001, 0.1)) %>%
+  select(-popANI) %>%
+  pivot_wider(names_from = "name2", values_from = "star", values_fill = 0.1) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     p.mat = stars, 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.99190, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black',
+                     tl.cex = 1.0,
+                     sig.level = c(0.001), 
+                     pch.cex = 0.8, 
+                     insig = 'label_sig', 
+                     pch.col = 'grey20')
+
+
+```
+
+```{r efaecalis}
+gw_wide <- gw_dup_gm %>%
+  filter(genome == "Enterococcus_faecalis_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.99190) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+stars <- gw_dup_gm %>%
+  filter(genome == "Enterococcus_faecalis_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  mutate(star = ifelse(popANI >= 99.999, 0.0001, 0.1)) %>%
+  select(-popANI) %>%
+  pivot_wider(names_from = "name2", values_from = "star", values_fill = 0.1) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     p.mat = stars, 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.99190, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black',
+                     tl.cex = 1.0,
+                     sig.level = c(0.001), 
+                     pch.cex = 0.8, 
+                     insig = 'label_sig', 
+                     pch.col = 'grey20')
+
+
+```
+
+```{r Ecoli}
+gw_wide <- gw_dup_gm %>%
+  filter(genome == "Escherichia_coli_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.99190) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+stars <- gw_dup_gm %>%
+  filter(genome == "Escherichia_coli_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  mutate(star = ifelse(popANI >= 99.999, 0.0001, 0.1)) %>%
+  select(-popANI) %>%
+  pivot_wider(names_from = "name2", values_from = "star", values_fill = 0.1) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     p.mat = stars, 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.99190, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black',
+                     tl.cex = 1.0,
+                     sig.level = c(0.001), 
+                     pch.cex = 0.8, 
+                     insig = 'label_sig', 
+                     pch.col = 'grey20')
+
+
+```
+
+```{r Lfermentum}
+gw_wide <- gw_dup_gm %>%
+  filter(genome == "Lactobacillus_fermentum_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.99190) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+stars <- gw_dup_gm %>%
+  filter(genome == "Lactobacillus_fermentum_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  mutate(star = ifelse(popANI >= 99.999, 0.0001, 0.1)) %>%
+  select(-popANI) %>%
+  pivot_wider(names_from = "name2", values_from = "star", values_fill = 0.1) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     p.mat = stars, 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.99190, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black',
+                     tl.cex = 1.0,
+                     sig.level = c(0.001), 
+                     pch.cex = 0.8, 
+                     insig = 'label_sig', 
+                     pch.col = 'grey20')
+
+
+```
+
+```{r lmonocytogenes}
+gw_wide <- gw_dup_gm %>%
+  filter(genome == "Listeria_monocytogenes_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.99190) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+stars <- gw_dup_gm %>%
+  filter(genome == "Listeria_monocytogenes_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  mutate(star = ifelse(popANI >= 99.999, 0.0001, 0.1)) %>%
+  select(-popANI) %>%
+  pivot_wider(names_from = "name2", values_from = "star", values_fill = 0.1) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     p.mat = stars, 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.99190, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black',
+                     tl.cex = 1.0,
+                     sig.level = c(0.001), 
+                     pch.cex = 0.8, 
+                     insig = 'label_sig', 
+                     pch.col = 'grey20')
+
+
+```
+
+```{r paeruginosa}
+gw_wide <- gw_dup_gm %>%
+  filter(genome == "Pseudomonas_aeruginosa_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.99190) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+stars <- gw_dup_gm %>%
+  filter(genome == "Pseudomonas_aeruginosa_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  mutate(star = ifelse(popANI >= 99.999, 0.0001, 0.1)) %>%
+  select(-popANI) %>%
+  pivot_wider(names_from = "name2", values_from = "star", values_fill = 0.1) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     p.mat = stars, 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.99190, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black',
+                     tl.cex = 1.0,
+                     sig.level = c(0.001), 
+                     pch.cex = 0.8, 
+                     insig = 'label_sig', 
+                     pch.col = 'grey20')
+
+
+```
+
+```{r senterica}
+gw_wide <- gw_dup_gm %>%
+  filter(genome == "Salmonella_enterica_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.99190) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+stars <- gw_dup_gm %>%
+  filter(genome == "Salmonella_enterica_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  mutate(star = ifelse(popANI >= 99.999, 0.0001, 0.1)) %>%
+  select(-popANI) %>%
+  pivot_wider(names_from = "name2", values_from = "star", values_fill = 0.1) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     p.mat = stars, 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.99190, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black',
+                     tl.cex = 1.0,
+                     sig.level = c(0.001), 
+                     pch.cex = 0.8, 
+                     insig = 'label_sig', 
+                     pch.col = 'grey20')
+
+
+```
+
+```{r saureus}
+gw_wide <- gw_dup_gm %>%
+  filter(genome == "Staphylococcus_aureus_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.99190) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+stars <- gw_dup_gm %>%
+  filter(genome == "Staphylococcus_aureus_complete_genome.fasta") %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name1 = str_replace_all(name1, ".bam",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".bam","")) %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  mutate(star = ifelse(popANI >= 99.999, 0.0001, 0.1)) %>%
+  select(-popANI) %>%
+  pivot_wider(names_from = "name2", values_from = "star", values_fill = 0.1) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     p.mat = stars, 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.99190, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black',
+                     tl.cex = 1.0,
+                     sig.level = c(0.001), 
+                     pch.cex = 0.8, 
+                     insig = 'label_sig', 
+                     pch.col = 'grey20')
+
+
+```
+
+```{r}
+
+table <- gw_dup_gm %>%
+  filter(str_detect(name1, "udg_half")) %>%
+  select(genome, name1, name2, popANI, percent_compared) %>%
+  mutate(name1 = str_replace_all(name1, ".zymo_reference_genomes.sort",""),
+         name2 = str_replace_all(name2, ".zymo_reference_genomes.sort",""),
+         genome = str_replace_all(genome, "_complete_genome.fasta","")) %>%
+  arrange(genome, name1, name2)
+
+```
+
+

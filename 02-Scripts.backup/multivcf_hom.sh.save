@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+ 
+#SBATCH -c 4                      # number of CPUs (here 4)
+#SBATCH --mem=32G               # memory pool for all cores (here 32GB)
+#SBATCH -o slurm.%j.out           # STDOUT (the standard output stream) into file slurm.<JOB_NUMBER>.out
+#SBATCH -e slurm.%j.err           # STDERR (the output stream for errors) into file slurm.<JOB_NUMBER>.err
+#SBATCH -p short                  # The queue or 'partition' you want to submit to, here the 'short' queue
+
+java -Xmx16G -jar /projects1/tools/multivcfanalyzer/0.0.87/MultiVCFanalyzer_0-87.jar \
+NA \
+/projects1/microbiome_sciences/reference_genomes/Tannerella_forsythia/Tannerella_forsythia_9212.fa \
+NA \
+/projects1/microbiome_calculus/pacific_calculus/04-Analysis/phylogenies/tannerella_forsythia/multivcfanalyzer_hom/ \
+F \
+30 \
+5 \
+0.9 \
+0.9 \
+NA \
+/├── AKI002.A0101.unifiedgenotyper.vcf.gz
+├── AMH001.A0101.unifiedgenotyper.vcf.gz
+├── AMH002.A0101.unifiedgenotyper.vcf.gz
+├── AMH003.A0101.unifiedgenotyper.vcf.gz
+├── AMH004.A0101.unifiedgenotyper.vcf.gz
+├── ANN001.A0101.unifiedgenotyper.vcf.gz
+├── ANN002.A0101.unifiedgenotyper.vcf.gz
+├── ANN003.A0101.unifiedgenotyper.vcf.gz
+├── ANN004.A0101.unifiedgenotyper.vcf.gz
+├── AON001.A0101.unifiedgenotyper.vcf.gz
+├── AON002.A0101.unifiedgenotyper.vcf.gz
+├── ATT001.A0101.unifiedgenotyper.vcf.gz
+├── ATT002.A0101.unifiedgenotyper.vcf.gz
+├── ECO002.B0102.unifiedgenotyper.vcf.gz
+├── EFE002.B0101.unifiedgenotyper.vcf.gz
+├── EFE003.B0101.unifiedgenotyper.vcf.gz
+├── EFE004.B0101.unifiedgenotyper.vcf.gz
+├── EFE005.B0101.unifiedgenotyper.vcf.gz
+├── EFE006.B0101.unifiedgenotyper.vcf.gz
+├── EMN001.A0102.unifiedgenotyper.vcf.gz
+├── FUT021.B0101.unifiedgenotyper.vcf.gz
+├── FUT024.B0101.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-01-00-01_S1.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-02-00-01_S2.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-05-00-01_S5.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-06-00-01_S6.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-07-00-01_S7.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-08-00-01_S8.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-11-00-01_S11.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-12-00-01_S12.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-14-00-01_S14.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-15-00-01_S15.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-16-00-01_S16.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-17-00-01_S17.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-21-00-01_S21.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-26-00-01_S26.unifiedgenotyper.vcf.gz
+├── HCLVMBCX2-3505-28-00-01_S28.unifiedgenotyper.vcf.gz
+├── NMU115.A0101.unifiedgenotyper.vcf.gz
+├── NMU117.A0101.unifiedgenotyper.vcf.gz
+├── NMU118.A0101.unifiedgenotyper.vcf.gz
+├── NMU119.A0101.unifiedgenotyper.vcf.gz
+├── NMU120.A0101.unifiedgenotyper.vcf.gz
+├── NMU121.A0101.unifiedgenotyper.vcf.gz
+├── NMU122.A0101.unifiedgenotyper.vcf.gz
+├── NMU123.A0101.unifiedgenotyper.vcf.gz
+├── NMU124.A0101.unifiedgenotyper.vcf.gz
+├── NMU125.A0101.unifiedgenotyper.vcf.gz
+├── NMU126.A0101.unifiedgenotyper.vcf.gz
+├── NMU127.A0101.unifiedgenotyper.vcf.gz
+├── NMU128.A0101.unifiedgenotyper.vcf.gz
+├── NMU129.A0101.unifiedgenotyper.vcf.gz
+├── NMU130.A0101.unifiedgenotyper.vcf.gz
+├── PAH002.A0101.unifiedgenotyper.vcf.gz
+├── PAH003.A0101.unifiedgenotyper.vcf.gz
+├── PVD001.A0101.unifiedgenotyper.vcf.gz
+├── RAP001.A0101.unifiedgenotyper.vcf.gz
+├── RAP002.A0101.unifiedgenotyper.vcf.gz
+├── SIG031.A0101.unifiedgenotyper.vcf.gz
+├── SIG032.A0101.unifiedgenotyper.vcf.gz
+├── SIG033.A0101.unifiedgenotyper.vcf.gz
+├── SIG035.A0101.unifiedgenotyper.vcf.gz
+├── TAP001.B0101.unifiedgenotyper.vcf.gz
+├── TAP003.B0101.unifiedgenotyper.vcf.gz
+├── TON004.B0101.unifiedgenotyper.vcf.gz
+├── TON005.B0101.unifiedgenotyper.vcf.gz
+TON006.B0101.unifiedgenotyper.vcf.gz
+TON007.B0101.unifiedgenotyper.vcf.gz
+
