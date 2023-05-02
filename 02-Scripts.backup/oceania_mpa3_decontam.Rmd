@@ -1,0 +1,466 @@
+---
+title: "MID/CMB calculus MetaPhlAn3 decontam"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(decontam)
+library(data.table)
+library(janitor)
+library(tidyverse)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r load_data}
+# read in the species table
+mpa3_raw <- fread("./05-Documentation.backup/mpa3_anc_params_pacific_abundance_table.tsv") %>%
+  select(-clade_taxid) %>%
+  select(-matches("01_S13")) %>%
+  # remove all HPD samples b/c we're not including them
+  select(-matches("HPD"))
+
+# clean the file names
+colnames(mpa3_raw) <- gsub(".metaphlan.profile","", colnames(mpa3_raw))
+
+# filter to have only species
+mpa3_sp <- mpa3_raw %>% 
+  filter(str_detect(clade_name, "s__")) %>%
+  separate(clade_name, into = c("K","P","C","O","F","G","Species"), sep = "\\|") %>%
+  select(-c("K","P","C","O","F","G")) %>%
+  mutate(Species = str_replace_all(Species, "s__",""),
+         Species = str_replace_all(Species, "_"," ")) %>%
+  arrange(Species)
+
+```
+
+Load metadata
+```{r load_metadata}
+
+metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv")
+
+```
+
+```{r poorly_preserved}
+
+# cfdp_fail <- fread("05-Documentation.backup/cfdp_fail_samples_20210413.txt") %>%
+#   pull()
+
+
+cfdp_fail <- fread("05-Documentation.backup/oceania_cuperdec_mpa3_anc_params_poor_samples.tsv") %>%
+  rename(Library_ID = 1)
+
+```
+
+```{r}
+# list all bones that are part of this study
+# the ARS bones are a little different in the PCA, so we won't use them
+bones <- metadata %>%
+  filter(Type == "bone") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(!str_detect(Library_ID, "ARS|HPD"))
+
+# list all samples and blanks from Otago
+otago <- metadata %>%
+  filter(Lab == "Otago") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  bind_rows(bones) %>%
+  arrange(Library_ID) %>%
+  pull(Library_ID)
+
+# list all sampmles and blanks from Oklahoma
+oklahoma <- metadata %>%
+  filter(Lab == "Oklahoma") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Type != "bone") %>%
+  bind_rows(bones) %>%
+  bind_rows(., metadata %>%
+              filter(str_detect(Library_ID, "LIB")) %>% select(Library_ID, Lab, Type)) %>%
+  pull(Library_ID)
+
+# list all samples and blanks from Jena
+jena <- metadata %>%
+  filter(Lab == "Jena") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Type != "bone") %>%
+  bind_rows(bones) %>%
+  pull(Library_ID)
+
+
+```
+
+```{r pca_plotting_functions}
+# plotting PCA with colored dots
+plot_pca <- function(df, pc1, pc2, metadata_group) {
+    metadata_group_colors <- get(paste(metadata_group, "_colors", sep = ""))
+    metadata_group_shapes <- get(paste(metadata_group, "_shapes", sep = ""))
+
+    exp_var <- paste0(round(df$prop_expl_var$X * 100, 2), "%")
+    df_X <- df$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata %>%
+                           select(Library_ID, Site, Sample_or_Control), by = "Library_ID")
+    
+    metadata_group = df_X[[metadata_group]]
+    
+                       if (pc1 == 'PC1') {
+                           pc1 <- df_X$PC1
+                           exp_var_pc1 <- exp_var[1]
+                           xaxis <- c("PC1")
+                       }  else if (pc1 == 'PC2') {
+                           pc1 <- df_X$PC2
+                           exp_var_pc1 <- exp_var[2]
+                           xaxis <- c("PC2")
+                       } else if (pc1 == 'PC3') {
+                           pc1 <- df_X$PC3
+                           exp_var_pc1 <- exp_var[3]
+                           xaxis <- c("PC3")
+                       }
+
+                       if (pc2 == 'PC1') {
+                           pc2 <- df_X$PC1
+                           exp_var_pc2 <- exp_var[1]
+                           yaxis <- c("PC1")
+                       }  else if (pc2 == 'PC2') {
+                           pc2 <- df_X$PC2
+                           exp_var_pc2 <- exp_var[2]
+                           yaxis <- c("PC2")
+                       } else if (pc2 == 'PC3') {
+                           pc2 <- df_X$PC3
+                           exp_var_pc2 <- exp_var[3]
+                           yaxis <- c("PC3")
+                       }
+
+    pca_plot <- ggplot(df_X, aes(pc1, pc2, colour = metadata_group, shape = metadata_group)) +
+                        geom_point(size = 4) +
+                        scale_colour_manual(values = metadata_group_colors) +
+                        scale_shape_manual(values = metadata_group_shapes) +
+                        # stat_ellipse() +
+                        xlab(paste(xaxis, " - ", exp_var_pc1)) +
+                        ylab(paste(yaxis, " - ", exp_var_pc2)) +
+                        theme_minimal(base_size = 10) +
+                        theme(legend.position = "top") +
+                        theme(legend.title = element_blank())
+
+    return(pca_plot)
+}
+
+# this function plots the PCA with the sample names instead of points
+plot_pca_names <- function(df, pc1, pc2, metadata_group) {
+    metadata_group_colors <- get(paste(metadata_group, "_colors", sep = ""))
+
+    exp_var <- paste0(round(df$prop_expl_var$X * 100, 2), "%")
+    df_X <- df$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata %>%
+                           select(Library_ID, Site, Sample_or_Control), by = "Library_ID")
+    
+    metadata_group = df_X[[metadata_group]]
+    
+                       if (pc1 == 'PC1') {
+                           pc1 <- df_X$PC1
+                           exp_var_pc1 <- exp_var[1]
+                           xaxis <- c("PC1")
+                       }  else if (pc1 == 'PC2') {
+                           pc1 <- df_X$PC2
+                           exp_var_pc1 <- exp_var[2]
+                           xaxis <- c("PC2")
+                       } else if (pc1 == 'PC3') {
+                           pc1 <- df_X$PC3
+                           exp_var_pc1 <- exp_var[3]
+                           xaxis <- c("PC3")
+                       }
+
+                       if (pc2 == 'PC1') {
+                           pc2 <- df_X$PC1
+                           exp_var_pc2 <- exp_var[1]
+                           yaxis <- c("PC1")
+                       }  else if (pc2 == 'PC2') {
+                           pc2 <- df_X$PC2
+                           exp_var_pc2 <- exp_var[2]
+                           yaxis <- c("PC2")
+                       } else if (pc2 == 'PC3') {
+                           pc2 <- df_X$PC3
+                           exp_var_pc2 <- exp_var[3]
+                           yaxis <- c("PC3")
+                       }
+
+    pca_plot_names <- ggplot(df_X, aes(pc1, pc2, colour = metadata_group)) +
+                        geom_text(aes(label = Library_ID), size = 3) +
+                        scale_colour_manual(values = metadata_group_colors) +
+                        # stat_ellipse() +
+                        xlab(paste(xaxis, " - ", exp_var_pc1)) +
+                        ylab(paste(yaxis, " - ", exp_var_pc2)) +
+                        theme_minimal(base_size = 10) +
+                        theme(legend.position = "top") +
+                        theme(legend.title = element_blank())
+
+    return(pca_plot_names)
+}
+
+```
+
+
+### Raw PCA
+Before running decontam, let's plot the samples in a PCA to see if there are any that are clearly not good-quality
+```{r raw_plot_nt}
+# all samples
+species_raw <- mpa3_sp %>%
+  gather("Library_ID","Counts",2:ncol(.)) %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Species,Counts) %>%
+  filter(!str_detect(Library_ID, "ARS")) %>%
+  column_to_rownames("Library_ID")
+
+# prepare to run a PCA
+# check the number of components to retain by tuning the PCA
+tune.species_pca <- mixOmics::tune.pca(species_raw, logratio = 'CLR')
+tune.species_pca
+
+# perform a PCA to see how the data cluster
+species_mpa3.pca <- mixOmics::pca(species_raw, ncomp = 3, logratio = 'CLR')
+plot(species_mpa3.pca)
+
+# define some colors
+Sample_or_Control_colors = c("Blue", "Magenta")
+Sample_or_Control_shapes = c(19,8)
+
+plot_pca(species_mpa3.pca, "PC1", "PC2", "Sample_or_Control")
+# plot_pca_names(species_mpa3.pca,  "PC1", "PC2", "Sample_or_Control")
+
+# MALT RefSeq cuperdec failed samples removed
+species_raw <- mpa3_sp %>%
+  select(-matches(cfdp_fail %>% pull(Library_ID))) %>%
+  gather("Library_ID","Counts",2:ncol(.)) %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Species,Counts) %>%
+  filter(!str_detect(Library_ID, "ARS")) %>%
+  column_to_rownames("Library_ID")
+
+# prepare to run a PCA
+# check the number of components to retain by tuning the PCA
+tune.species_pca <- mixOmics::tune.pca(species_raw, logratio = 'CLR')
+tune.species_pca
+
+# perform a PCA to see how the data cluster
+species_mpa3.pca <- mixOmics::pca(species_raw, ncomp = 3, logratio = 'CLR')
+plot(species_mpa3.pca)
+
+# define some colors
+Sample_or_Control_colors = c("Blue", "Magenta")
+Sample_or_Control_shapes = c(19,8)
+
+plot_pca(species_mpa3.pca, "PC1", "PC2", "Sample_or_Control")
+plot_pca_names(species_mpa3.pca,  "PC1", "PC2", "Sample_or_Control")
+
+# samples that look like blanks
+poor_samples <- species_mpa3.pca$variates$X %>%
+  as.data.frame() %>%
+  rownames_to_column("Library_ID") %>%
+  inner_join(metadata %>%
+  select(Library_ID, Site, Type), by = "Library_ID") %>%
+  filter(PC1 > 0) %>%
+  filter(Type == "calculus") %>%
+  filter(str_detect(Library_ID, "HCLV|NMU")) %>%
+  # these might be ok, they're not directy w/ the blanks
+  filter(!str_detect(Library_ID,"S11|S14"))
+
+# fwrite(poor_samples %>% select(Library_ID), "../strep_clades/00-documentation/mpa3_anc_params_poor_samples.tsv", sep = "\t", quote = F)
+
+```
+
+
+
+# Decontamination with Decontam
+
+### Otago
+
+```{r otago_data_prep}
+# select only Otago samples and controls
+otago_df <- mpa3_sp %>%
+  select(one_of("Species", otago)) %>%
+  select(-matches(poor_samples %>% pull(Library_ID))) %>%
+  adorn_totals(where = "col") %>%
+  filter(Total > 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts")
+
+# make a matrix for decontam
+otago_matrix <- data.matrix(otago_df[2:ncol(otago_df)])
+rownames(otago_matrix) <- otago_df$Library_ID
+
+# make a metadata dataframe with the same samples 
+otago_metadata <- otago_df %>%
+  filter(!str_detect(Library_ID, poor_samples%>% pull(Library_ID))) %>%
+  select(Library_ID) %>%
+  left_join(., metadata, by = "Library_ID")
+
+```
+
+```{r otago_prevalence}
+# Assign sample-type status to identify control samples
+otago_metadata$is.control <- otago_metadata$Sample_or_Control=="Control"
+
+#Try changing the probability threshold cut-off to see how many more or less are ID'd as contaminants
+otago.contam.prev.species <- isContaminant(otago_matrix, method="prevalence", 
+                                 neg=otago_metadata$is.control, 
+                                 threshold = 0.1)
+
+# Check number of contaminants
+table(otago.contam.prev.species$contaminant)
+
+# List of contaminants
+otago_cont_prev_species_list <- otago.contam.prev.species[which(otago.contam.prev.species$contaminant=="TRUE"), ]
+
+# Look at the histogram - does the probability threshold need to be changed?
+ggplot(otago.contam.prev.species, aes(x=p)) +
+  geom_histogram() +
+  scale_y_log10() +
+  ggtitle('Prevalence - Species')
+
+```
+
+```{r contaminants, eval = F}
+contaminant_species_otago <- otago_cont_prev_species_list %>% rownames_to_column("Species") %>% select(Species)
+fwrite(contaminant_species_otago, file = "./05-results.backup/contaminant_species_otago_mpa3.tsv", sep="\t", quote=F)
+
+```
+
+### Oklahoma
+
+```{r oklahoma_data_prep}
+# select only Oklahoma samples and controls
+# note that all poorly-preserved samples are removed from genus_raw_pass although they're still in the Oklahoma list
+oklahoma_df <- mpa3_sp %>%
+  select(one_of("Species", oklahoma)) %>%
+  adorn_totals(where = "col") %>%
+  filter(Total > 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts")
+
+# make a matrix for decontam
+oklahoma_matrix <- data.matrix(oklahoma_df[2:ncol(oklahoma_df)])
+rownames(oklahoma_matrix) <- oklahoma_df$Library_ID
+
+# make a metadata dataframe with the same samples 
+oklahoma_metadata <- oklahoma_df %>%
+  select(Library_ID) %>%
+  left_join(., metadata, by = "Library_ID")
+
+
+```
+
+```{r oklahoma_prevalence}
+# Assign sample-type status to identify control samples
+oklahoma_metadata$is.control <- oklahoma_metadata$Sample_or_Control=="Control"
+
+#Try changing the probability threshold cut-off to see how many more or less are ID'd as contaminants
+oklahoma.contam.prev.species <- isContaminant(oklahoma_matrix, method="prevalence", 
+                                 neg=oklahoma_metadata$is.control, 
+                                 threshold = 0.1)
+
+# Check number of contaminants
+table(oklahoma.contam.prev.species$contaminant)
+
+# List of contaminants
+oklahoma_cont_prev_species_list <- oklahoma.contam.prev.species[which(oklahoma.contam.prev.species$contaminant=="TRUE"), ]
+
+# Look at the histogram - does the probability threshold need to be changed?
+ggplot(oklahoma.contam.prev.species, aes(x=p)) +
+  geom_histogram(bins=100) +
+  scale_y_log10() +
+  ggtitle('Prevalence - Species')
+
+```
+
+```{r contaminants, eval = F}
+contaminant_species_oklahoma <- oklahoma_cont_prev_species_list %>% rownames_to_column("Species") %>% select(Species)
+fwrite(contaminant_species_oklahoma, file = "./05-results.backup/contaminant_species_oklahoma_mpa3.tsv", sep="\t", quote=F)
+
+```
+
+### Jena
+
+```{r jena_data_prep}
+# select only Jena samples and controls
+# note that all poorly-preserved samples are removed from genus_raw_pass although they're still in the Jena list
+jena_df <- mpa3_sp %>%
+  select(one_of("Species", jena)) %>%
+  select(-matches(poor_samples %>% pull(Library_ID))) %>%
+  adorn_totals(where = "col") %>%
+  filter(Total > 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts")
+
+# make a matrix for decontam
+jena_matrix <- data.matrix(jena_df[2:ncol(jena_df)])
+rownames(jena_matrix) <- jena_df$Library_ID
+
+# make a metadata dataframe with the same samples 
+jena_metadata <- jena_df %>%
+  select(-matches(poor_samples %>% pull(Library_ID))) %>%
+  select(Library_ID) %>%
+  left_join(., metadata, by = "Library_ID")
+
+```
+
+```{r jena_prevalence}
+# Assign sample-type status to identify control samples
+jena_metadata$is.control <- jena_metadata$Sample_or_Control=="Control"
+
+#Try changing the probability threshold cut-off to see how many more or less are ID'd as contaminants
+jena.contam.prev.species <- isContaminant(jena_matrix, method="prevalence", 
+                                 neg=jena_metadata$is.control, 
+                                 threshold = 0.1)
+
+# Check number of contaminants
+table(jena.contam.prev.species$contaminant)
+
+# List of contaminants
+jena_cont_prev_species_list <- jena.contam.prev.species[which(jena.contam.prev.species$contaminant=="TRUE"), ]
+
+# Look at the histogram - does the probability threshold need to be changed?
+ggplot(jena.contam.prev.species, aes(x=p)) +
+  geom_histogram(bins=100) +
+  scale_y_log10() +
+  ggtitle('Prevalence - Species')
+
+```
+
+```{r contaminants, eval = F}
+contaminant_species_jena <- jena_cont_prev_species_list %>% rownames_to_column("Species") %>% select(Species)
+fwrite(contaminant_species_jena, file = "./05-results.backup/contaminant_species_jena_mpa3.tsv", sep="\t", quote=F)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

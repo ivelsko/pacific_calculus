@@ -1,0 +1,333 @@
+---
+title: "Prep Pacific species table for SourceTracker"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(mixOmics)
+library(compositions)
+library(janitor)
+library(tidyverse)
+library(gplots)
+library(viridis)
+library(cowplot)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+# SourceTracker table from MALT shotgun profile
+
+Read the metadata file and order alphabetically
+```{r, eval = F}
+mapfile <- fread("./05-Documentation.backup/oceania_mappingfile_20210611.tsv") %>%
+  arrange(`#SampleID`) %>%
+  filter(!str_detect(`#SampleID`, "SRR059454|SRR513449")) %>%
+  mutate_all(na_if,"") %>%
+  replace(is.na(.), "NA")
+
+fwrite(mapfile, "../strep_clades/00-documentation/source_tracker_mappingfile_20220722.tsv", sep = "\t", quote = F)
+
+
+# mapfile %>%
+#   select(`#Library_ID`, BarcodeSequence, LinkerPrimerSequence, Study, Env, SourceSink) %>%
+#   fwrite(., "./00-documentation.backup/source_tracker_mappingfile_new.tsv", sep = "\t", quote = T)
+  
+```
+
+Read in the formatted metadata table
+```{r}
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv")
+
+mapfile <- fread("./05-Documentation.backup/source_tracker_mappingfile_20220722.tsv")
+
+```
+
+
+Read in the species table of sources from the DeepEvo project
+```{r}
+source_table <- fread("./05-Documentation.backup/oceania_malt_cRefSeq_summarized_species_20201105.txt") %>%
+  rename(Species = 1) %>%
+  full_join(., fread("./05-Documentation.backup/sources_MALT_cRefSeq_JFY_species_summarized.txt") %>%
+              rename(Species = 1) %>%
+              select(matches("Species|SRR|ERR|ARS")) %>%
+              select(-matches("SRR059425|SRR1761692|SRR1761697|SRR1761710|SRR1761718")), by = "Species") %>%
+  full_join(., fread("./05-Documentation.backup/oceania_malt_blanks_cRefSeq_species_summarized_20201130.txt") %>%
+              rename(Species = 1), by = "Species") %>%
+  full_join(., fread("./05-Documentation.backup/oceania_malt_bones_cRefSeq_species_summarized_20201202.txt") %>%
+              rename(Species = 1), by = "Species") %>%
+   full_join(., fread("./05-Documentation.backup/deep_evo_malt_refseq_comparison_species.tsv") %>%
+              rename(Species = 1) %>%
+              select(matches("Species|JAE006|JAE007|JAE008|JAE009|JAE012|VLC001|VLC002|VLC003|VLC004|VLC005")), by = "Species") %>%
+ filter(!str_detect(Species, "Homo")) %>%
+  # remove HPD samples 
+  select(-matches("HPD"))
+
+# clean the file names
+colnames(source_table) <- gsub("MeganServer::", "", colnames(source_table)) 
+colnames(source_table) <- gsub(".unmapped", "", colnames(source_table)) 
+colnames(source_table) <- gsub(".SG1.1", "", colnames(source_table)) 
+colnames(source_table) <- gsub(".SG1.2", "", colnames(source_table)) 
+colnames(source_table) <- gsub("_L001_R1_001.fastq.combined.fq.prefixed.extractunmapped.bam", "", colnames(source_table)) 
+colnames(source_table) <- gsub("_S0_L000_R1_000.fastq.merged.prefixed.hg19unmapped", "", colnames(source_table)) 
+colnames(source_table) <- gsub("_S0_L001_R1_001.fastq.truncated.prefixed.extractunmapped.bam", "", colnames(source_table)) 
+colnames(source_table) <- gsub("_S0_L001_R1_000.fastq.merged.prefixed.hg1", "", colnames(source_table)) 
+colnames(source_table) <- gsub("_S0_L000_R1_000.fastq.merged.prefixed.hg1", "", colnames(source_table)) 
+colnames(source_table) <- gsub(".SG1.2_S0_L003_R1_001.fastq.combined.fq.prefixed.extrac.bam", "", colnames(source_table))  
+colnames(source_table) <- gsub("_S0_L003_R1_001.fastq.combined.fq.prefixed.extrac.bam", "", colnames(source_table)) 
+
+# replace all NA with 0
+source_table <- source_table %>% 
+  replace(is.na(.), 0) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  arrange(Library_ID) %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts")
+
+```
+
+```{r}
+# do we need to filter out bones?
+bones <- pacific_metadata %>%
+  filter(Type == "bone") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(!str_detect(Library_ID, "ARS|HPD"))
+
+blanks <- pacific_metadata %>%
+  filter(Type == "blank") %>%
+  pull(Library_ID)
+
+```
+
+
+Combine the input data table and the source table. This needs to be normalized
+by sequencing depth
+```{r}
+
+full_table_sourcetracker <- source_table %>%
+  select(-matches(blanks %>% str_c(collapse = "|"))) 
+# %>% 
+  # replace(is.na(.), 0) %>%
+  # pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  # pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  # gather("Library_ID","Counts", 2:ncol(.)) %>%
+  # spread(Library_ID, Counts) %>%
+  # rename(`#OTU ID` = Species)
+
+```
+
+Create a rarefied table with phyloseq to use in SourceTracker
+```{r}
+# all_species_decontam is the OTU table
+# what is the lowest sequencing depth?
+full_table_sourcetracker %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  # gather("Library_ID","Counts", 2:ncol(.)) %>%
+  # spread(`#OTU ID`, Counts) %>%
+  adorn_totals(where = "col") %>%
+  select(Library_ID, Total) %>%
+  arrange(Total) %>%
+  as_tibble()
+
+# Make the table a matrix
+st_table <- full_table_sourcetracker %>%
+  column_to_rownames("Species") %>%
+  as.matrix(.)
+
+# make an accompanying taxonomy matrix
+st_taxa <- full_table_sourcetracker %>%
+  mutate(Species_2 = Species) %>%
+  select(Species, Species_2) %>%
+  column_to_rownames("Species") %>%
+  rename(Species = Species_2) %>%
+  as.matrix(.)
+
+# now convert to a phyloseq object
+library("phyloseq")
+OTU = otu_table(st_table, taxa_are_rows = TRUE)
+TAX = tax_table(st_taxa)
+
+st_physeq = phyloseq(OTU, TAX)
+st_physeq
+
+rare_st_physeq <- rarefy_even_depth(st_physeq, rngseed = 14)
+
+# save the rarefied table (from https://github.com/joey711/phyloseq/issues/613)
+# Extract abundance matrix from the phyloseq object
+OTU1 <- as(otu_table(rare_st_physeq), "matrix")
+# transpose if necessary
+if(taxa_are_rows(rare_st_physeq)){OTU1 <- t(OTU1)}
+# Coerce to data.frame
+st_table_rare <- as.data.frame(OTU1)
+
+# check the depth of rarefaction
+st_table_rare %>%
+  rownames_to_column("#OTU ID") %>%
+  adorn_totals(where = "col") %>%
+  select(`#OTU ID`,Total) %>%
+  as_tibble()
+
+# make the rownames a column with the appropriate header
+st_table_rare <- st_table_rare %>%
+  rownames_to_column("Library_ID") %>%
+  gather("#OTU ID","Counts",2:ncol(.)) %>%
+  spread(Library_ID, Counts)
+
+
+```
+
+Rarefy blanks for PCA later
+```{r}
+# all_species_decontam is the OTU table
+# what is the lowest sequencing depth?
+source_table %>%
+  select(matches(c("Species", blanks) %>% str_c(collapse = "|"))) %>%
+  # remmoce the blank with almost no reads
+  select(-LIB027.A0136) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  # gather("Library_ID","Counts", 2:ncol(.)) %>%
+  # spread(`#OTU ID`, Counts) %>%
+  adorn_totals(where = "col") %>%
+  select(Library_ID, Total) %>%
+  arrange(Total) %>%
+  as_tibble()
+
+# Make the table a matrix
+blank_table <- source_table %>%
+  select(matches(c("Species", blanks) %>% str_c(collapse = "|"))) %>%
+  # remmoce the blank with almost no reads
+  select(-LIB027.A0136) %>%
+  column_to_rownames("Species") %>%
+  as.matrix(.)
+
+# make an accompanying taxonomy matrix
+blank_taxa <- source_table %>%
+  select(matches(c("Species", blanks) %>% str_c(collapse = "|"))) %>%
+  # remmoce the blank with almost no reads
+  select(-LIB027.A0136) %>%
+  mutate(Species_2 = Species) %>%
+  select(Species, Species_2) %>%
+  column_to_rownames("Species") %>%
+  rename(Species = Species_2) %>%
+  as.matrix(.)
+
+# now convert to a phyloseq object
+library("phyloseq")
+OTU = otu_table(blank_table, taxa_are_rows = TRUE)
+TAX = tax_table(blank_taxa)
+
+bl_physeq = phyloseq(OTU, TAX)
+bl_physeq
+
+rare_bl_physeq <- rarefy_even_depth(bl_physeq, rngseed = 14)
+
+# save the rarefied table (from https://github.com/joey711/phyloseq/issues/613)
+# Extract abundance matrix from the phyloseq object
+OTU1 <- as(otu_table(rare_bl_physeq), "matrix")
+# transpose if necessary
+if(taxa_are_rows(rare_bl_physeq)){OTU1 <- t(OTU1)}
+# Coerce to data.frame
+bl_table_rare <- as.data.frame(OTU1)
+
+# check the depth of rarefaction
+bl_table_rare %>%
+  rownames_to_column("#OTU ID") %>%
+  adorn_totals(where = "col") %>%
+  select(`#OTU ID`,Total) %>%
+  as_tibble()
+
+# make the rownames a column with the appropriate header
+bl_table_rare <- bl_table_rare %>%
+  rownames_to_column("Library_ID") %>%
+  gather("#OTU ID","Counts",2:ncol(.)) %>%
+  spread(Library_ID, Counts)
+
+
+```
+
+```{r, eval = F}
+# save the rarefied table for input to sourcetracker
+fwrite(st_table_rare, "../strep_clades/00-documentation/oceania_sourcetracker_table_species_rarefied.txt", sep = "\t", quote = F)
+
+# save the unrarefied table as well
+full_table_sourcetracker %>%
+  rename("#OTU ID" = Species) %>%
+  fwrite(., "../strep_clades/00-documentation/oceania_sourcetracker_table_species.txt", sep = "\t", quote = F)
+
+# save the rarefied blanks table for input to PCA in oceania_sourcetracker_plots.Rmd
+fwrite(bl_table_rare, "../strep_clades/00-documentation/oceania_sourcetracker_table_blanks_species_rarefied.tsv", sep = "\t", quote = F)
+
+```
+
+log-transform the table for sourcetracker
+```{r, eval = F}
+# clr-transform (has negative values)
+full_table_sourcetracker_clr <- clr(full_table_sourcetracker %>%
+                                      gather("Library_ID","Counts", 2:ncol(.)) %>%
+                                      mutate(Counts = Counts + 1) %>%
+                                      spread(Library_ID, Counts) %>%
+                                      column_to_rownames("Species"))
+
+full_table_sourcetracker_clr <- full_table_sourcetracker_clr %>%
+  as.data.frame.matrix(.)
+
+# log2-transform (no negative values)
+full_table_sourcetracker_log <- full_table_sourcetracker %>%
+  gather("Library_ID","Counts", 2:ncol(.)) %>%
+  mutate(Counts = log2(Counts + 1)) %>%
+  spread(Library_ID, Counts) %>%
+  column_to_rownames("Species")
+
+# fwrite(full_table_sourcetracker_log, "./05-results.backup/shotgun_sourcetracker_table_log.txt", sep = "\t", quote = F)
+
+```
+
+```{r}
+
+# in st_table_rare but not mapping file
+st_table_rare %>%
+  gather("Library_ID","Counts",2:ncol(.)) %>%
+  spread(`#OTU ID`, Counts) %>%
+  select(Library_ID) %>%
+  anti_join(., mapfile %>%
+              rename(Library_ID = `#SampleID`) %>%
+              arrange(Library_ID) %>%
+              select(Library_ID))
+
+# in mapping file but not st_table_rare
+mapfile %>%
+  rename(Library_ID = `#SampleID`) %>%
+  select(Library_ID) %>%
+  arrange(Library_ID) %>%
+  anti_join(., st_table_rare %>%
+    gather("Library_ID","Counts",2:ncol(.)) %>%
+    spread(`#OTU ID`, Counts) %>%
+    select(Library_ID))
+    
+```
+
+
+
+
+
+
+
+
+
+
+

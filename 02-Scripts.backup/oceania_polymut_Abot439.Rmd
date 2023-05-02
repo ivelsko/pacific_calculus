@@ -1,0 +1,321 @@
+---
+title: "Pacific calculus polymut score for Anaerolineaceae bacterium oral taxon 439"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(janitor)
+library(tidyverse)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+
+Load metadata
+```{r metadata}
+metadata_full <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  full_join(., fread("./05-Documentation.backup/oceana_climate.tsv"))
+
+```
+
+```{r colors}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades::microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =  microshades::microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" = microshades::microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+
+```
+
+
+```{r poorly_preserved}
+cfdp_fail <- fread("05-Documentation.backup/cfdp_fail_samples_20210413.txt") %>%
+  rename(Library_ID = 1)
+
+```
+
+```{r}
+# list all samples to include
+sample_list <- metadata_full %>%
+  anti_join(., cfdp_fail) %>%
+  # remove the blank
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  filter(Type == "calculus",
+         !str_detect(Library_ID, "HPD")) %>%
+  select(Library_ID)
+  
+```
+
+Check the mapping coverage
+```{r}
+abot_439_list <- list.files(path = "./04-Analysis/polymut/bwa_mapping/", pattern = ".cov", full.names = T)
+
+abot439_cov <- map_dfr(abot_439_list, function(fn) {
+  fread(fn, col.names = c("Genome", "Start_coord", "End_coord","Depth","Breadth","Genome_length","Proportion_covered"), sep = "\t", fill = T) %>%
+  mutate(Library_ID = basename(fn))
+}) %>%
+  arrange(Library_ID) %>%
+# remove the end of the file name from the Library_ID
+  mutate(Library_ID = str_replace_all(Library_ID, ".abot439.m_s_r.cov","")) %>%
+  filter(Genome != "all")
+
+abot439_cov_depth <- abot439_cov %>%
+  filter(Depth > 0) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_1X = sum(Proportion_covered)) %>%
+  full_join(., abot439_cov %>%
+               filter(Depth > 2) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_2X = sum(Proportion_covered))) %>%
+  full_join(., abot439_cov %>%
+               filter(Depth > 5) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_5X = sum(Proportion_covered))) %>%
+  ungroup()
+
+abot439_avg_depth <- abot439_cov %>%
+  select(Depth, Breadth, Library_ID) %>%
+  filter(Depth > 0) %>%
+  group_by(Library_ID) %>%
+  mutate(db = Depth * Breadth) %>%
+  summarize(avg_depth = sum(db) / sum(Breadth))
+
+
+```
+
+
+```{r masked_bam_polymut}
+# read in the polymut table
+masked_abot439_polymut <- fread("./05-Documentation.backup/masked_abot439_polymut_out.tsv", header = F, col.names = c("Library_ID", "Scores")) %>%
+  separate(Scores, into = c("Non_synonymous", "Synonymous",  "Total_sites"), sep = " ") %>%
+  # convert to numeric columns
+  mutate(Non_synonymous = as.numeric(Non_synonymous),
+         Synonymous = as.numeric(Synonymous),
+         Total_sites = as.numeric(Total_sites)) %>%
+  mutate(dN_dS = Non_synonymous / Synonymous,
+         Total_snps = Non_synonymous + Synonymous)
+
+
+```
+
+```{r}
+
+masked_abot439_polymut %>%
+  left_join(., abot439_cov_depth, by = "Library_ID") %>%
+  filter(dN_dS >= 0.5) %>%
+  arrange(Library_ID)
+
+```
+
+```{r}
+
+masked_abot439_polymut %>%
+  left_join(., abot439_cov_depth, by = "Library_ID") %>%
+  filter(dN_dS != 0) %>%
+  mutate(dN_dS = ifelse(dN_dS > 1, 1, dN_dS)) %>%
+  ggplot(., aes(x = Total_sites, y = Total_snps, color = dN_dS)) + # Species
+         geom_point() +
+         scale_color_viridis_c(option = "C") +
+         # scale_x_log10() +
+         theme_minimal(base_size = 10) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         # ylab("Total SNPs/Genome") +
+         ggtitle("")
+
+```
+
+
+```{r cov_plots}
+
+abot439_avg_depth %>%
+  select(Library_ID, avg_depth) %>%
+  left_join(., metadata_full %>%
+              select(Library_ID, Lab, Island), by = "Library_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(avg_depth)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = avg_depth, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    # scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    geom_hline(yintercept = 5, linetype = "dotted") +
+    xlab("Library") +
+    ylab("Average coverage depth") +
+    ggtitle("Anaerolineaceae bacterium oral taxon 439")
+
+
+abot439_cov_depth %>%
+  select(Library_ID, cov_1X) %>%
+  drop_na(cov_1X) %>%
+  filter(cov_1X >= 0.01) %>%
+  left_join(., metadata_full %>%
+              select(Library_ID, Lab, Island), by = "Library_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(cov_1X)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = cov_1X, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1.0)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    geom_hline(yintercept = 1.0, linetype = "dotted") +
+    xlab("Library") +
+    ylab("Breadth 1X coverage") +
+    ggtitle("Anaerolineaceae bacterium oral taxon 439")
+
+
+abot439_cov_depth %>%
+  select(Library_ID, cov_5X) %>%
+  left_join(., metadata_full %>%
+              select(Library_ID, Lab, Island), by = "Library_ID") %>%
+  drop_na(cov_5X) %>%
+  filter(cov_5X >= 0.01) %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(cov_5X)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = cov_5X, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1.0)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    geom_hline(yintercept = 1.0, linetype = "dotted") +
+    xlab("Library") +
+    ylab("Breadth 5X coverage") +
+    ggtitle("Anaerolineaceae bacterium oral taxon 439")
+
+
+```
+
+```{r, eval = F}
+
+masked_abot439_polymut %>%
+  left_join(., abot439_cov_depth, by = "Library_ID") %>%
+  left_join(., abot439_avg_depth,  by  = "Library_ID") %>%
+  fwrite(., "../strep_clades/00-documentation/abot439_polymut_stats.tsv", sep = "\t", quote = F)
+
+```
+
+## Compare coverage between mapping for inStrain (R1/R2) and for polymut (collapsed) 
+
+```{r}
+abot_439i_list <- list.files(path = "./04-Analysis/inStrain/bwa_mapping/", pattern = ".abot439.cov", full.names = T)
+
+abot439i_cov <- map_dfr(abot_439i_list, function(fn) {
+  fread(fn, col.names = c("Genome", "Start_coord", "End_coord","Depth","Breadth","Genome_length","Proportion_covered"), sep = "\t", fill = T) %>%
+  mutate(Library_ID = basename(fn))
+}) %>%
+  arrange(Library_ID) %>%
+# remove the end of the file name from the Library_ID
+  mutate(Library_ID = str_replace_all(Library_ID, ".pac_reference_genomes.abot439.cov","")) %>%
+  filter(Genome != "all")
+
+abot439i_cov_depth <- abot439i_cov %>%
+  filter(Depth > 0) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_1X = sum(Proportion_covered)) %>%
+  full_join(., abot439i_cov %>%
+               filter(Depth > 2) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_2X = sum(Proportion_covered))) %>%
+  full_join(., abot439i_cov %>%
+               filter(Depth > 5) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_5X = sum(Proportion_covered))) %>%
+  ungroup()
+
+abot439i_avg_depth <- abot439i_cov %>%
+  select(Depth, Breadth, Library_ID) %>%
+  filter(Depth > 0) %>%
+  group_by(Library_ID) %>%
+  mutate(db = Depth * Breadth) %>%
+  summarize(avg_depth = sum(db) / sum(Breadth))
+
+```
+
+```{r abot439_lolipop}
+
+abot439_order <- masked_abot439_polymut %>%
+  full_join(., metadata_full, by = "Library_ID") %>%
+  filter(Type == "calculus",
+         Total_sites > 0) %>%
+  arrange(Total_sites) %>%
+  filter(!str_detect(Library_ID, "EXB|LIB|HPD")) %>%
+  pull(Library_ID)
+
+df <- masked_abot439_polymut %>%
+  full_join(., metadata_full, by = "Library_ID") %>%
+  filter(Type == "calculus",
+         Total_sites > 0) %>%
+  select(Library_ID, Total_sites, dN_dS) %>%
+  filter(!str_detect(Library_ID, "EXB|LIB|HPD"))%>%
+  pivot_longer(!Library_ID, names_to = "Sites", values_to = "Counts") %>%
+  filter(Counts > 0) %>%
+  arrange(Library_ID) %>%
+  pivot_wider(names_from = "Sites", values_from = "Counts") %>%
+  mutate(Sites = Total_sites / 1000000) %>%
+  mutate(dN_dS = replace_na(dN_dS, 0),
+         dN_dS = ifelse(is.infinite(dN_dS), 0, dN_dS))
+
+df %>%
+  mutate(Library_ID = fct_relevel(Library_ID, abot439_order)) %>%
+  arrange(Library_ID) %>%
+  ggplot(.) +
+         geom_bar(aes(x = Library_ID, y = Sites, fill = "Stat"), stat = "identity", color = "black") +
+         geom_point(data = df, aes(x = Library_ID, y = dN_dS), shape = 21, color = "black", fill = "#766df8") +
+         geom_segment(data = df, aes(x = Library_ID, xend=Library_ID, y = 0, yend=dN_dS), linetype="dotted") +
+         theme_minimal(base_size = 8) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 8),
+               axis.text.y = element_text(size = 4)) +
+         coord_flip() +
+         # scale_x_continuous(breaks=scales::pretty_breaks(n=8)) +
+         # geom_vline(xintercept = 3, linetype = "dashed") +
+         xlab("Library_ID") +
+         ylab("Total sites x10^6 (bars) or dN/dS x10^0 (dots)")
+
+
+```
+
+
+

@@ -1,0 +1,426 @@
+---
+title: "Pacific calculus humann3 pahway analysis"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(janitor)
+library(rstatix)
+library(tidyverse)
+# have to load POMS after tidyverse b/c of stringr version issue
+library(POMS)
+library(microshades)
+library(patchwork)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+
+# humann3 tables 
+```{r cuperdec_poor_samples}
+poor_samples <- fread("./05-Documentation.backup/gf_poor_samples.tsv")%>%
+  pull(Library_ID)
+
+```
+
+```{r load_UR90_data, eval = F}
+## load the species and genus tables generated with humann3
+humann3_GFs_full <- fread("./04-Analysis/humann3/genefamilies_anc_params_joined_cpm_ur90rxn.tsv")
+humann3_GFs_full <- as_tibble(humann3_GFs_full)
+
+# clean the file names
+humann3_GFs_full <- rename(humann3_GFs_full, GeneFamily = `# Gene Family`)
+colnames(humann3_GFs_full) <- gsub("_Abundance-RPKs","", colnames(humann3_GFs_full))
+colnames(humann3_GFs_full) <- gsub(".SG1.1","", colnames(humann3_GFs_full))
+
+# remove unmapped and ungrouped reads
+humann3_GFs <- humann3_GFs_full %>% filter(!str_detect(GeneFamily, "UNMAPPED|UNGROUPED"))
+
+# remove all species-level-assignments
+humann3_GFs_top <- humann3_GFs %>%
+  filter(!str_detect(GeneFamily, "\\|")) %>%
+  # remove Heping Dao calculus
+  select(-c("HPD005.B0101","HPD006.B0101","HPD007.B0101"))
+  
+
+```
+
+```{r load_kegg_data}
+
+## load the species and genus tables generated with humann3
+humann3_GFs_full <- fread("./04-Analysis/humann3/genefamilies_anc_params_joined_cpm_ko_names.tsv")
+humann3_GFs_full <- as_tibble(humann3_GFs_full)
+
+# clean the file names
+humann3_GFs_full <- rename(humann3_GFs_full, GeneFamily = `# Gene Family`)
+colnames(humann3_GFs_full) <- gsub("_Abundance-RPKs","", colnames(humann3_GFs_full))
+colnames(humann3_GFs_full) <- gsub(".SG1.1","", colnames(humann3_GFs_full))
+
+# remove unmapped and ungrouped reads
+humann3_GFs <- humann3_GFs_full %>% filter(!str_detect(GeneFamily, "UNMAPPED|UNGROUPED"))
+
+# remove all species-level-assignments
+humann3_GFs_top <- humann3_GFs %>%
+  filter(!str_detect(GeneFamily, "\\|")) %>%
+  # remove Heping Dao calculus
+  select(-c("HPD005.B0101","HPD006.B0101","HPD007.B0101")) %>%
+  # and remove the samples that are poorly preserved
+  select(-matches(poor_samples))
+
+
+```
+
+```{r}
+# load tree file
+
+pacific_tree <- fread("./05-Documentation.backup/oceania_malt_cRefSeq_20201105.tre")
+
+```
+
+
+```{r metadata}
+# load the metadata file
+metadata <- fread("./05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  full_join(., fread("./05-Documentation.backup/oceana_climate.tsv")) %>%
+  mutate(Island = ifelse(Type == "blank", "Blank",Island)) %>%
+  mutate(Island = ifelse(Type == "bone", "Bone", Island)) %>%
+  mutate(Library_ID = str_replace_all(Library_ID, ".SG1.1","")) %>%
+  mutate(Island = str_replace_all(Island, "Efate_3000", "Efate 3000 BP"),
+         Island = str_replace_all(Island, "Rapa_Nui", "Rapa Nui"),
+         Island = str_replace_all(Island, "Viti_Levu", "Viti Levu"),
+         Island = str_replace_all(Island, "Taumako_Duff_Islands", "Taumako")) %>%
+  mutate(Type = str_replace_all(Type, "bone","Arch. Bone"),
+         Type = str_replace_all(Type, "calculus","Arch. calculus")) %>%
+  mutate(log_total_reads = log10(No_reads_no_human))
+         
+```
+
+```{r}
+# make a list of blanks b/c they don't all have the same prefixes
+blanks <- metadata %>%
+  filter(str_detect(Type, "blank|Bone")) %>%
+  select(Library_ID) %>%
+  pull()
+
+```
+
+
+```{r load_species_tables}
+# read in the species table
+rs_raw_sp <- fread("./05-Documentation.backup/oceania_malt_cRefSeq_summarized_species_20201105.txt") %>%
+  rename(Species = 1) 
+
+# clean the file names
+colnames(rs_raw_sp) <- gsub("MeganServer::", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".unmapped", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".SG1.1", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".SG1.2", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub("_L001_R1_001.fastq.combined.fq.prefixed.extractunmapped.bam", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub("_S0_L000_R1_000.fastq.merged.prefixed.hg19unmapped", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub("_S0_L001_R1_001.fastq.truncated.prefixed.extractunmapped.bam", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub("_S0_L001_R1_000.fastq.merged.prefixed.hg1", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub("_S0_L000_R1_000.fastq.merged.prefixed.hg1", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".SG1.2_S0_L003_R1_001.fastq.combined.fq.prefixed.extrac.bam", "", colnames(rs_raw_sp))  
+colnames(rs_raw_sp) <- gsub("_S0_L003_R1_001.fastq.combined.fq.prefixed.extrac.bam", "", colnames(rs_raw_sp)) 
+
+# now do a pretend transpose to replace the NAs with 0s
+rs_raw_sp <- rs_raw_sp %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = replace_na(Counts, 0)) %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts")
+
+```
+
+
+```{r taxa_outliers}
+# HCLVMBCX2-3505-13-00-01_S13 appears to be a sample, although it's supposed to be a blank
+# remove it from all further analyses
+
+# contaminant taxa
+cont_all_sp <- fread("./05-Documentation.backup/contaminant_pacific_ooj_sp.tsv", sep = "\t")
+
+# poorly preserved samples
+cfdp_fail <- fread("05-Documentation.backup/oceania_cuperdec_species_poor_samples.tsv") %>%
+  rename(Library_ID = 1)
+
+species_pass <- rs_raw_sp %>%
+  # remove coontaminant taxa
+  # anti_join(., cont_all_sp %>%
+  #             select(Species), by = "Species") %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  anti_join(., cfdp_fail %>%
+              as_data_frame(.) %>%
+              rename(Library_ID = 1)) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  # remove all taxa that have to entries anymore
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  adorn_totals(where = "col") %>%
+  select(Total, everything()) %>%
+  filter(Total != 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts")
+
+```
+
+
+```{r colors}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =  microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" = microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+Type_colors <- c("Arch. Bone" = "#148F77", "blank" = "#8B8B8B", "Arch. calculus" = "black")
+
+
+```
+
+```{r}
+Island_shapes = c("Tongatapu" = 21, 
+                  "Rurutu" = 21, 
+                  "Flores" = 21, 
+                  "Rapa Nui" = 21, 
+                  "Futuna" = 21, 
+                  "Efate" = 21, 
+                  "Vao" = 21,
+                  "Efate 3000 BP" = 21, 
+                  "Uripiv" = 21, 
+                  "Viti Levu" = 21, 
+                  "Raiatea" = 21, 
+                  "Taumako" = 21, 
+                  "Watom" = 21)
+
+Lab_shapes = c(21,21,21)
+Lab_size = c(4,4,4)
+
+Type_shapes = c(21,21,21,21,21,21,21,21)
+Type_size = c(4,4,4,4,4,4,4,4)
+
+```
+
+# GeneFamily analysis
+```{r}
+
+ex_taxa_abun <- read.table("ex_taxa_abun.tsv.gz", header = TRUE, sep = "\t", row.names = 1)
+ex_func <- read.table("ex_func.tsv.gz", header = TRUE, sep = "\t", row.names = 1)
+ex_tree <- ape::read.tree("ex_tree.newick")
+ex_group1 <- read.table("ex_group1.txt.gz", stringsAsFactors = FALSE)$V1
+ex_group2 <- read.table("ex_group2.txt.gz", stringsAsFactors = FALSE)$V1
+
+# Example of how to run main POMS function. 
+POMS_out <- POMS_pipeline(abun = ex_taxa_abun,
+                          func = ex_func,
+                          tree = ex_tree,
+                          group1_samples = ex_group1,
+                          group2_samples = ex_group2,
+                          ncores = 1,
+                          min_num_tips = 4,
+                          multinomial_min_FSNs = 3,
+                          min_func_instances = 0,
+                          verbose = TRUE)
+
+```
+
+```{r}
+# read in data
+ex_taxa_abun <- species_pass
+ex_func <- humann3_GFs_top
+ex_tree <- ape::read.tree("./05-Documentation.backup/oceania_malt_cRefSeq_20201105.tre")
+
+# compute node balances
+nb_test <- compute_node_balances(ex_tree, ex_taxa_abun, min_num_tips = 10, ncores = 2)
+
+# calculate correlation betwee nodoe balance and KEGG ortholog abundance
+cor_out <- cor.test(nb_test$balances[[node]][rownames(metadata)],
+                        metadata$Rainfall,
+                        method = "spearman", exact = FALSE)
+
+
+ex_group1 <- read.table("ex_group1.txt.gz", stringsAsFactors = FALSE)$V1
+ex_group2 <- read.table("ex_group2.txt.gz", stringsAsFactors = FALSE)$V1
+
+# Example of how to run main POMS function. 
+POMS_out <- POMS_pipeline(abun = ex_taxa_abun,
+                          func = ex_func,
+                          tree = ex_tree,
+                          group1_samples = ex_group1,
+                          group2_samples = ex_group2,
+                          ncores = 1,
+                          min_num_tips = 4,
+                          multinomial_min_FSNs = 3,
+                          min_func_instances = 0,
+                          verbose = TRUE)
+
+```
+
+```{r}
+
+# Run POMS on TARA oceans dataset.
+
+library(ape)
+library(parallel)
+
+node_balances_spearman_cor <- function(node_balances, sample_info, sample_var) {
+
+  if (length(which(is.na(sample_info[, sample_var]))) > 0) {
+    sample_info <- sample_info[-which(is.na(sample_info[, sample_var])), , drop = FALSE]
+  }
+  
+  node_spearman_cor <- data.frame(matrix(NA, nrow = length(node_balances$balances), ncol = 2))
+  colnames(node_spearman_cor) <- c("rho", "p")
+  rownames(node_spearman_cor) <- names(node_balances$balances)
+  
+  for (node in names(node_balances$balances)) {
+    
+    cor_out <- cor.test(node_balances$balances[[node]][rownames(sample_info)],
+                        sample_info[ , sample_var],
+                        method = "spearman", exact = FALSE)
+    
+    node_spearman_cor[node, ] <- c(cor_out$estimate, cor_out$p.value) 
+  }
+  
+  return(node_spearman_cor)
+}
+
+# Read in input files.
+TARA_ko <- read.table(file = "Table_S11_KO_abun.txt",
+                         sep = "\t", stringsAsFactors = FALSE, quote = "", comment.char = "", header = TRUE, check.names = FALSE, row.names = 1)
+
+TARA_ko <- data.frame(t(TARA_ko), check.names = FALSE)
+
+TARA_tree <- read.tree(file = "./05-Documentation.backup/oceania_malt_cRefSeq_20201105.tre")
+
+
+TARA_ko <- POMS::filter_rare_table_cols(in_tab = TARA_ko, min_nonzero_count = 5, min_nonzero_prop = 0.001)
+TARA_pathways <- POMS::filter_rare_table_cols(in_tab = TARA_pathways, min_nonzero_count = 5, min_nonzero_prop = 0.001)
+TARA_modules <- POMS::filter_rare_table_cols(in_tab = TARA_modules, min_nonzero_count = 5, min_nonzero_prop = 0.001)
+
+TARA_func <- list()
+TARA_func[["ko"]] <- TARA_ko
+TARA_func[["pathway"]] <- TARA_pathways
+TARA_func[["module"]] <- TARA_modules
+
+
+TARA_abun <- species_pass
+
+TARA_sample_info <- read.table("Table_S1_sample_info.txt",
+                               header = TRUE, sep = "\t", stringsAsFactors = FALSE, quote = "", comment.char = "", row.names = 1)
+
+
+# Identify significant nodes outside of main POMS pipeline, based on Spearman correlations with sample metadata.
+TARA_tree <- POMS::prep_tree(phy = TARA_tree, tips2keep = TARA_tree$tip.label)
+
+TARA_node_balances <- POMS::compute_node_balances(tree = TARA_tree, 
+                                                  abun_table = TARA_abun, 
+                                                  ncores = 40,
+                                                  pseudocount = 1,
+                                                  min_num_tips = 10)
+
+TARA_POMS_out <- list()
+
+var2compare <- c("Chlorophyll.Sensor.s", "Mean_Temperature", 
+                 "Mean_Salinity", "Mean_Oxygen", "Mean_Nitrates",
+                 "NO2", "PO4", "NO2NO3", "SI")
+
+for (sample_var in var2compare) {
+
+  TARA_POMS_out[[sample_var]] <- list()
+  
+  TARA_node_cor <- node_balances_spearman_cor(node_balances = TARA_node_balances,
+                                               sample_info = TARA_sample_info,
+                                               sample_var = sample_var)
+
+  var_sig_nodes <- rownames(TARA_node_cor)[which(TARA_node_cor$p < 0.05)]
+
+  var_nodes_dir <- rep(NA, nrow(TARA_node_cor))
+  names(var_nodes_dir) <- rownames(TARA_node_cor)
+  var_nodes_dir[which(TARA_node_cor[, "rho"] >= 0)] <- "group1"
+  var_nodes_dir[which(TARA_node_cor[, "rho"] < 0)] <- "group2"
+
+  TARA_abun_subset <- TARA_abun[, rownames(TARA_sample_info[which(!is.na(TARA_sample_info[, sample_var])), ])]
+  TARA_abun_subset <- TARA_abun_subset[which(rowSums(TARA_abun_subset) > 0), which(colSums(TARA_abun_subset) > 0)]
+  
+  for (func_level in names(TARA_func)) {
+    
+    TARA_func_table <- TARA_func[[func_level]][rownames(TARA_abun_subset), ]
+    TARA_func_table <- TARA_func_table[, which(colSums(TARA_func_table) > 0)]
+    
+    TARA_POMS_out[[sample_var]][[func_level]] <- POMS_pipeline(abun = TARA_abun_subset, func = TARA_func_table, tree = TARA_tree, ncores = 10, pseudocount = 1,
+                                                               manual_BSNs = var_sig_nodes, manual_balances = TARA_node_balances$balances, manual_BSN_dir = var_nodes_dir[var_sig_nodes],
+                                                               min_func_instances = 5, min_func_prop = 0.001, func_descrip_infile = descrip_tables[[func_level]])
+  }
+
+}
+
+
+# Quick dig into the results:
+for (sample_var in names(TARA_POMS_out)) {
+  for (func_type in names(TARA_POMS_out[[sample_var]])) {
+   
+    sig_subset <- TARA_POMS_out[[sample_var]][[func_type]]$results[which(TARA_POMS_out[[sample_var]][[func_type]]$results$multinomial_corr < 0.25), ]
+    
+    if (nrow(sig_subset) > 0) {
+      print(func_type)
+      print(sample_var)
+      print(sig_subset)
+      print("")
+      print("")
+      
+    }
+    
+    
+  }
+  
+
+}
+
+
+```
+
+```{r}
+
+treelist <- fread("./05-Documentation.backup/mann2018_world_malt_refseq_comparison_species_ID.tsv") %>%
+  rename(Species = 1) %>%
+  select(Species) %>%
+  fwrite(., "./05-Documentation.backup/speciesids.tsv", quote = F, col.names = F, sep = "\t")
+
+```
+
+
+
+
+
+
+

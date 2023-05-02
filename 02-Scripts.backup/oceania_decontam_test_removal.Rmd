@@ -1,0 +1,1683 @@
+---
+title: "Pacific calculus humann3 pahway analysis"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+# library(edgeR) # needed to run ComBat_seq
+library(mixOmics)
+library(janitor)
+# library(rstatix)
+library(pander)
+library(tidyverse)
+library(ggrepel)
+library(viridis)
+library(patchwork)
+library(RColorBrewer)
+library(microshades)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+
+# contaminant tables 
+```{r load_contam_lists}
+# genus lists
+cont_otago_gn <- fread("./05-Documentation.backup/contaminant_otago_gn.tsv")
+cont_oklahoma_gn <- fread("./05-Documentation.backup/contaminant_oklahoma_gn.tsv")
+cont_jena_gn <- fread("./05-Documentation.backup/contaminant_jena_gn.tsv") %>%
+  filter(Genus != "Lautropia") # beacuse this is a known oral species that wouldn't go away no matter the decontam cut-off
+
+cont_all_gn <- fread("./05-Documentation.backup/contaminant_pacific_ooj_gn.tsv") %>%
+  filter(Genus != "Lautropia") # beacuse this is a known oral species that wouldn't go away no matter the decontam cut-off
+
+# make sure the same contaminants are in the individual and combined tables (expect 874 - yes, same total)
+cont_otago_gn %>%
+  bind_rows(., cont_oklahoma_gn) %>%
+  bind_rows(., cont_jena_gn) %>%
+  distinct() %>%
+  count()
+
+
+# species lists
+cont_otago_sp <- fread("./05-Documentation.backup/contaminant_otago_sp.tsv", sep = "\t")
+cont_oklahoma_sp <- fread("./05-Documentation.backup/contaminant_oklahoma_sp.tsv", sep = "\t")
+cont_jena_sp <- fread("./05-Documentation.backup/contaminant_jena_sp.tsv", sep = "\t")
+
+cont_all_sp <- fread("./05-Documentation.backup/contaminant_pacific_ooj_sp.tsv", sep = "\t")
+
+```
+
+Load metadata
+```{r load_metadata, eval = F}
+#only need to run this once, then read in the file with the DNA concentration added
+metadata <- fread("./05-Documentation.backup/oceana_metadata.tsv") %>%
+  rename(Library_ID = Library_ID) %>%
+  mutate(Library_ID = str_replace_all(Library_ID, ".SG1.1","")) %>%
+  full_join(., fread("./05-Documentation.backup/oceana_meta_decontam.tsv") %>%
+              select(-Lab) %>%
+              rename(Library_ID = SampleID), by = "Library_ID") %>%
+  mutate(Sample_or_Control = ifelse(SourceSink == "sink", "sample","control")) %>%
+  mutate(Sample_or_Control = ifelse(Env == "blank", "control",Sample_or_Control)) %>%
+  mutate(Sample_or_Control = ifelse(is.na(Sample_or_Control) & Type == "blank", "control",Sample_or_Control)) %>%
+  mutate(Sample_or_Control = ifelse(is.na(Sample_or_Control) & Type == "bone", "control",Sample_or_Control)) %>%
+  mutate(Sample_or_Control = ifelse(is.na(Sample_or_Control) & Type == "calculus","sample",Sample_or_Control)) %>%
+  mutate(Type = ifelse(str_detect(Library_ID, "ARS"),"bone",Type))
+
+# can't write into the Pacific folder, so write it here and move it to 05-Documentation.backup
+# fwrite(metadata, "../strep_clades/00-documentation/oceana_metadata_merged.tsv", quote = F, sep = "\t", na = "NA")
+
+```
+
+```{r}
+metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  # this sample has no information so we'll remove it
+  filter(Library_ID != "HCLVMBCX2-3505-26-00-01_S26")
+
+```
+
+
+```{r poorly_preserved}
+cfdp_fail <- fread("05-Documentation.backup/cfdp_fail_samples_20210413.txt") %>%
+  rename(Library_ID = 1)
+
+```
+
+```{r}
+# list all bones that are part of this study
+# the ARS bones are a little different in the PCA, so we won't use them
+bones <- metadata %>%
+  filter(Type == "bone") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(!str_detect(Library_ID, "ARS|HPD"))
+
+blanks <- metadata %>%
+  filter(Type == "blank") %>%
+  select(Library_ID, Lab, Type)
+
+
+# list all samples and blanks from Otago
+otago <- metadata %>%
+  filter(Lab == "Otago") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  arrange(Library_ID) %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all sampmles and blanks from Oklahoma
+oklahoma <- metadata %>%
+  filter(Lab == "Oklahoma") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Type != "bone") %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all samples and blanks from Jena
+jena <- metadata %>%
+  filter(Lab == "Jena") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Type != "bone") %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all samples to include
+sample_list <- c(otago,oklahoma,jena)
+
+```
+
+```{r colors}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =  microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" = microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+Type_colors <- c("Arch. Bone" = "#148F77", "blank" = "#8B8B8B", "Arch. calculus" = "black")
+
+
+```
+
+```{r}
+Island_shapes = c("Tongatapu" = 21, 
+                  "Rurutu" = 21, 
+                  "Flores" = 21, 
+                  "Rapa Nui" = 21, 
+                  "Futuna" = 21, 
+                  "Efate" = 21, 
+                  "Vao" = 21,
+                  "Efate 3000 BP" = 21, 
+                  "Uripiv" = 21, 
+                  "Viti Levu" = 21, 
+                  "Raiatea" = 21, 
+                  "Taumako" = 21, 
+                  "Watom" = 21)
+
+Lab_shapes = c(21,21,21)
+Lab_size = c(4,4,4)
+
+Type_shapes = c(21,21,21,21,21,21,21,21)
+Type_size = c(4,4,4,4,4,4,4,4)
+
+```
+
+
+```{r plot_pca_fxn}
+
+# add functions for:
+# making the input table for PCA?
+
+# plotting PCA with colored dots
+plot_pca <- function(df, pc1, pc2, color_group, shape_group) {
+    metadata_group_colors <- get(paste(color_group, "_colors", sep = ""))
+    metadata_group_shapes <- get(paste(shape_group, "_shapes", sep = ""))
+
+    exp_var <- paste0(round(df$prop_expl_var$X * 100, 2), "%")
+    df_X <- df$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata, by = "Library_ID")
+    
+    color_group = df_X[[color_group]]
+    shape_group = df_X[[shape_group]]
+
+                       if (pc1 == 'PC1') {
+                           pc1 <- df_X$PC1
+                           exp_var_pc1 <- exp_var[1]
+                           xaxis <- c("PC1")
+                       }  else if (pc1 == 'PC2') {
+                           pc1 <- df_X$PC2
+                           exp_var_pc1 <- exp_var[2]
+                           xaxis <- c("PC2")
+                       } else if (pc1 == 'PC3') {
+                           pc1 <- df_X$PC3
+                           exp_var_pc1 <- exp_var[3]
+                           xaxis <- c("PC3")
+                       }
+
+                       if (pc2 == 'PC1') {
+                           pc2 <- df_X$PC1
+                           exp_var_pc2 <- exp_var[1]
+                           yaxis <- c("PC1")
+                       }  else if (pc2 == 'PC2') {
+                           pc2 <- df_X$PC2
+                           exp_var_pc2 <- exp_var[2]
+                           yaxis <- c("PC2")
+                       } else if (pc2 == 'PC3') {
+                           pc2 <- df_X$PC3
+                           exp_var_pc2 <- exp_var[3]
+                           yaxis <- c("PC3")
+                       }
+
+    pca_plot <- ggplot(df_X, aes(pc1, pc2)) +
+                        geom_point(aes(fill = color_group, shape = shape_group), size = 4, stroke = 0.3, shape = 21) +
+                        scale_fill_manual(values = metadata_group_colors) +
+                        xlab(paste(xaxis, " - ", exp_var_pc1)) +
+                        ylab(paste(yaxis, " - ", exp_var_pc2)) +
+                        theme_minimal(base_size = 14) +
+                        theme(legend.position = "right") +
+                        theme(legend.title = element_blank())
+
+    return(pca_plot)
+}
+
+```
+
+
+```{r plot_bi}
+# this function plots the PCA with biplots to look at the categories with strongest loadings
+plot_pca_bi <- function(df, pc1, pc2, metadata_group, columntitle, GeneFamilys = c("TRUE","FALSE")) {
+    metadata_group_colors <- get(paste(metadata_group, "_colors", sep = ""))
+    metadata_group_shapes <- get(paste(metadata_group, "_shapes", sep = ""))
+   
+    arrow_pc <- enquo(columntitle)
+    
+    exp_var <- paste0(round(df$prop_expl_var$X * 100, 2), "%") # explained variance for x- and y-labels
+    
+    # select only the PCs from the PCA and add metadata
+    df_X <- df$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata, by = "Library_ID")
+    
+    metadata_group = df_X[[metadata_group]]
+    
+    corr_lam <- df$sdev[c("PC1", "PC2", "PC3")] * sqrt(nrow(df_X))
+
+    df_X <- df_X %>%
+      mutate(PC1 = PC1 / corr_lam[1],
+             PC2 = PC2 / corr_lam[2], 
+             PC3 = PC3 / corr_lam[3])
+
+    # select the correct PC column and explained variance for PC1
+    if (pc1 == 'PC1') {
+        Pc1 <- df_X$PC1
+        exp_var_pc1 <- exp_var[1]
+        xaxis <- c("PC1")
+    } else if (pc1 == 'PC2') {
+        Pc1 <- df_X$PC2
+        exp_var_pc1 <- exp_var[2]
+        xaxis <- c("PC2")
+    } else if (pc1 == 'PC3') {
+        Pc1 <- df_X$PC3
+        exp_var_pc1 <- exp_var[3]
+        xaxis <- c("PC3")
+   }
+    
+    # select the correct PC column and explained variance for PC2
+    if (pc2 == 'PC1') {
+        Pc2 <- df_X$PC1
+        exp_var_pc2 <- exp_var[1]
+        yaxis <- c("PC1")
+ } else if (pc2 == 'PC2') {
+       Pc2 <- df_X$PC2
+       exp_var_pc2 <- exp_var[2]
+       yaxis <- c("PC2")
+    } else if (pc2 == 'PC3') {
+       Pc2 <- df_X$PC3
+       exp_var_pc2 <- exp_var[3]
+       yaxis <- c("PC3")
+   }
+
+    # Identify the 10 GeneFamilys that have highest positive and negative loadings in the selected PC
+    pws_10 <- df$loadings$X %>%
+      as.data.frame(.) %>%
+      rownames_to_column(var = "Function") %>%
+      top_n(10, !!arrow_pc)
+   if (GeneFamilys == T) {
+      pws_10 <- pws_10 %>%
+        rename(GeneFamily = Function) %>%
+        mutate(Function = sapply(GeneFamily, function(f) {
+                                  unlist(str_split(f, ":"))[1]
+                           })) 
+    }
+
+    neg_10 <- df$loadings$X %>%
+      as.data.frame(.) %>%
+      rownames_to_column(var = "Function") %>%
+      top_n(-10, !!arrow_pc)
+    if (GeneFamilys == T) {
+      neg_10 <- neg_10 %>%
+      rename(GeneFamily = Function) %>%
+       mutate(Function = sapply(GeneFamily, function(f) {
+                                  unlist(str_split(f, ":"))[1]
+                           })) 
+    }
+
+
+    pca_plot_bi <- ggplot(df_X, aes(x = Pc1, y = Pc2)) +
+      geom_point(aes(shape = metadata_group, fill = metadata_group), size = 3.5, stroke = 0.3) +
+      geom_segment(data = pws_10,
+                   aes(xend = get(paste(pc1)), yend = get(paste(pc2))),
+                   x = 0, y = 0, colour = "black",
+                   size = 0.5,
+                   arrow = arrow(length = unit(0.03, "npc"))) +
+      geom_label_repel(data = pws_10,
+                   aes(x = get(paste(pc1)), y = get(paste(pc2)), label = Function),
+                   size = 1.5, colour = "grey20", label.padding = 0.2, max.overlaps = 12) +
+      geom_segment(data = neg_10,
+                   aes(xend = get(paste(pc1)), yend = get(paste(pc2))),
+                   x = 0, y = 0, colour = "grey50",
+                   size = 0.5,
+                   arrow = arrow(length = unit(0.03, "npc"))) +
+      geom_label_repel(data = neg_10,
+                   aes(x = get(paste(pc1)), y = get(paste(pc2)), label = Function),
+                   size = 1.5, colour = "grey20", label.padding = 0.2, max.overlaps = 12) +
+      labs(x = paste(xaxis, " - ", exp_var_pc1),
+           y = paste(yaxis, " - ", exp_var_pc2)) +
+      scale_fill_manual(values = metadata_group_colors) +
+      scale_shape_manual(values = metadata_group_shapes) +
+      theme_minimal() + theme(text = element_text(size = 14)) +
+      theme(legend.position = "right")
+
+    return(pca_plot_bi)
+}
+
+
+```
+
+```{r pca_plot_cont_fxn}
+# for continuous data
+plot_pca_cont <- function(df_pca, pc1, pc2, color_group, ncomps, title_text) {
+
+    exp_var <- paste0(round(df_pca$prop_expl_var$X * 100, 2), "%")
+    df_X <- df_pca$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata, by = "Library_ID")
+
+    color_group = df_X[[color_group]]
+
+    if (pc1 == 'PC1') {
+        pc1 <- df_X$PC1
+        exp_var_pc1 <- exp_var[1]
+        xaxis <- c("PC1")
+    }  else if (pc1 == 'PC2') {
+        pc1 <- df_X$PC2
+        exp_var_pc1 <- exp_var[2]
+        xaxis <- c("PC2")
+    } else if (pc1 == 'PC3') {
+        pc1 <- df_X$PC3
+        exp_var_pc1 <- exp_var[3]
+        xaxis <- c("PC3")
+    }
+
+    if (pc2 == 'PC1') {
+        pc2 <- df_X$PC1
+        exp_var_pc2 <- exp_var[1]
+        yaxis <- c("PC1")
+    }  else if (pc2 == 'PC2') {
+        pc2 <- df_X$PC2
+        exp_var_pc2 <- exp_var[2]
+        yaxis <- c("PC2")
+    } else if (pc2 == 'PC3') {
+        pc2 <- df_X$PC3
+        exp_var_pc2 <- exp_var[3]
+        yaxis <- c("PC3")
+    }
+
+    pca_plot <- ggplot(df_X, aes(x = pc1, y = pc2)) +
+      geom_point(aes(fill = color_group), size = 3.5, stroke = 0.3, shape = 21) +
+     scale_fill_viridis_c(option = "C") +
+     # scale_shape_manual(values = c(16, 16, 16, 16, 16,16,16,16)) +
+     # scale_shape_manual(values = c(16, 17, 15, 18, 14,9,13,24)) +
+    # stat_ellipse() +
+     xlab(paste(xaxis, " - ", exp_var_pc1)) +
+     ylab(paste(yaxis, " - ", exp_var_pc2)) +
+     theme_minimal(base_size = 16) +
+     theme(text = element_text(size=16)) +
+     theme(legend.title = element_blank(),
+           legend.key.size = unit(2,"mm"),
+           legend.text = element_text(size = 10)) + 
+     theme(legend.position = "right") +
+     ggtitle(title_text) + theme(plot.title = element_text(size = 10))
+
+    return(pca_plot)
+}
+
+```
+
+## MALT assignment stats
+```{r}
+
+cfdp_fail <- fread("05-Documentation.backup/oceania_cuperdec_species_poor_samples.tsv") %>%
+  rename(Library_ID = 1) %>%
+  pull(Library_ID)
+
+malt_assignment_stats <- fread("./04-Analysis/malt/output_cRefSeq/malt_alignment_stats.tsv", sep = "\t") %>%
+  rename(Library_ID = 1,
+         Total_reads = 2,
+         Aligned_reads = 3) %>%
+  mutate(Library_ID = str_replace_all(Library_ID, "Finishing file: /projects1/microbiome_calculus/pacific_calculus/04-Analysis/malt/output_cRefSeq/",""),
+         Library_ID = str_replace_all(Library_ID, ".unmapped.rma6",""),
+         Total_reads = str_replace_all(Total_reads, "Num. of queries:",""),
+         Aligned_reads = str_replace_all(Aligned_reads, "Aligned queries:",""),
+         Library_ID = str_trim(Library_ID, side = "both"),
+         Total_reads = str_trim(Total_reads, side = "both"),
+         Aligned_reads = str_trim(Aligned_reads, side = "both"),
+         Total_reads = as.numeric(Total_reads),
+         Aligned_reads = as.numeric(Aligned_reads)) %>%
+  mutate(Percent_assigned = Aligned_reads / Total_reads * 100)
+
+malt_assignment_stats %>%
+  left_join(., metadata, by = "Library_ID") %>%
+  filter(str_detect(Library_ID, sample_list %>% str_c(collapse = "|"))) %>%
+  filter(!str_detect(Library_ID, cfdp_fail %>% str_c(collapse = "|"))) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, sample_list)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x = Library_ID, y = Percent_assigned, color = Lab)) +
+    geom_point() +
+    theme_minimal() +
+    scale_color_manual(values = Lab_colors) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    xlab("Library ID") +
+    ylab("Percent of reads classified")
+
+```
+
+```{r}
+malt_assignment_stats %>%
+  left_join(., metadata, by = "Library_ID") %>%
+  filter(str_detect(Library_ID, sample_list %>% str_c(collapse = "|"))) %>%
+  filter(!str_detect(Library_ID, cfdp_fail %>% str_c(collapse = "|"))) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, sample_list)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x = Percent_assigned, y = seq_len_avg, color = Lab)) +
+    geom_point() +
+    theme_minimal() +
+    scale_color_manual(values = Lab_colors) +
+    theme(axis.text.x = element_text(angle = 0, hjust = 1, vjust = 0.5)) +
+    xlab("Percent of reads classified") +
+    ylab("Average read length (bp)")
+
+
+malt_assignment_stats %>%
+  left_join(., metadata, by = "Library_ID") %>%
+  filter(str_detect(Library_ID, sample_list %>% str_c(collapse = "|"))) %>%
+  filter(!str_detect(Library_ID, cfdp_fail %>% str_c(collapse = "|"))) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, sample_list)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x = Percent_assigned, y = gc_avg, color = Lab)) +
+    geom_point() +
+    theme_minimal() +
+    scale_color_manual(values = Lab_colors) +
+    theme(axis.text.x = element_text(angle = 0, hjust = 1, vjust = 0.5)) +
+    xlab("Percent of reads classified") +
+    ylab("Average GC (%)")
+
+```
+
+
+## Contaminant overlaps
+Calculate how many contaminants are shared between each lab
+```{r}
+# Genus
+# Shared by all 3
+cont_otago_gn %>%
+  inner_join(., cont_oklahoma_gn, by = "Genus") %>%
+  inner_join(., cont_jena_gn, by = "Genus") %>%
+  count(name = "OT-OK-JE")
+
+# Shared by Otago and Oklahoma
+cont_otago_gn %>%
+  inner_join(., cont_oklahoma_gn, by = "Genus") %>%
+  count(name = "OT-OK")
+
+# Shared by Otago and Jena
+cont_otago_gn %>%
+  inner_join(., cont_jena_gn, by = "Genus") %>%
+  count(name = "OT-JE")
+
+# Shared by Oklahoma and Jena
+cont_oklahoma_gn %>%
+  inner_join(., cont_jena_gn, by = "Genus") %>%
+  count(name = "OK-JE")
+
+
+```
+
+
+## Genus
+```{r load_genus_tables}
+# read in the species table
+rs_raw_gn <- fread("./05-Documentation.backup/oceania_malt_cRefSeq_summarized_genus_20201105.txt") %>%
+  rename(Genus = 1) %>%
+  full_join(., fread("./05-Documentation.backup/sources_MALT_cRefSeq_JFY_genus_summarized.txt") %>%
+              rename(Genus = 1), by = "Genus") %>%
+  full_join(., fread("./05-Documentation.backup/oceania_malt_blanks_cRefSeq_genus_summarized_20201130.txt") %>%
+              rename(Genus = 1), by = "Genus") %>%
+  full_join(., fread("./05-Documentation.backup/oceania_malt_bones_cRefSeq_genus_summarized_20201202.txt") %>%
+              rename(Genus = 1), by = "Genus") %>%
+  filter(Genus != "Homo")
+
+# clean the file names
+colnames(rs_raw_gn) <- gsub("MeganServer::", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub(".unmapped", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub(".SG1.1", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub(".SG1.2", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub("_L001_R1_001.fastq.combined.fq.prefixed.extractunmapped.bam", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub("_S0_L000_R1_000.fastq.merged.prefixed.hg19unmapped", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub("_S0_L001_R1_001.fastq.truncated.prefixed.extractunmapped.bam", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub("_S0_L001_R1_000.fastq.merged.prefixed.hg1", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub("_S0_L000_R1_000.fastq.merged.prefixed.hg1", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub(".SG1.2_S0_L003_R1_001.fastq.combined.fq.prefixed.extrac.bam", "", colnames(rs_raw_gn))  
+colnames(rs_raw_gn) <- gsub("_S0_L003_R1_001.fastq.combined.fq.prefixed.extrac.bam", "", colnames(rs_raw_gn)) 
+
+# now do a pretend transpose to replace the NAs with 0s
+rs_raw_gn <- rs_raw_gn %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = replace_na(Counts, 0)) %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts")
+
+# make sure there are no genera with no counts in any sample
+rs_raw_gn %>%
+  adorn_totals(where = "col") %>%
+  select(Genus, Total) %>%
+  arrange(Total) %>%
+  slice_min(Total)
+
+```
+
+
+```{r outliers}
+# HCLVMBCX2-3505-13-00-01_S13 appears to be a sample, although it's supposed to be a blank
+# remove it from all further analyses
+
+metadata_filt <- metadata %>%
+  anti_join(., cfdp_fail %>%
+              as_data_frame(.) %>%
+              rename(Library_ID = 1)) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13")
+
+genus_raw_pass <- rs_raw_gn %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Genus", values_from = "Counts") %>%
+  anti_join(., cfdp_fail %>%
+              as_data_frame(.) %>%
+              rename(Library_ID = 1)) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  # remove all taxa that have to entries anymore
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Genus", values_from = "Counts")
+
+
+
+```
+
+### Unfiltered genus table PCA
+```{r unfiltered_gn_plot}
+
+gn_unfilt_1 <- genus_raw_pass %>%
+  filter(Library_ID %in% c(sample_list)) %>%
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  pivot_wider(names_from = "Genus", values_from = "Counts") %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.gn_unfilt_1_pca <- tune.pca(gn_unfilt_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+gn_unfilt_1.pca <- pca(gn_unfilt_1, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+plot_pca(gn_unfilt_1.pca, "PC1", "PC2", "Type", "Type")
+unfilt_plot <- plot_pca(gn_unfilt_1.pca, "PC1", "PC2", "Lab", "Lab")
+unfilt_plot
+
+```
+
+
+### Decontam individual tables
+
+```{r individual_tables}
+# note that all poorly-preserved samples are removed from genus_raw_pass although they're still in the lab lists
+
+# select only Otago samples
+otago_gn <- genus_raw_pass %>%
+  filter(Library_ID %in% otago) %>%
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_otago_gn, by = "Genus") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# select only Oklahoma samples
+oklahoma_gn <- genus_raw_pass %>%
+  filter(Library_ID %in% oklahoma) %>%
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_oklahoma_gn, by = "Genus") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# select only Jena samples
+jena_gn <- genus_raw_pass %>%
+  filter(Library_ID %in% jena) %>%
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_jena_gn, by = "Genus") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# and join the tables. There should be no genera with 0 counts total
+gn_individual_filt <- otago_gn %>%
+  full_join(., oklahoma_gn, by = "Genus") %>%
+  full_join(., jena_gn, by = "Genus")
+
+```
+
+
+```{r indivudal_plot}
+
+gn_indiv_filt_1 <- gn_individual_filt %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = replace_na(Counts,0)) %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Genus,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.gn_indiv_filt_1_pca <- tune.pca(gn_indiv_filt_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+gn_indiv_filt_1.pca <- pca(gn_indiv_filt_1, ncomp = 3, logratio = 'CLR')
+
+Type_colors <- c("black","blue","turquoise", "red")
+Type_shapes <- c(19,17,15,9)
+
+
+# plot the PCA
+gn_indiv_plot <- plot_pca(gn_indiv_filt_1.pca, "PC1", "PC2", "Lab", "Lab")
+gn_indiv_plot
+
+# top 20 genera separating samples along PC1? (10+, 10-)
+gn_indiv_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Genus = rownames(gn_indiv_filt_1.pca$loadings$X)) %>%
+  select(Genus, PC1) %>%
+  arrange(PC1) %>%
+  slice_max(PC1, n = 10) %>%
+  bind_rows(., gn_indiv_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Genus = rownames(gn_indiv_filt_1.pca$loadings$X)) %>%
+            select(Genus, PC1) %>%
+            arrange(PC1) %>%
+            slice_min(PC1, n = 10))
+
+
+```
+
+```{r indiv_gn_read_stats}
+# average sequence length
+plot_pca_cont(gn_indiv_filt_1.pca, "PC1", "PC2", "seq_len_avg", 3, "Avg. Read Length")
+
+# average gc content
+plot_pca_cont(gn_indiv_filt_1.pca, "PC1", "PC2", "gc_avg", 3, "Average GC (%)")
+
+# total number of reads
+plot_pca_cont(gn_indiv_filt_1.pca, "PC1", "PC2", "No_reads_no_human", 3, "Total Reads")
+
+# total number of reads
+plot_pca_cont(gn_indiv_filt_1.pca, "PC1", "PC2", "Age_mean", 3, "Mean Age (BP)")
+
+```
+
+### Decontam all together
+
+```{r all_table}
+# note that all poorly-preserved samples are removed from genus_raw_pass although they're still in the lab lists
+
+# select all samples and remove all contaminants, and remove all genera with no counts in any sample
+gn_all_filt <- genus_raw_pass %>%
+  filter(Library_ID %in% sample_list) %>%
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_all_gn %>%
+              select(Genus), by = "Genus") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+
+```
+
+
+```{r all_plot}
+
+gn_all_filt_1 <- gn_all_filt %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Genus,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.gn_all_filt_1_pca <- tune.pca(gn_all_filt_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+gn_all_filt_1.pca <- pca(gn_all_filt_1, ncomp = 3, logratio = 'CLR')
+
+Type_colors <- c("black","blue","turquoise", "red")
+Type_shapes <- c(19,17,15,9)
+
+
+# plot the PCA
+gn_all_plot <- plot_pca(gn_all_filt_1.pca, "PC1", "PC2", "Lab", "Lab")
+gn_all_plot
+
+# top 20 genera separating samples along PC1? (10+, 10-)
+gn_all_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Genus = rownames(gn_all_filt_1.pca$loadings$X)) %>%
+  select(Genus, PC1) %>%
+  arrange(PC1) %>%
+  slice_max(PC1, n = 10) %>%
+  bind_rows(., gn_all_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Genus = rownames(gn_all_filt_1.pca$loadings$X)) %>%
+            select(Genus, PC1) %>%
+            arrange(PC1) %>%
+            slice_min(PC1, n = 10))
+
+```
+
+```{r all_gn_read_stats}
+# average sequence length
+plot_pca_cont(gn_all_filt_1.pca, "PC1", "PC2", "seq_len_avg", 3, "Avg. Read Length")
+
+# average gc content
+plot_pca_cont(gn_all_filt_1.pca, "PC1", "PC2", "gc_avg", 3, "Average GC (%)")
+
+# total number of reads
+plot_pca_cont(gn_all_filt_1.pca, "PC1", "PC2", "No_reads_no_human", 3, "Total Reads")
+
+# total number of reads
+plot_pca_cont(gn_all_filt_1.pca, "PC1", "PC2", "Age_mean", 3, "Mean Age (BP)")
+
+```
+
+### Decontam only shared contaminants
+(Found in all 3 contamination lists)
+```{r shared_table}
+# note that all poorly-preserved samples are removed from genus_raw_pass although they're still in the lab lists
+
+# select all samples and remove all contaminants
+gn_shared_filt <- genus_raw_pass %>%
+  filter(Library_ID %in% sample_list) %>%
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_all_gn %>%
+              adorn_totals(where = "col") %>%
+              filter(Total == 3) %>%
+              select(Genus), by = "Genus") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+```
+
+```{r shared_plot}
+
+gn_shared_filt_1 <- gn_shared_filt %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Genus,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.gn_shared_filt_1_pca <- tune.pca(gn_shared_filt_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+gn_shared_filt_1.pca <- pca(gn_shared_filt_1, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+gn_shared_plot <- plot_pca(gn_shared_filt_1.pca, "PC1", "PC2", "Lab", "Lab")
+gn_shared_plot
+
+# top 20 genera separating samples along PC1? (10+, 10-)
+gn_shared_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Genus = rownames(gn_shared_filt_1.pca$loadings$X)) %>%
+  select(Genus, PC1) %>%
+  arrange(PC1) %>%
+  slice_max(PC1, n = 10) %>%
+  bind_rows(., gn_shared_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Genus = rownames(gn_shared_filt_1.pca$loadings$X)) %>%
+            select(Genus, PC1) %>%
+            arrange(PC1) %>%
+            slice_min(PC1, n = 10))
+
+gn_shared_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Genus = rownames(gn_shared_filt_1.pca$loadings$X)) %>%
+  select(Genus, PC2) %>%
+  arrange(PC2) %>%
+  slice_max(PC2, n = 10) %>%
+  bind_rows(., gn_shared_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Genus = rownames(gn_shared_filt_1.pca$loadings$X)) %>%
+            select(Genus, PC2) %>%
+            arrange(PC2) %>%
+            slice_min(PC2, n = 10))
+
+
+```
+
+```{r shared_gn_read_stats}
+# average sequence length
+plot_pca_cont(gn_shared_filt_1.pca, "PC1", "PC2", "seq_len_avg", 3, "Avg. Read Length")
+
+# average gc content
+plot_pca_cont(gn_shared_filt_1.pca, "PC1", "PC2", "gc_avg", 3, "Average GC (%)")
+
+# total number of reads
+plot_pca_cont(gn_shared_filt_1.pca, "PC1", "PC2", "No_reads_no_human", 3, "Total Reads")
+
+# total number of reads
+plot_pca_cont(gn_shared_filt_1.pca, "PC1", "PC2", "Age_mean", 3, "Mean Age (BP)")
+
+```
+
+
+### Compare to Zandra's decontam tables
+Now decontam the tables the way that Zandra did, using her decontam lists. She
+filtered each table individually and then merged them.
+```{r zandra_decontam_lists}
+
+# each lab filtered individually
+z_otago_contaminants <- fread("./05-Documentation.backup/otago_decontam_genus_blanks_bones_20210415.txt", sep = "\t")
+z_oklahoma_contaminants <- fread("./05-Documentation.backup/oklahoma_decontam_genus_blanks_bones_20210415.txt", sep = "\t")
+z_jena_contaminants <- fread("./05-Documentation.backup/jena_decontam_genus_blanks_bones_20210415.txt", sep = "\t")
+
+# this comes from filtering all 3 labs together
+z_all_contaminants <- fread("./05-Documentation.backup/pacific_decontam_genus_blanks_bones_20210414.txt", sep = "\t")
+
+# now check if the individual files together have the same list as z_all_contaminants
+
+# in the individual files but not the combined one
+z_otago_contaminants %>%
+  bind_rows(., z_oklahoma_contaminants) %>%
+  bind_rows(., z_jena_contaminants) %>%
+  distinct() %>%
+  arrange(Genus) %>%
+  anti_join(., z_all_contaminants, by = "Genus")
+# only 3 genera: Dorea, Oscillibacter, Roseburia
+
+# in the combined file but not the individual ones
+z_all_contaminants %>%
+  anti_join(., z_otago_contaminants %>%
+            bind_rows(., z_oklahoma_contaminants) %>%
+            bind_rows(., z_jena_contaminants) %>%
+            distinct(), by = "Genus") %>%
+  arrange(Genus)
+# 63 genera, including these oral ones: Abiotrophia, Alloprevotella, Neisseria, Porphyromonas, Prevotella, Pseudopropionibacterium, Selenomonas, Streptococcus, Tannerella, Treponema
+
+```
+
+```{r zandra_individual_tables}
+# note that all poorly-preserved samples are removed from genus_raw_pass although they're still in the lab lists
+
+# select only Otago samples
+z_otago_gn <- genus_raw_pass %>%
+  filter(Library_ID %in% otago) %>%
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., z_otago_contaminants, by = "Genus") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# select only Oklahoma samples
+z_oklahoma_gn <- genus_raw_pass %>%
+  filter(Library_ID %in% oklahoma) %>%
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., z_oklahoma_contaminants, by = "Genus") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# select only Jena samples
+z_jena_gn <- genus_raw_pass %>%
+  filter(Library_ID %in% jena) %>%
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., z_jena_contaminants, by = "Genus") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# and join the tables. This should have no genera with 0 counts across all samples
+z_gn_individual_filt <- z_otago_gn %>%
+  full_join(., z_oklahoma_gn, by = "Genus") %>%
+  full_join(., z_jena_gn, by = "Genus")
+
+```
+
+```{r zandra_indivudal_plot}
+
+z_gn_indiv_filt_1 <- z_gn_individual_filt %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = replace_na(Counts,0)) %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Genus,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.z_gn_indiv_filt_1_pca <- tune.pca(z_gn_indiv_filt_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+z_gn_indiv_filt_1.pca <- pca(z_gn_indiv_filt_1, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+z_gn_indiv_plot <- plot_pca(z_gn_indiv_filt_1.pca, "PC1", "PC2", "Lab", "Lab")
+z_gn_indiv_plot
+
+# top 20 genera separating samples along PC1? (10+, 10-)
+z_gn_indiv_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Genus = rownames(z_gn_indiv_filt_1.pca$loadings$X)) %>%
+  select(Genus, PC1) %>%
+  arrange(PC1) %>%
+  slice_max(PC1, n = 10) %>%
+  bind_rows(., z_gn_indiv_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Genus = rownames(z_gn_indiv_filt_1.pca$loadings$X)) %>%
+            select(Genus, PC1) %>%
+            arrange(PC1) %>%
+            slice_min(PC1, n = 10))
+
+z_gn_indiv_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Genus = rownames(z_gn_indiv_filt_1.pca$loadings$X)) %>%
+  select(Genus, PC2) %>%
+  arrange(PC2) %>%
+  slice_max(PC2, n = 10) %>%
+  bind_rows(., z_gn_indiv_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Genus = rownames(z_gn_indiv_filt_1.pca$loadings$X)) %>%
+            select(Genus, PC2) %>%
+            arrange(PC2) %>%
+            slice_min(PC2, n = 10))
+
+
+```
+
+```{r zandra_gn_read_stats}
+# average sequence length
+plot_pca_cont(z_gn_indiv_filt_1.pca, "PC1", "PC2", "seq_len_avg", 3, "Avg. Read Length")
+
+# average gc content
+plot_pca_cont(z_gn_indiv_filt_1.pca, "PC1", "PC2", "gc_avg", 3, "Average GC (%)")
+
+# total number of reads
+plot_pca_cont(z_gn_indiv_filt_1.pca, "PC1", "PC2", "No_reads_no_human", 3, "Total Reads")
+
+# total number of reads
+plot_pca_cont(z_gn_indiv_filt_1.pca, "PC1", "PC2", "Age_mean", 3, "Mean Age (BP)")
+
+```
+
+
+Put the filtered plots together to easily compare
+```{r}
+
+gn_plot <- unfilt_plot + gn_indiv_plot + gn_all_plot + gn_shared_plot + z_gn_indiv_plot  + 
+  plot_layout(nrow = 1)  + 
+  plot_layout(guides = "collect")
+gn_plot
+
+```
+Filtering everything together seems the best to me. There's not much difference
+between the 3 plots,adn the genera driving separation along PC1 are teh same for
+all 3 plots
+
+
+Biplots
+```{r unfilt_biplot}
+# PC1
+gn_unfilt_1_pc1 <- plot_pca_bi(gn_unfilt_1.pca, "PC1", "PC2", "Lab", PC1, GeneFamily = F)
+gn_unfilt_1_pc1
+
+# PC2
+gn_unfilt_1_pc2 <- plot_pca_bi(gn_unfilt_1.pca, "PC1", "PC2", "Lab", PC2, GeneFamily = F)
+gn_unfilt_1_pc2
+
+```
+
+```{r indiv_filt_biplot}
+# PC
+gn_indiv_filt_1_pc1 <- plot_pca_bi(gn_indiv_filt_1.pca, "PC1", "PC2", "Lab", PC1, GeneFamily = F)
+gn_indiv_filt_1_pc1
+
+# PC
+gn_indiv_filt_1_pc2 <- plot_pca_bi(gn_indiv_filt_1.pca, "PC1", "PC2", "Lab", PC2, GeneFamily = F)
+gn_indiv_filt_1_pc2
+
+```
+
+```{r all_filt_biplot}
+# PC
+gn_all_filt_1_pc1 <- plot_pca_bi(gn_all_filt_1.pca, "PC1", "PC2", "Lab", PC1, GeneFamily = F)
+gn_all_filt_1_pc1
+
+# PC
+gn_all_filt_1_pc2 <- plot_pca_bi(gn_all_filt_1.pca, "PC1", "PC2", "Lab", PC2, GeneFamily = F)
+gn_all_filt_1_pc2
+
+```
+
+```{r shared_filt_biplot}
+# PC
+gn_shared_filt_1_pc1 <- plot_pca_bi(gn_shared_filt_1.pca, "PC1", "PC2", "Lab", PC1, GeneFamily = F)
+gn_shared_filt_1_pc1
+
+# PC
+gn_shared_filt_1_pc2 <- plot_pca_bi(gn_shared_filt_1.pca, "PC1", "PC2", "Lab", PC2, GeneFamily = F)
+gn_shared_filt_1_pc2
+
+```
+
+```{r z_indiv_filt_biplot}
+# PC
+z_gn_indiv_filt_pc1 <- plot_pca_bi(z_gn_indiv_filt_1.pca, "PC1", "PC2", "Lab", PC1, GeneFamily = F)
+z_gn_indiv_filt_pc1
+
+# PC
+z_gn_indiv_filt_pc2 <- plot_pca_bi(z_gn_indiv_filt_1.pca, "PC1", "PC2", "Lab", PC2, GeneFamily = F)
+z_gn_indiv_filt_pc2
+
+```
+
+
+## Species
+```{r load_species_tables}
+# read in the species table
+rs_raw_sp <- fread("./05-Documentation.backup/oceania_malt_cRefSeq_summarized_species_20201105.txt") %>%
+  rename(Species = 1) %>%
+  full_join(., fread("./05-Documentation.backup/sources_MALT_cRefSeq_JFY_species_summarized.txt") %>%
+              rename(Species = 1), by = "Species") %>%
+  full_join(., fread("./05-Documentation.backup/oceania_malt_blanks_cRefSeq_species_summarized_20201130.txt") %>%
+              rename(Species = 1), by = "Species") %>%
+  full_join(., fread("./05-Documentation.backup/oceania_malt_bones_cRefSeq_species_summarized_20201202.txt") %>%
+              rename(Species = 1), by = "Species") %>%
+  filter(Species != "Homo sapiens")
+
+# clean the file names
+colnames(rs_raw_sp) <- gsub("MeganServer::", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".unmapped", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".SG1.1", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".SG1.2", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub("_L001_R1_001.fastq.combined.fq.prefixed.extractunmapped.bam", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub("_S0_L000_R1_000.fastq.merged.prefixed.hg19unmapped", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub("_S0_L001_R1_001.fastq.truncated.prefixed.extractunmapped.bam", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub("_S0_L001_R1_000.fastq.merged.prefixed.hg1", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub("_S0_L000_R1_000.fastq.merged.prefixed.hg1", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".SG1.2_S0_L003_R1_001.fastq.combined.fq.prefixed.extrac.bam", "", colnames(rs_raw_sp))  
+colnames(rs_raw_sp) <- gsub("_S0_L003_R1_001.fastq.combined.fq.prefixed.extrac.bam", "", colnames(rs_raw_sp)) 
+
+# now do a pretend transpose to replace the NAs with 0s
+rs_raw_sp <- rs_raw_sp %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = replace_na(Counts, 0)) %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts")
+
+```
+
+
+```{r outliers}
+# HCLVMBCX2-3505-13-00-01_S13 appears to be a sample, although it's supposed to be a blank
+# remove it from all further analyses
+
+species_raw_pass <- rs_raw_sp %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  anti_join(., cfdp_fail %>%
+              as_data_frame(.) %>%
+              rename(Library_ID = 1)) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  # remove all taxa that have to entries anymore
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  adorn_totals(where = "col") %>%
+  select(Total, everything()) %>%
+  filter(Total != 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts")
+
+```
+
+### Unfiltered species table PCA
+```{r unfiltered_sp_plot}
+
+sp_unfilt_1 <- species_raw_pass %>%
+  filter(Library_ID %in% c(sample_list)) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.sp_unfilt_1_pca <- tune.pca(sp_unfilt_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+sp_unfilt_1.pca <- pca(sp_unfilt_1, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+plot_pca(sp_unfilt_1.pca, "PC1", "PC2", "Type", "Type")
+unfilt_plot <- plot_pca(sp_unfilt_1.pca, "PC1", "PC2", "Lab", "Lab")
+unfilt_plot
+
+```
+
+
+### Decontam individual tables
+
+```{r individual_tables}
+# note that all poorly-preserved samples are removed from species_raw_pass although they're still in the lab lists
+
+# select only Otago samples
+otago_sp <- species_raw_pass %>%
+  filter(Library_ID %in% otago) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_otago_sp, by = "Species") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# select only Oklahoma samples
+oklahoma_sp <- species_raw_pass %>%
+  filter(Library_ID %in% oklahoma) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_oklahoma_sp, by = "Species") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# select only Jena samples
+jena_sp <- species_raw_pass %>%
+  filter(Library_ID %in% jena) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_jena_sp, by = "Species") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# and join the tables 
+sp_individual_filt <- otago_sp %>%
+  full_join(., oklahoma_sp, by = "Species") %>%
+  full_join(., jena_sp, by = "Species")
+
+```
+
+
+```{r indivudal_plot}
+
+sp_indiv_filt_1 <- sp_individual_filt %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = replace_na(Counts,0)) %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Species,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.sp_indiv_filt_1_pca <- tune.pca(sp_indiv_filt_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+sp_indiv_filt_1.pca <- pca(sp_indiv_filt_1, ncomp = 3, logratio = 'CLR')
+
+Type_colors <- c("black","blue","turquoise", "red")
+Type_shapes <- c(19,17,15,9)
+
+
+# plot the PCA
+sp_indiv_plot <- plot_pca(sp_indiv_filt_1.pca, "PC1", "PC2", "Lab", "Lab")
+sp_indiv_plot
+
+# top 20 genera separating samples along PC1? (10+, 10-)
+sp_indiv_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Species = rownames(sp_indiv_filt_1.pca$loadings$X)) %>%
+  select(Species, PC1) %>%
+  arrange(PC1) %>%
+  slice_max(PC1, n = 10) %>%
+  bind_rows(., sp_indiv_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Species = rownames(sp_indiv_filt_1.pca$loadings$X)) %>%
+            select(Species, PC1) %>%
+            arrange(PC1) %>%
+            slice_min(PC1, n = 10))
+
+
+```
+
+```{r indiv_sp_read_stats}
+# average sequence length
+plot_pca_cont(sp_indiv_filt_1.pca, "PC1", "PC2", "seq_len_avg", 3, "Avg. Read Length")
+
+# average gc content
+plot_pca_cont(sp_indiv_filt_1.pca, "PC1", "PC2", "gc_avg", 3, "Average GC (%)")
+
+# total number of reads
+plot_pca_cont(sp_indiv_filt_1.pca, "PC1", "PC2", "No_reads_no_human", 3, "Total Reads")
+
+# total number of reads
+plot_pca_cont(sp_indiv_filt_1.pca, "PC1", "PC2", "Age_mean", 3, "Mean Age (BP)")
+
+```
+
+
+### Decontam all together
+
+```{r all_table}
+# note that all poorly-preserved samples are removed from species_raw_pass although they're still in the lab lists
+
+# select all samples and remove all contaminants
+sp_all_filt <- species_raw_pass %>%
+  filter(Library_ID %in% sample_list) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_all_sp %>%
+              select(Species), by = "Species") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+```
+
+```{r, eval = F}
+bone_df <- species_raw_pass %>% inner_join(., bones %>% select(Library_ID),  by = "Library_ID") %>% pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>% pivot_wider(names_from = "Library_ID", values_from = "Counts") %>% adorn_totals(where = "col") %>% filter(Total > 0) %>% select(-Total) %>% arrange(Species)
+
+blank_df <- species_raw_pass %>% inner_join(., blanks %>% select(Library_ID),  by = "Library_ID") %>% pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>% pivot_wider(names_from = "Library_ID", values_from = "Counts") %>% adorn_totals(where = "col") %>% filter(Total > 0) %>% select(-Total) %>% arrange(Species)
+
+species_df <- species_raw_pass %>% pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>% pivot_wider(names_from = "Library_ID", values_from = "Counts") %>% arrange(Species)
+
+```
+
+
+```{r all_plot}
+
+sp_all_filt_1 <- sp_all_filt %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Species,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.sp_all_filt_1_pca <- tune.pca(sp_all_filt_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+sp_all_filt_1.pca <- pca(sp_all_filt_1, ncomp = 3, logratio = 'CLR')
+
+Type_colors <- c("black","blue","turquoise", "red")
+Type_shapes <- c(19,17,15,9)
+
+
+# plot the PCA
+sp_all_plot <- plot_pca(sp_all_filt_1.pca, "PC1", "PC2", "Lab", "Lab")
+sp_all_plot
+
+# top 20 genera separating samples along PC1? (10+, 10-)
+sp_all_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Species = rownames(sp_all_filt_1.pca$loadings$X)) %>%
+  select(Species, PC1) %>%
+  arrange(PC1) %>%
+  slice_max(PC1, n = 10) %>%
+  bind_rows(., sp_all_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Species = rownames(sp_all_filt_1.pca$loadings$X)) %>%
+            select(Species, PC1) %>%
+            arrange(PC1) %>%
+            slice_min(PC1, n = 10))
+
+```
+
+```{r all_sp_read_stats}
+# average sequence length
+plot_pca_cont(sp_all_filt_1.pca, "PC1", "PC2", "seq_len_avg", 3, "Avg. Read Length")
+
+# average gc content
+plot_pca_cont(sp_all_filt_1.pca, "PC1", "PC2", "gc_avg", 3, "Average GC (%)")
+
+# total number of reads
+plot_pca_cont(sp_all_filt_1.pca, "PC1", "PC2", "No_reads_no_human", 3, "Total Reads")
+
+# total number of reads
+plot_pca_cont(sp_all_filt_1.pca, "PC1", "PC2", "Age_mean", 3, "Mean Age (BP)")
+
+```
+
+
+### Decontam only shared contaminants
+(Found in all 3 contamination lists)
+```{r shared_table}
+# note that all poorly-preserved samples are removed from species_raw_pass although they're still in the lab lists
+
+# select all samples and remove all contaminants
+sp_shared_filt <- species_raw_pass %>%
+  filter(Library_ID %in% sample_list) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_all_sp %>%
+              adorn_totals(where = "col") %>%
+              filter(Total == 3) %>%
+              select(Species), by = "Species")  %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+```
+
+```{r shared_plot}
+
+sp_shared_filt_1 <- sp_shared_filt %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Species,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.sp_shared_filt_1_pca <- tune.pca(sp_shared_filt_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+sp_shared_filt_1.pca <- pca(sp_shared_filt_1, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+sp_shared_plot <- plot_pca(sp_shared_filt_1.pca, "PC1", "PC2", "Lab", "Lab")
+sp_shared_plot
+
+# top 20 genera separating samples along PC1? (10+, 10-)
+sp_shared_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Species = rownames(sp_shared_filt_1.pca$loadings$X)) %>%
+  select(Species, PC1) %>%
+  arrange(PC1) %>%
+  slice_max(PC1, n = 10) %>%
+  bind_rows(., sp_shared_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Species = rownames(sp_shared_filt_1.pca$loadings$X)) %>%
+            select(Species, PC1) %>%
+            arrange(PC1) %>%
+            slice_min(PC1, n = 10))
+
+sp_shared_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Species = rownames(sp_shared_filt_1.pca$loadings$X)) %>%
+  select(Species, PC2) %>%
+  arrange(PC2) %>%
+  slice_max(PC2, n = 10) %>%
+  bind_rows(., sp_shared_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Species = rownames(sp_shared_filt_1.pca$loadings$X)) %>%
+            select(Species, PC2) %>%
+            arrange(PC2) %>%
+            slice_min(PC2, n = 10))
+
+
+```
+
+```{r shared_sp_read_stats}
+# average sequence length
+plot_pca_cont(sp_shared_filt_1.pca, "PC1", "PC2", "seq_len_avg", 3, "Avg. Read Length")
+
+# average gc content
+plot_pca_cont(sp_shared_filt_1.pca, "PC1", "PC2", "gc_avg", 3, "Average GC (%)")
+
+# total number of reads
+plot_pca_cont(sp_shared_filt_1.pca, "PC1", "PC2", "No_reads_no_human", 3, "Total Reads")
+
+# total number of reads
+plot_pca_cont(sp_shared_filt_1.pca, "PC1", "PC2", "Age_mean", 3, "Mean Age (BP)")
+
+```
+
+
+### Compare to Zandra's decontam tables
+Now decontam the tables the way that Zandra did, using her decontam lists. She
+filtered each table individually and then merged them.
+```{r zandra_decontam_lists}
+
+# each lab filtered individually
+z_otago_sp_contaminants <- fread("./05-Documentation.backup/otago_decontam_species_blanks_bones_20210428.txt", sep = "\t") %>%
+  rename(Species = species)
+z_oklahoma_sp_contaminants <- fread("./05-Documentation.backup/oklahoma_decontam_species_blanks_bones_20210428.txt", sep = "\t") %>%
+  rename(Species = species)
+z_jena_sp_contaminants <- fread("./05-Documentation.backup/jena_decontam_species_blanks_bones_20210428.txt", sep = "\t") %>%
+  rename(Species = species)
+
+# she did not filter species in all 3 together like she did for genus
+
+```
+
+```{r _zandra_individual_tables}
+# note that all poorly-preserved samples are removed from species_raw_pass although they're still in the lab lists
+
+# select only Otago samples
+z_otago_sp <- species_raw_pass %>%
+  filter(Library_ID %in% otago) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., z_otago_sp_contaminants, by = "Species") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# select only Oklahoma samples
+z_oklahoma_sp <- species_raw_pass %>%
+  filter(Library_ID %in% oklahoma) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., z_oklahoma_sp_contaminants, by = "Species") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# select only Jena samples
+z_jena_sp <- species_raw_pass %>%
+  filter(Library_ID %in% jena) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., z_jena_sp_contaminants, by = "Species") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+# and join the tables 
+z_sp_individual_filt <- z_otago_sp %>%
+  full_join(., z_oklahoma_sp, by = "Species") %>%
+  full_join(., z_jena_sp, by = "Species")
+
+```
+
+```{r zandra_indivudal_plot}
+
+z_sp_indiv_filt_1 <- z_sp_individual_filt %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = replace_na(Counts,0)) %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Species,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.z_sp_indiv_filt_1_pca <- tune.pca(z_sp_indiv_filt_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+z_sp_indiv_filt_1.pca <- pca(z_sp_indiv_filt_1, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+z_sp_indiv_plot <- plot_pca(z_sp_indiv_filt_1.pca, "PC1", "PC2", "Lab", "Lab")
+z_sp_indiv_plot
+
+# top 20 genera separating samples along PC1? (10+, 10-)
+z_sp_indiv_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Species = rownames(z_sp_indiv_filt_1.pca$loadings$X)) %>%
+  select(Species, PC1) %>%
+  arrange(PC1) %>%
+  slice_max(PC1, n = 10) %>%
+  bind_rows(., z_sp_indiv_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Species = rownames(z_sp_indiv_filt_1.pca$loadings$X)) %>%
+            select(Species, PC1) %>%
+            arrange(PC1) %>%
+            slice_min(PC1, n = 10))
+
+z_sp_indiv_filt_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Species = rownames(z_sp_indiv_filt_1.pca$loadings$X)) %>%
+  select(Species, PC2) %>%
+  arrange(PC2) %>%
+  slice_max(PC2, n = 10) %>%
+  bind_rows(., z_sp_indiv_filt_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Species = rownames(z_sp_indiv_filt_1.pca$loadings$X)) %>%
+            select(Species, PC2) %>%
+            arrange(PC2) %>%
+            slice_min(PC2, n = 10))
+
+
+```
+
+```{r zandra_sp_read_stats}
+# average sequence length
+plot_pca_cont(z_sp_indiv_filt_1.pca, "PC1", "PC2", "seq_len_avg", 3, "Avg. Read Length")
+
+# average gc content
+plot_pca_cont(z_sp_indiv_filt_1.pca, "PC1", "PC2", "gc_avg", 3, "Average GC (%)")
+
+# total number of reads
+plot_pca_cont(z_sp_indiv_filt_1.pca, "PC1", "PC2", "No_reads_no_human", 3, "Total Reads")
+
+# total number of reads
+plot_pca_cont(z_sp_indiv_filt_1.pca, "PC1", "PC2", "Age_mean", 3, "Mean Age (BP)")
+
+```
+
+
+Put the filtered plots together to easily compare
+```{r}
+
+sp_plot <- unfilt_plot + sp_indiv_plot + sp_all_plot + sp_shared_plot + z_sp_indiv_plot  + 
+  plot_layout(nrow = 1)  + 
+  plot_layout(guides = "collect")
+sp_plot
+
+```
+Filtering everything together seems the best to me. There's not much difference
+between the 3 plots,adn the genera driving separation along PC1 are teh same for
+all 3 plots
+
+Biplots
+```{r unfilt_biplot}
+# PC
+sp_unfilt_1_pc1 <- plot_pca_bi(sp_unfilt_1.pca, "PC1", "PC2", "Lab", PC1, GeneFamily = F)
+sp_unfilt_1_pc1
+
+# PC
+sp_unfilt_1_pc2 <- plot_pca_bi(sp_unfilt_1.pca, "PC1", "PC2", "Lab", PC2, GeneFamily = F)
+sp_unfilt_1_pc2
+
+```
+
+```{r indiv_filt_biplot}
+# PC
+sp_indiv_filt_1_pc1 <- plot_pca_bi(sp_indiv_filt_1.pca, "PC1", "PC2", "Lab", PC1, GeneFamily = F)
+sp_indiv_filt_1_pc1
+
+# PC
+sp_indiv_filt_1_pc2 <- plot_pca_bi(sp_indiv_filt_1.pca, "PC1", "PC2", "Lab", PC2, GeneFamily = F)
+sp_indiv_filt_1_pc2
+
+```
+
+```{r all_filt_biplot}
+# PC
+sp_all_filt_1_pc1 <- plot_pca_bi(sp_all_filt_1.pca, "PC1", "PC2", "Lab", PC1, GeneFamily = F)
+sp_all_filt_1_pc1
+
+# PC
+sp_all_filt_1_pc2 <- plot_pca_bi(sp_all_filt_1.pca, "PC1", "PC2", "Lab", PC2, GeneFamily = F)
+sp_all_filt_1_pc2
+
+```
+
+```{r shared_filt_biplot}
+# PC
+sp_shared_filt_1_pc1 <- plot_pca_bi(sp_shared_filt_1.pca, "PC1", "PC2", "Lab", PC1, GeneFamily = F)
+sp_shared_filt_1_pc1
+
+# PC
+sp_shared_filt_1_pc2 <- plot_pca_bi(sp_shared_filt_1.pca, "PC1", "PC2", "Lab", PC2, GeneFamily = F)
+sp_shared_filt_1_pc2
+
+```
+
+```{r z_indiv_filt_biplot}
+# PC
+z_sp_indiv_filt_pc1 <- plot_pca_bi(z_sp_indiv_filt_1.pca, "PC1", "PC2", "Lab", PC1, GeneFamily = F)
+z_sp_indiv_filt_pc1
+
+# PC
+z_sp_indiv_filt_pc2 <- plot_pca_bi(z_sp_indiv_filt_1.pca, "PC1", "PC2", "Lab", PC2, GeneFamily = F)
+z_sp_indiv_filt_pc2
+
+```
+
+### Compare contaminant genera between genus and species tables
+```{r, eval = F}
+# 873 genera in the genus contaminant list
+# 792 genera in the species contaminant list
+cont_all_sp %>%
+  separate(Species, into = c("Genus","Species"), sep = " ", extra = "merge") %>%
+  select(Genus) %>%
+  distinct() %>%
+  count()
+
+# 160 genera in genus list but not species list
+cont_all_gn %>%
+  select(Genus) %>%
+  anti_join(., cont_all_sp %>%
+            separate(Species, into = c("Genus","Species"), sep = " ", extra = "merge") %>%
+            select(Genus) %>%
+            distinct(), by = "Genus")
+
+# 79 genera in species list but not genus list
+cont_all_sp %>%
+  separate(Species, into = c("Genus","Species"), sep = " ", extra = "merge") %>%
+  select(Genus) %>%
+  distinct() %>%
+  anti_join(., cont_all_gn %>%
+              select("Genus"), by = "Genus")
+
+# 713 genera in both lists
+cont_all_sp %>%
+  separate(Species, into = c("Genus","Species"), sep = " ", extra = "merge") %>%
+  select(Genus) %>%
+  distinct() %>%
+  inner_join(., cont_all_gn %>%
+              select(Genus), by = "Genus")
+
+
+
+```
+
+
+
+
+
+
+
+

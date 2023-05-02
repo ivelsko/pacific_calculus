@@ -1,0 +1,499 @@
+---
+title: "Pacific calculus MALT read mapping stats"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output: github_document
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(janitor)
+library(data.table)
+library(rstatix)
+library(tidyverse)
+library(patchwork)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r}
+Study_colors <- c("Pacific" = "#098BD9", 
+                  "Velsko2022" = "#7472af", 
+                  "Velsko2019" = "#cc79a7", 
+                  "Mann2018" = "#f6865e", 
+                  # "Iberia" = "#1ec1a7",
+                  "Eisenhoffer2020" = "#86c73a",
+                  "Ottoni2021" = "#616161",
+                  "FellowsYates2021" = "#e1f2fe",
+                  "Mann2018_world" = "7D3560")
+
+Continent_colors <- c("Pacific" = "#098BD9", 
+                  "Europe" = "#7472af", 
+                  "Africa" = "#cc79a7", 
+                  "Caribbean" = "#f6865e", 
+                  "Asia" = "#86c73a",
+                  "North America" = "#1ec1a7")
+
+
+```
+
+
+Read in the tables once and then save a big table to be read in again other times
+```{r}
+malt_stats_pac <- fread("./04-Analysis/malt/output_cRefSeq/malt_alignment_stats.tsv") %>%
+  rename(Library_ID = 1,
+         Total = 2,
+         Mapped = 3,
+         Assigned = 4) %>%
+  # remove HPD samples 
+  filter(!str_detect(Library_ID, "HPD")) %>%
+  mutate(Library_ID = str_replace_all(Library_ID, "Finishing file: /projects1/microbiome_calculus/pacific_calculus/04-Analysis/malt/output_cRefSeq/",""),
+         Library_ID = str_replace_all(Library_ID, ".unmapped.rma6",""),
+         Total = str_replace_all(Total, "Num. of queries:",""),
+         Total = str_replace_all(Total, " ",""),
+         Mapped = str_replace_all(Mapped, "Aligned queries:",""),
+         Mapped = str_replace_all(Mapped, " ",""),
+         Assigned = str_replace_all(Assigned, "Assig. Taxonomy:",""),
+         Assigned = str_replace_all(Assigned, " ",""),
+         Assigned = str_replace_all(Assigned, ",","")) %>%
+  mutate(Mapped = as.numeric(Mapped),
+         Total = as.numeric(Total),
+         Non_mapped = Total - Mapped,
+         Assigned = as.numeric(Assigned)) %>%
+  select(Library_ID, Mapped, Non_mapped, Assigned) 
+
+world_malt_stats <- fread("./03-Preprocessing/deep_evo_eager_malt/eager2/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+  rename(Library_ID = 1,
+         Mapped = 2,
+         Non_mapped = 3) %>%
+  bind_rows(., fread("./03-Preprocessing/ottoni2021_eager_malt/eager2_out/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Mapped = 2,
+                     Non_mapped = 3)) %>%
+  bind_rows(., fread("./03-Preprocessing/eisenhoffer2020_eager_malt/eager2_out/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Mapped = 2,
+                     Non_mapped = 3)) %>%
+  bind_rows(., fread("../smoking_calculus/03-preprocessing/radcliffe_pfuT/eager2/multiqc/radcliffe_pfuT_tsv_multiqc_report_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Mapped = 2,
+                     Non_mapped = 3)) %>%
+  bind_rows(., fread("../smoking_calculus/03-preprocessing/eager2/eager2_run/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Mapped = 2,
+                     Non_mapped = 3)) %>%
+  bind_rows(., fread("./03-Preprocessing/mann2018_world/eager2_out/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Mapped = 2,
+                     Non_mapped = 3)) %>%
+  bind_rows(., fread("../../projects1/microbiome_calculus/iberian/03-preprocessing/screening/eager2/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Mapped = 2,
+                     Non_mapped = 3) %>%
+              filter(str_detect(Library_ID, "ELR|IVE"))) %>%
+  bind_rows(., fread("../strep_clades/03-preprocessing/fellowsyates2021_missed/eager2/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Mapped = 2,
+                     Non_mapped = 3)) %>%
+  bind_rows(., fread("../smoking_calculus/03-preprocessing/kilteasheen/eager2/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Mapped = 2,
+                     Non_mapped = 3)) 
+
+
+world_malt_stats <- world_malt_stats %>%
+  full_join(., fread("./03-Preprocessing/deep_evo_eager_malt/eager2/multiqc/multiqc_data/mqc_malt-taxonomic-success-plot_1.txt") %>%
+            rename(Library_ID = 1,
+                   Assigned = 2,
+                   Non_Assigned = 3) %>%
+  bind_rows(., fread("./03-Preprocessing/ottoni2021_eager_malt/eager2_out/multiqc/multiqc_data/mqc_malt-taxonomic-success-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Assigned = 2,
+                     Non_Assigned = 3)) %>%
+  bind_rows(., fread("./03-Preprocessing/eisenhoffer2020_eager_malt/eager2_out/multiqc/multiqc_data/mqc_malt-taxonomic-success-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Assigned = 2,
+                     Non_Assigned = 3)) %>%
+  bind_rows(., fread("../smoking_calculus/03-preprocessing/radcliffe_pfuT/eager2/multiqc/radcliffe_pfuT_tsv_multiqc_report_data/mqc_malt-taxonomic-success-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Assigned = 2,
+                     Non_Assigned = 3)) %>%
+  bind_rows(., fread("../smoking_calculus/03-preprocessing/eager2/eager2_run/multiqc/multiqc_data/mqc_malt-taxonomic-success-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Assigned = 2,
+                     Non_Assigned = 3)) %>%
+  bind_rows(., fread("./03-Preprocessing/mann2018_world/eager2_out/multiqc/multiqc_data/mqc_malt-taxonomic-success-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Assigned = 2,
+                     Non_Assigned = 3)) %>%
+  bind_rows(., fread("../../projects1/microbiome_calculus/iberian/03-preprocessing/screening/eager2/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Assigned = 2,
+                     Non_Assigned = 3) %>%
+              filter(str_detect(Library_ID, "ELR|IVE"))) %>%
+  bind_rows(., fread("../strep_clades/03-preprocessing/fellowsyates2021_missed/eager2/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Assigned = 2,
+                     Non_Assigned = 3)) %>%
+  bind_rows(., fread("../smoking_calculus/03-preprocessing/kilteasheen/eager2/multiqc/multiqc_data/mqc_malt-mappability-plot_1.txt") %>%
+              rename(Library_ID = 1,
+                     Assigned = 2,
+                     Non_Assigned = 3)), by = "Library_ID") %>%  
+  # remove blanks
+  filter(!str_detect(Library_ID, "EXB|LIB|CSS|CSD|CSN|CSL|SRR11176637|SRR11176643|ERR5729658|ERR5729659|ERR5729660|ERR5729661"))
+  
+  
+malt_stats_table <- malt_stats_pac %>%
+  bind_rows(., world_malt_stats)
+  
+fwrite(malt_stats_table, "./05-Documentation.backup/malt_stats_table_pac_world.tsv", quote = F, sep = "\t")
+
+```
+
+Load metadata
+```{r load_metadata}
+
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  # this sample has no information so we'll remove it
+  # filter(Library_ID != "HCLVMBCX2-3505-26-00-01_S26") %>%
+  select(Library_ID, Lab, Type, Age_mean, seq_len_avg, gc_avg, No_reads_no_human) %>%
+  mutate(Study = "Pacific",
+         Continent = "Pacific",
+         Age_mean_log = log10(Age_mean))
+
+pre_metadata <- fread("../smoking_calculus/00-documentation.backup/full_combined_metadata.tsv") %>%
+  select(Library_ID, Site_code, seq_len_avg, gc_avg, No_reads_no_human) %>%
+  mutate(Study = str_replace_all(Site_code, "MID","Middenbeemster"),
+         Study = str_replace_all(Study, "CMB","Middenbeemster"),
+         Study = str_replace_all(Study, "KIL","Kilteasheen"),
+         Study = str_replace_all(Study, "RAD","Radcliffe"),
+         Study = str_replace_all(Study, "ELR","Iberia"),
+         Study = str_replace_all(Study, "IVE","Iberia"),
+         Lab = str_replace_all(Site_code, "MID","Jena"),
+         Lab = str_replace_all(Lab, "CMB","Jena"),
+         Lab = str_replace_all(Lab, "ELR","Jena"),
+         Lab = str_replace_all(Lab, "IVE","Jena"),
+         Lab = str_replace_all(Lab, "RAD","Oxford"),
+         Lab = str_replace_all(Lab, "KIL","Tuebingen")) %>%
+  mutate(Age_mean = ifelse(str_detect(Site_code, "MID|CMB|RAD"), 250,
+                           ifelse(Site_code == "KIL", 700,
+                                  ifelse(str_detect(Site_code, "ELR|IVE"), 620, 7)))) %>%
+  mutate(Continent = "Europe") %>%
+  full_join(., fread("./05-Documentation.backup/eisenhoffer2020_ottoni2021_deepevo_mann2018w_metadata.tsv") %>%
+              mutate(Run_accession = ifelse(Study == "FellowsYates2021",Sample_alias,Run_accession),
+                     Study = ifelse(Study == "Mann2018" & str_detect(Run_accession, "SRR"),"Mann2018_world",Study)) %>%
+              rename(Library_ID = Run_accession)) %>%
+  mutate(Age_mean_log = log10(Age_mean))
+
+world_metadata <-  pre_metadata %>%
+  mutate(Sample_group = ifelse(is.na(Sample_group),"bone",Sample_group)) %>%
+  filter(!str_detect(Sample_group, "primate|modern"))
+
+metadata <- pacific_metadata %>%
+  bind_rows(., world_metadata)
+
+nhp <- pre_metadata %>%
+  filter(str_detect(Sample_group, "primate|modern")) %>%
+  select(Sample_alias) %>%
+  pull()
+
+
+```
+
+
+```{r}
+malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              select(Library_ID, Study), by = "Library_ID") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Percent = Mapped / (Non_mapped + Mapped) * 100) %>%
+  ggplot(., aes(x = Study, y = Percent, fill = Study)) +
+         geom_boxplot() +
+         geom_jitter(alpha = 0.5, width = 0.1) +
+         scale_fill_manual(values = Study_colors) +
+         theme_minimal(base_size = 14) +
+         #scale_y_continuous(trans='log10') +
+         #scale_y_continuous(trans='pseudo_log') +
+         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+         ylab("Percent aligned reads") +
+         ggtitle("")
+
+```
+
+```{r}
+raincloud <- malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              select(Library_ID, Study, Continent), by = "Library_ID") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  ggplot(., aes(x = Continent, y = Percent, fill = Continent)) + 
+  ## add half-violin from {ggdist} package
+  ggdist::stat_halfeye(
+    ## custom bandwidth
+    adjust = .5, 
+    ## adjust height
+    width = .6, 
+    ## move geom to the right
+    justification = -.2, 
+    ## remove slab interval
+    .width = 0, 
+    point_colour = NA
+  ) + 
+  geom_boxplot(
+    width = .12, 
+    ## remove outliers
+    outlier.color = NA, ## `outlier.shape = NA` works as well
+    color = "grey30"
+  ) +
+  ## add dot plots from {ggdist} package
+  ggdist::stat_dots(
+    ## orientation to the left
+    side = "left", 
+    ## move geom to the left
+    justification = 1.1, 
+    ## adjust grouping (binning) of observations 
+    binwidth = 1
+  ) + 
+  ## remove white space on the left
+  coord_cartesian(xlim = c(1.2, NA)) +
+  theme_minimal(base_size = 12) +
+  scale_fill_manual(values = Continent_colors) +
+  theme(axis.text.y = element_text(size = 12)) +
+  theme(legend.position = "none") +
+  xlab("") +
+  ylab("% assigned reads") +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5)) 
+# +
+  # theme(axis.title.x = element_text(vjust=-1.5)) +
+  # theme(axis.title.y = element_text(vjust=1.9))
+
+  raincloud
+
+```
+
+```{r stats_malt}
+
+malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              select(Library_ID, Study, Continent), by = "Library_ID") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  wilcox_test(., Percent ~ Continent, p.adjust.method = "fdr") %>%
+  arrange(`p.adj`)
+
+```
+
+
+```{r}
+# also read in the number of species in the final cleaned species table for comparison between the # of species detected and the # of GFs in each sample
+
+sp_counts <- fread("./05-Documentation.backup/pe_all_table_species_counts.tsv")
+
+```
+
+```{r}
+sp_counts_plot <- malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              select(Library_ID, Study, Continent), by = "Library_ID") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  drop_na(no_species) %>%
+  ggplot(., aes(x = Continent, y = no_species, fill = Continent)) + 
+  ## add half-violin from {ggdist} package
+  ggdist::stat_halfeye(
+    ## custom bandwidth
+    adjust = .5, 
+    ## adjust height
+    width = .6, 
+    ## move geom to the right
+    justification = -.2, 
+    ## remove slab interval
+    .width = 0, 
+    point_colour = NA
+  ) + 
+  geom_boxplot(
+    width = .12, 
+    ## remove outliers
+    outlier.color = NA, ## `outlier.shape = NA` works as well
+    color = "grey30"
+  ) +
+  ## add dot plots from {ggdist} package
+  ggdist::stat_dots(
+    ## orientation to the left
+    side = "left", 
+    ## move geom to the left
+    justification = 1.1, 
+    ## adjust grouping (binning) of observations 
+    binwidth = 1.5
+  ) + 
+  ## remove white space on the left
+  coord_cartesian(xlim = c(1.2, NA)) +
+  theme_minimal(base_size = 12) +
+  scale_fill_manual(values = Continent_colors) +
+  theme(axis.text.y = element_text(size = 12)) +
+  theme(legend.position = "none") +
+  xlab("") +
+  ylab("No. species") +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5)) 
+
+  sp_counts_plot
+
+```
+
+```{r stats_sp}
+
+malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              select(Library_ID, Study, Continent), by = "Library_ID") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  drop_na(no_species) %>%
+  wilcox_test(., no_species ~ Continent, p.adjust.method = "fdr") %>%
+  arrange(`p.adj`)
+
+```
+
+```{r}
+counts_wrap <- malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              select(Library_ID, Study, Continent), by = "Library_ID") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  drop_na(no_species) %>%
+  ggplot(., aes(x = Percent, y = no_species)) + # Species
+         geom_point(aes(fill = Continent), size = 1.5, stroke = 0.2, shape = 21) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_manual(values = Continent_colors) +
+         scale_color_manual(values = Continent_colors) +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 40, aes(label = ..rr.label..)) +
+         ylab("No. species") +
+         xlab("% assigned reads") + facet_wrap(~Continent)
+counts_wrap
+
+
+no_wrap <- malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              select(Library_ID, Study, Continent), by = "Library_ID") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  drop_na(no_species) %>%
+  ggplot(., aes(x = Percent, y = no_species)) + # Species
+         geom_point(aes(fill = Continent), size = 2.0, stroke = 0.2, shape = 21) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_manual(values = Continent_colors) +
+         scale_color_manual(values = Continent_colors) +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 40, aes(label = ..rr.label..)) +
+         ylab("No. species") +
+         xlab("% assigned reads")
+no_wrap
+
+
+```
+
+```{r}
+
+# reads_sp <- raincloud + no_wrap + counts_wrap +
+#   plot_layout(widths = c(1.6, 1, 1), guides = "collect") # 
+
+reads_sp <- (raincloud + sp_counts_plot) / (no_wrap + counts_wrap) +
+  plot_layout(guides = "collect") # 
+
+
+reads_sp
+
+```
+
+
+```{r}
+
+ggsave("./06-publication/supplemental_figures/Sup_fig_XX2/no_species_malt_assignment_stats.svg", plot = reads_sp, device = "svg",
+       scale = 1, width = 11, height = 7, units = c("in"), dpi = 300)
+
+ggsave("./06-publication/supplemental_figures/Sup_fig_XX2/no_species_malt_assignment_stats.pdf", plot = reads_sp, device = "pdf",
+       scale = 1, width = 11, height = 7, units = c("in"), dpi = 300)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

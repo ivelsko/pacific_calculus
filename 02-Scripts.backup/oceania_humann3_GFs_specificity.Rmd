@@ -1,0 +1,269 @@
+---
+title: "Pacific calculus decontam"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(specificity)
+library(data.table)
+library(janitor)
+library(tidyverse)
+library(microshades)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+Set colors
+```{r}
+spec_colors = c("Rainfall" = microshades_palette("micro_cvd_blue", 4, lightest = FALSE)[4],
+                "Evapotrans." =  (microshades_palette("micro_cvd_blue", 4, lightest = FALSE)[1]),
+                "Latitude" = microshades_palette("micro_cvd_turquoise", 4, lightest = FALSE)[4],
+                "Longitude" = microshades_palette("micro_cvd_turquoise", 4, lightest = FALSE)[1],
+                "Age" = microshades_palette("micro_cvd_purple", 5, lightest = FALSE)[5],
+                "GC" = microshades_palette("micro_cvd_purple", 5, lightest = FALSE)[3],
+                "Read_length" = microshades_palette("micro_cvd_purple", 5, lightest = FALSE)[1])
+
+```
+
+Load metadata
+```{r}
+metadata_full <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  full_join(., fread("./05-Documentation.backup/oceana_climate.tsv")) %>%
+  # this sample has no information so we'll remove it
+  filter(Library_ID != "HCLVMBCX2-3505-26-00-01_S26")
+
+```
+
+
+```{r poorly_preserved}
+gf_poor <- fread("./05-Documentation.backup/gf_poor_samples.tsv")
+
+```
+
+```{r}
+# list all samples to include
+sample_list <- metadata_full %>%
+  anti_join(., gf_poor) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13",
+         Library_ID != "HCLVMBCX2-3505-17-00-01_S26") %>%
+  filter(Type == "calculus",
+         !str_detect(Library_ID, "HPD")) %>%
+  select(Library_ID)
+  
+```
+
+
+## HUMAnN3 Gene Families
+
+```{r load_kegg_data}
+
+## load the GeneFamily and genus tables generated with humann3
+humann3_GFs_full <- fread("./04-Analysis/humann3/genefamilies_anc_params_joined_cpm_ko_names.tsv")
+humann3_GFs_full <- as_tibble(humann3_GFs_full)
+
+# clean the file names
+humann3_GFs_full <- rename(humann3_GFs_full, GeneFamily = `# Gene Family`)
+colnames(humann3_GFs_full) <- gsub("_Abundance-RPKs","", colnames(humann3_GFs_full))
+colnames(humann3_GFs_full) <- gsub(".SG1.1","", colnames(humann3_GFs_full))
+
+# remove unmapped and ungrouped reads
+humann3_GFs <- humann3_GFs_full %>% filter(!str_detect(GeneFamily, "UNMAPPED|UNGROUPED"))
+
+# remove all GeneFamily-level-assignments
+humann3_GFs_top <- humann3_GFs %>%
+  filter(!str_detect(GeneFamily, "\\|")) %>%
+  # remove Heping Dao calculus
+  select(-c("HPD005.B0101","HPD006.B0101","HPD007.B0101"))
+
+
+```
+
+
+```{r outliers_GeneFamily}
+# HCLVMBCX2-3505-13-00-01_S13 appears to be a sample, although it's supposed to be a blank
+# remove it from all further analyses
+
+h3_GFs_pass_df <- humann3_GFs_top %>%
+  pivot_longer(!GeneFamily, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "GeneFamily", values_from = "Counts") %>%
+  inner_join(., sample_list %>%
+               as_data_frame(.) %>%
+               rename(Library_ID = 1), by = "Library_ID") %>%
+  distinct() %>%
+  arrange(Library_ID)
+
+h3_GFs_pass <- h3_GFs_pass_df %>%
+  select(-Library_ID) %>%
+  as.matrix()
+
+rownames(h3_GFs_pass) <- h3_GFs_pass_df$Library_ID
+
+```
+
+Filter metadata table so it has the same samples as the GeneFamily table
+```{r}
+metadata <- metadata_full %>%
+  inner_join(., sample_list, by = "Library_ID") %>%
+  distinct() %>%
+  mutate(Lab_n = ifelse(Lab == "Jena",0,
+                        ifelse(Lab == "Oklahoma",1,2))) %>%
+  arrange(Library_ID) %>%
+  column_to_rownames("Library_ID")
+
+
+metadata %>% 
+  rownames_to_column("Library_ID") %>%
+  select(Library_ID) %>%
+  anti_join(., h3_GFs_pass_df %>% select(Library_ID))
+
+```
+
+
+Keep only taxa in 10 or more samples
+```{r}
+# apply occupancy threshold to remove low-occupancy GeneFamily
+h3_GFs_pass_ovr10 <- occ_threshold(h3_GFs_pass, threshold=40)
+# how many GeneFamily are we left with?
+ncol(h3_GFs_pass)
+ncol(h3_GFs_pass_ovr10)
+# (there are MANY GeneFamily in this dataset that are extremely rare...)
+# (that's common for microbiome data.)
+
+```
+
+Make sure the samples are not modified - are they still the same as in the metadata?
+```{r echo = T}
+all(rownames(h3_GFs_pass_ovr10) == rownames(metadata))
+```
+
+```{r results = 'hide', eval = TRUE, message=FALSE}
+# set number of CPU cores to use in commands below - change for your system.
+spec_ncores <- 4
+# make empty list for specificity values
+specs_list <- list()
+
+# specificity for lab:
+# specs_list$"Lab" <- phy_or_env_spec(h3_GFs_pass_ovr10, env=metadata$Lab_n,
+#                                     n_sim=500, n_cores=spec_ncores)
+
+# specificity for rainfall
+specs_list$"Rainfall" <- phy_or_env_spec(h3_GFs_pass_ovr10, env=metadata$Rainfall, 
+                                         n_sim=500, n_cores=spec_ncores)
+
+# specificity for evapotranspiration
+specs_list$"Evapotrans." <- phy_or_env_spec(h3_GFs_pass_ovr10, env=metadata$ann_evapotransporation, 
+                                                   n_sim=500, n_cores=spec_ncores )
+
+# specificity for latitude
+specs_list$"Latitude" <- phy_or_env_spec(h3_GFs_pass_ovr10, env=metadata$Lat, 
+                                                   n_sim=500, n_cores=spec_ncores )
+
+# specificity for longitude
+specs_list$"Longitude" <- phy_or_env_spec(h3_GFs_pass_ovr10, env=metadata$Long, 
+                                                   n_sim=500, n_cores=spec_ncores )
+
+# specificity for mean age (BP)
+specs_list$"Age" <- phy_or_env_spec(h3_GFs_pass_ovr10, env=metadata$Age_mean, 
+                                                   n_sim=500, n_cores=spec_ncores )
+# specificity for average gc content
+specs_list$"GC" <- phy_or_env_spec(h3_GFs_pass_ovr10, env=metadata$gc_avg, 
+                                                   n_sim=500, n_cores=spec_ncores )
+
+# specificity for average read length (bp)
+specs_list$"Read_length" <- phy_or_env_spec(h3_GFs_pass_ovr10, env=metadata$seq_len_avg, 
+                                                   n_sim=500, n_cores=spec_ncores )
+
+```
+
+```{r, echo=TRUE, fig.cap="Specificity violin plot", out.width="90%"}
+plot_specs_violin(specs_list, label_cex=0.9, cols=spec_colors, cols_bord = "#d0d0d0") # c("#86c73a", "blue", "gold","green","turquoise","magenta","orange","purple")
+
+
+# ggsave("./06-publication/prelim_figs/specificity_violins.png", plot = spec_viol, device = "png",
+#        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
+
+
+# svg(file = "./06-publication/prelim_figs/specificity_violins_h3_GFs.svg", width = 10, height = 7) 
+
+plot_specs_violin(specs_list, label_cex=0.9, cols=spec_colors, cols_bord = "#d0d0d0")
+
+dev.off()
+
+```
+
+```{r, echo=TRUE, fig.cap="Specificity violin plot", out.width="90%"}
+plot_specs_stacks(specs_list, label_cex=0.6)
+
+```
+
+Pearson correlation between Spec values of each group
+```{r, echo=TRUE, fig.cap="Pairwise specificity plot", out.width="90%"}
+plot_pairwise_spec(specs_list)
+
+```
+
+Make a data frame for ggplot
+```{r}
+specs_df <- aggregate_specs_list(specs_list, byFeature=FALSE, fd_id=1)
+
+specs_df_lab <- specs_df %>%
+  filter(Variable == "Lab",
+         Pval <= 0.05)
+
+
+specs_note <- specs_df %>%
+  filter(str_detect(Variable, "Rainfall|Longitude|Read|Age")) %>%
+  filter(Pval <= 0.05, Spec < -0.6) %>%
+  select(-Pval) %>%
+  pivot_wider(names_from = "Variable", values_from = "Spec") %>%
+  # drop_na(GC) %>%
+  # select(-Longitude) %>%
+  drop_na(Age) %>%
+  arrange(Age)
+  # arrange(desc(Rainfall),desc(Longitude),desc(Read_length), desc(Age))
+specs_note
+
+```
+
+```{r}
+
+humann3_GFs_full %>%
+  filter(str_detect(GeneFamily, specs_note %>% 
+                      select(FeatureID) %>% 
+                      separate(FeatureID, into = "KO", extra = "drop", sep = ":") %>%
+                      pull(KO) %>%
+                      str_c(collapse = "|")))
+
+```
+
+
+```{r, echo=TRUE, fig.cap="Specificity violins using ggplot", out.width="90%"}
+
+ggplot(specs_df, aes(x=Variable, y=Spec, fill=Variable)) + 
+  geom_violin() + 
+  geom_jitter(width=0.2, size=0.2)
+```
+
+```{r echo = T, results = 'hide', eval = F}
+  specificity.shiny::plot_specs_shiny(sl=specs_list)
+```
+
+
+
+
+
+
+

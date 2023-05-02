@@ -1,0 +1,435 @@
+---
+title: "Pacific calculus HUMAnN3 species contributions to PC1 paths"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(decontam)
+library(data.table)
+library(vegan)
+library(ape)
+library(mixOmics)
+library(janitor)
+library(rstatix)
+library(pander)
+library(tidyverse)
+library(gplots)
+library(ggrepel)
+library(viridis)
+library(cowplot)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r load_data}
+## load the species and genus tables generated with humann3
+humann3_path_full <- fread("04-Analysis/humann3/pathabundance_anc_params_joined_cpm.tsv")
+humann3_path_full <- as_tibble(humann3_path_full)
+
+# clean the file names
+humann3_path_full <- rename(humann3_path_full, Pathway = `# Pathway`)
+colnames(humann3_path_full) <- gsub(".unmapped_Abundance","", colnames(humann3_path_full))
+colnames(humann3_path_full) <- gsub(".SG1.1","", colnames(humann3_path_full))
+
+# remove unmapped and ungrouped reads
+humann3_path <- humann3_path_full %>% filter(!str_detect(Pathway, "UNMAPPED|UNINTEGRATED"))
+
+```
+
+
+```{r pc_biplot_top10s}
+# PC biplot loading top 10s
+humann3_pathway_biplot_list <- fread("./04-Analysis/humann3/humann3_pathway_biplot_list.tsv") 
+humann3_pathway_biplot_list <- humann3_pathway_biplot_list %>%
+  mutate(Path = sapply(Pathway, function(f) {
+                                  unlist(str_split(f, ":"))[1]
+                                  })) %>%
+  select(Pathway, Path, everything())
+
+```
+
+
+## PC1
+```{r path_pc1pws}
+# list the 10 orthologs with strongest loading in PC1 + values
+humann3_path_biplot_pc <- humann3_pathway_biplot_list %>%
+  filter(Direction == "PC1+") %>%
+  pull(Path) %>%
+  str_c(., collapse = "|") # need this format for filtering in the next step
+
+
+# select only those 10 pathways from the list, and split the column with names into 3 (Pathway, Genus, Species)
+humann3_path_pc1pws <- humann3_path %>%
+  filter(str_detect(Pathway, humann3_path_biplot_pc)) %>%
+  filter(str_detect(Pathway, "\\|")) %>%
+  gather("SampleID", "CPM", 2:ncol(.)) %>%
+  mutate(Pathway = str_replace_all(Pathway, "\\.s__", "|s__")) %>%
+  separate(., Pathway, into = c("Pathway", "Genus", "Species"), sep = "\\|") %>%
+  mutate(Species = replace_na(Species, "unclassified"),
+         Genus = str_replace_all(Genus, "g__", ""),
+         Species = str_replace_all(Species, "s__", "")) %>%
+  inner_join(., humann3_pathway_biplot_list %>%
+              select(Pathway, Path) %>%
+               distinct(.), by = "Pathway") %>%
+  inner_join(.,  humann3_pathway_biplot_list %>%
+               filter(Direction == "PC1+") %>%
+               select(Path), by = "Path") %>%
+  select(-Pathway) %>%
+  select(Path, everything()) %>%
+  arrange(Path)
+
+# calculate the % for each ortholog contributed by each genus         
+humann3_path_pc1pws_stats <- humann3_path_pc1pws %>%
+  group_by(Path, Genus) %>%
+  summarize(Sum = sum(CPM)) %>%
+  mutate(Percent = Sum/sum(Sum)*100) %>%
+  ungroup(.)
+
+# create the list of 10 orthologs again, but don't collapse the list as above
+humann3_path_biplot_pc <- humann3_pathway_biplot_list %>%
+  filter(Direction == "PC1+") %>%
+  arrange(Path) %>%
+  pull(Path)
+
+# calculate the total % of all genera that contribute < X% to each ortholog
+humann3_path_pc1pws_stats_extra <- lapply(humann3_path_biplot_pc, function(eclass) {
+ high_percent <- humann3_path_pc1pws_stats %>%
+   filter(Path == eclass) %>%
+   filter(Percent < 5) %>%
+   summarise(Remaining = sum(Percent)) %>%
+   mutate(Path = eclass,
+          Genus = "Other")
+}) %>%
+ bind_rows(.)
+
+# add this additional % to the main table
+humann3_path_pcbi_bar_df <- humann3_path_pc1pws_stats_extra %>%
+  rename(Percent = Remaining) %>%
+  bind_rows(., humann3_path_pc1pws_stats %>%
+              select(-Sum)) %>% 
+  select(Path, Genus, Percent) %>%
+  mutate(Direction = "PC1+") %>%
+  distinct()
+  
+# plot the values in a bar chart
+humann3_path_pcbi_bar_df %>%
+  # filter(Direction == "PC1+", Genus != "Other") %>% # removing Other plots all species/unassigned - no need to filter the pathways
+  filter(Percent >= 5 | (Percent <= 5 & Genus == "Other")) %>% # filter out the genera with % < 5, but keep Other < 5
+  # filter(Percent >= 5) %>% # filter out the genera with % < 5, but keep Other < 5
+  mutate(Genus = fct_relevel(Genus, "unclassified","Other"), # ,"Kosakonia","Lautropia","Neisseria","Ottowia","Pseudomonas","Pseudopropionibacterium")
+         Path = fct_relevel(Path, humann3_pathway_biplot_list %>%
+                              filter(Direction == "PC1+") %>%
+                              pull(Path))) %>%
+  ggplot(., aes(x=Path, y=Percent, fill = Genus)) +
+    geom_bar(stat = "identity") +
+    theme_minimal() +
+    scale_fill_viridis_d(option = "D") +
+    # scale_fill_manual(values = c("#969696","#0D0887FF","#5D01A6FF","#7E03A8FF",
+    #                              "#9C179EFF","#B52F8CFF","#CC4678FF","#DE5F65FF",
+    #                              "#ED7953FF","#F89441FF","#FDB32FFF","#FBD424FF","#F0F921FF")) +
+     theme(text = element_text(size=18),
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+    ylab("Percent") +
+    ggtitle("Metacyc pathways - PC1 positive") +
+    theme(title = element_text(size=10))
+
+# viridis_pal(option = "D")(13)
+
+```
+
+
+```{r path_pc1neg}
+# list the 10 orthologs with strongest loading in PC1 + values
+humann3_path_biplot_pc <- humann3_pathway_biplot_list %>%
+  filter(Direction == "PC1-") %>%
+  arrange(Path) %>%
+  pull(Path) %>%
+  str_c(., collapse = "|") # need this format for filtering in the next step
+
+# select only those 10 orthologs from the list, and split the column with names into 3 (Ortholog, Genus, Species)
+humann3_path_pc1neg <- humann3_path %>%
+  filter(str_detect(Pathway, humann3_path_biplot_pc)) %>%
+  filter(str_detect(Pathway, "\\|")) %>%
+  gather("SampleID", "CPM", 2:ncol(.)) %>%
+  mutate(Pathway = str_replace_all(Pathway, "\\.s__", "|s__")) %>%
+  separate(., Pathway, into = c("Pathway", "Genus", "Species"), sep = "\\|") %>%
+  mutate(Species = replace_na(Species, "unclassified"),
+         Genus = str_replace_all(Genus, "g__", ""),
+         Species = str_replace_all(Species, "s__", "")) %>%
+  inner_join(., humann3_pathway_biplot_list %>%
+              select(Pathway, Path) %>%
+               distinct(.), by = "Pathway") %>%
+  inner_join(.,  humann3_pathway_biplot_list %>%
+               filter(Direction == "PC1-") %>%
+               select(Path), by = "Path") %>%
+  select(-Pathway) %>%
+  select(Path, everything()) %>%
+  arrange(Path)
+
+# calculate the % for each ortholog contributed by each genus         
+humann3_path_pc1neg_stats <- humann3_path_pc1neg %>%
+  group_by(Path, Genus) %>%
+  summarize(Sum = sum(CPM)) %>%
+  mutate(Percent = Sum/sum(Sum)*100) %>%
+  ungroup(.)
+
+# create the list of 10 orthologs again, but don't collapse the list as above
+humann3_path_biplot_pc <- humann3_pathway_biplot_list %>%
+  filter(Direction == "PC1-") %>%
+  arrange(Path) %>%
+  pull(Path)
+
+# calculate the total % of all genera that contribute < X% to each ortholog
+humann3_path_pc1neg_stats_extra <- lapply(humann3_path_biplot_pc, function(eclass) {
+ high_percent <- humann3_path_pc1neg_stats %>%
+   filter(Path == eclass) %>%
+   filter(Percent < 5) %>%
+   summarise(Remaining = sum(Percent)) %>%
+   mutate(Path = eclass,
+          Genus = "Other")
+}) %>%
+ bind_rows(.)
+
+# add this additional % to the main table
+humann3_path_pcbi_bar_df <- humann3_path_pcbi_bar_df %>%
+  bind_rows(humann3_path_pc1neg_stats_extra %>%
+            rename(Percent = Remaining) %>%
+            bind_rows(., humann3_path_pc1neg_stats %>%
+                      select(-Sum)) %>% 
+            select(Path, Genus, Percent) %>%
+            mutate(Direction = "PC1-")) %>%
+  distinct()
+
+# plot the values in a bar chart
+humann3_path_pcbi_bar_df %>%
+  filter(Direction == "PC1-") %>% # removing Other plots all species/unassigned - no need to filter the pathways
+  filter(Percent >= 5 | (Percent <= 5 & Genus == "Other")) %>% # filter out the genera with % < 5, but keep Other < 5
+  mutate(Genus = fct_relevel(Genus, "unclassified","Other"), # ,"Methanobrevibacter","Pseudomonas","Streptococcus"
+         Path = fct_relevel(Path, humann3_pathway_biplot_list %>%
+                              filter(Direction == "PC1-") %>%
+                              pull(Path))) %>%
+  ggplot(., aes(x=Path, y=Percent, fill = Genus)) +
+    geom_bar(stat = "identity") +
+    theme_minimal() +
+    scale_fill_viridis_d(option = "D") +
+    # scale_fill_manual(values = c("#969696","#0D0887FF","#5D01A6FF","#7E03A8FF",
+    #                              "#9C179EFF","#B52F8CFF","#CC4678FF","#DE5F65FF",
+    #                              "#ED7953FF","#F89441FF","#FDB32FFF","#FBD424FF","#F0F921FF")) +
+    theme(text = element_text(size=18),
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+    # facet_wrap(~pathrtholog, nrow=2) +
+    ylab("Percent") +
+    ggtitle("Metacyc pathways - PC1 negative") +
+    theme(title = element_text(size=12))
+
+
+```
+
+## PC2
+
+```{r path_pc2pws}
+# list the 10 orthologs with strongest loading in PC1 + values
+humann3_path_biplot_pc <- humann3_pathway_biplot_list %>%
+  filter(Direction == "PC2+") %>%
+  arrange(Path) %>%
+  pull(Path) %>%
+  str_c(., collapse = "|") # need this format for filtering in the next step
+
+# select only those 10 orthologs from the list, and split the column with names into 3 (Ortholog, Genus, Species)
+humann3_path_pc2pws <- humann3_path %>%
+  filter(str_detect(Pathway, humann3_path_biplot_pc)) %>%
+  filter(str_detect(Pathway, "\\|")) %>%
+  gather("SampleID", "CPM", 2:ncol(.)) %>%
+  mutate(Pathway = str_replace_all(Pathway, "\\.s__", "|s__")) %>%
+  separate(., Pathway, into = c("Pathway", "Genus", "Species"), sep = "\\|") %>%
+  mutate(Species = replace_na(Species, "unclassified"),
+         Genus = str_replace_all(Genus, "g__", ""),
+         Species = str_replace_all(Species, "s__", "")) %>%
+  inner_join(., humann3_pathway_biplot_list %>%
+              select(Pathway, Path) %>%
+               distinct(.), by = "Pathway") %>%
+  inner_join(.,  humann3_pathway_biplot_list %>%
+               filter(Direction == "PC2+") %>%
+               select(Path), by = "Path") %>%
+  select(-Pathway) %>%
+  select(Path, everything()) %>%
+  arrange(Path)
+
+# calculate the % for each ortholog contributed by each genus         
+humann3_path_pc2pws_stats <- humann3_path_pc2pws %>%
+  group_by(Path, Genus) %>%
+  summarize(Sum = sum(CPM)) %>%
+  mutate(Percent = Sum/sum(Sum)*100) %>%
+  ungroup(.)
+
+# create the list of 10 orthologs again, but don't collapse the list as above
+humann3_path_biplot_pc <- humann3_pathway_biplot_list %>%
+  filter(Direction == "PC2+") %>%
+  arrange(Path) %>%
+  pull(Path)
+
+# calculate the total % of all genera that contribute < X% to each ortholog
+humann3_path_pc2pws_stats_extra <- lapply(humann3_path_biplot_pc, function(eclass) {
+ high_percent <- humann3_path_pc2pws_stats %>%
+   filter(Path == eclass) %>%
+   filter(Percent < 5) %>%
+   summarise(Remaining = sum(Percent)) %>%
+   mutate(Path = eclass,
+          Genus = "Other")
+}) %>%
+ bind_rows(.)
+
+# add this additional % to the main table
+humann3_path_pcbi_bar_df <- humann3_path_pcbi_bar_df %>%
+  bind_rows(humann3_path_pc2pws_stats_extra %>%
+            rename(Percent = Remaining) %>%
+            bind_rows(., humann3_path_pc2pws_stats %>%
+                      select(-Sum)) %>% 
+            select(Path, Genus, Percent) %>%
+            mutate(Direction = "PC2+")) %>%
+  distinct()
+ 
+# plot the values in a bar chart
+# Most of these come from 'unclassified'
+humann3_path_pcbi_bar_df %>%
+  filter(Direction == "PC2+") %>%  # removing Other plots all species/unassigned - no need to filter the pathways
+  filter(Percent >= 5 | (Percent <= 5 & Genus == "Other")) %>% # filter out the genera with % < 5, but keep Other < 5
+  mutate(Genus = fct_relevel(Genus, "unclassified","Other"), # ,"Aggregatibacter","Bacteroidetes_unclassified","Clostridiales_Family_XIII_Incertae_Sedis_unclassified","Delftia","Desulfobulbus","Desulfomicrobium","Kosakonia","Haemophilus","Mogibacterium","Ottowia","Pseudomonas","Pseudoramibacter","Porphyromonas","Streptococcus","Tannerella"
+  Path = fct_relevel(Path, humann3_pathway_biplot_list %>%
+                       filter(Direction == "PC2+") %>%
+                       pull(Path))) %>%
+  ggplot(., aes(x=Path, y=Percent, fill = Genus)) +
+    geom_bar(stat = "identity") +
+    theme_minimal() +
+    scale_fill_viridis_d(option = "D") +
+    # scale_fill_manual(values = c("#969696","#0D0887FF","#5D01A6FF","#7E03A8FF",
+    #                              "#9C179EFF","#B52F8CFF","#CC4678FF","#DE5F65FF",
+    #                              "#ED7953FF","#F89441FF","#FDB32FFF","#FBD424FF","#F0F921FF")) +
+    theme(text = element_text(size=18),
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1,)) +
+    # facet_wrap(~pathrtholog, nrow=2) +
+    ylab("Percent") +
+    ggtitle("Metacyc pathways - PC2+") +
+    theme(title = element_text(size=12))
+
+
+```
+
+
+```{r path_pc2neg}
+# list the 10 orthologs with strongest loading in PC1 + values
+humann3_path_biplot_pc <- humann3_pathway_biplot_list %>%
+  filter(Direction == "PC2-") %>%
+  arrange(Path) %>%
+  pull(Path) %>%
+  str_c(., collapse = "|") # need this format for filtering in the next step
+
+# select only those 10 orthologs from the list, and split the column with names into 3 (Ortholog, Genus, Species)
+humann3_path_pc2neg <- humann3_path %>%
+  filter(str_detect(Pathway, humann3_path_biplot_pc)) %>%
+  filter(str_detect(Pathway, "\\|")) %>%
+  gather("SampleID", "CPM", 2:ncol(.)) %>%
+  mutate(Pathway = str_replace_all(Pathway, "\\.s__", "|s__")) %>%
+  separate(., Pathway, into = c("Pathway", "Genus", "Species"), sep = "\\|") %>%
+  mutate(Species = replace_na(Species, "unclassified"),
+         Genus = str_replace_all(Genus, "g__", ""),
+         Species = str_replace_all(Species, "s__", "")) %>%
+  inner_join(., humann3_pathway_biplot_list %>%
+              select(Pathway, Path) %>%
+               distinct(.), by = "Pathway") %>%
+  inner_join(.,  humann3_pathway_biplot_list %>%
+               filter(Direction == "PC2-") %>%
+               select(Path), by = "Path") %>%
+  select(-Pathway) %>%
+  select(Path, everything()) %>%
+  arrange(Path)
+
+# calculate the % for each ortholog contributed by each genus         
+humann3_path_pc2neg_stats <- humann3_path_pc2neg %>%
+  group_by(Path, Genus) %>%
+  summarize(Sum = sum(CPM)) %>%
+  mutate(Percent = Sum/sum(Sum)*100) %>%
+  ungroup(.)
+
+# create the list of 10 orthologs again, but don't collapse the list as above
+humann3_path_biplot_pc <- humann3_pathway_biplot_list %>%
+  filter(Direction == "PC2-") %>%
+  arrange(Path) %>%
+  pull(Path)
+
+# calculate the total % of all genera that contribute < X% to each ortholog
+humann3_path_pc2neg_stats_extra <- lapply(humann3_path_biplot_pc, function(eclass) {
+ high_percent <- humann3_path_pc2neg_stats %>%
+   filter(Path == eclass) %>%
+   filter(Percent < 5) %>%
+   summarise(Remaining = sum(Percent)) %>%
+   mutate(Path = eclass,
+          Genus = "Other")
+}) %>%
+ bind_rows(.)
+
+# add this additional % to the main table
+humann3_path_pcbi_bar_df <- humann3_path_pcbi_bar_df %>%
+  bind_rows(humann3_path_pc2neg_stats_extra %>%
+            rename(Percent = Remaining) %>%
+            bind_rows(., humann3_path_pc2neg_stats %>%
+                      select(-Sum)) %>% 
+            select(Path, Genus, Percent) %>%
+            mutate(Direction = "PC2-")) %>%
+  distinct()
+
+  
+# plot the values in a bar chart
+humann3_path_pcbi_bar_df %>%
+  filter(Direction == "PC2-") %>% # removing Other plots all species/unassigned - no need to filter the pathways
+  filter(Percent >= 5 | (Percent <= 5 & Genus == "Other")) %>% # filter out the genera with % < 5, but keep Other < 5
+  mutate(Genus = fct_relevel(Genus, "unclassified","Other"), # ,"Delftia","Kosakonia","Methanobrevibacter","Neisseria","Pseudomonas","Pseudopropionibacterium","Streptococcus","Streptomyces"
+         Path = fct_relevel(Path, humann3_pathway_biplot_list %>%
+                              filter(Direction == "PC2-") %>%
+                              pull(Path))) %>%
+  ggplot(., aes(x=Path, y=Percent, fill = Genus)) +
+    geom_bar(stat = "identity") +
+    theme_minimal() +
+    scale_fill_viridis_d(option = "D") +
+    # scale_fill_manual(values = c("#969696","#0D0887FF","#5D01A6FF","#7E03A8FF",
+    #                              "#9C179EFF","#B52F8CFF","#CC4678FF","#DE5F65FF",
+    #                              "#ED7953FF","#F89441FF","#FDB32FFF","#FBD424FF","#F0F921FF")) +
+    theme(text = element_text(size=18),
+          axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+    # facet_wrap(~pathrtholog, nrow=2) +
+    ylab("Percent") +
+    ggtitle("Genus-level assignents to Metacyc pathways - PC2 negative") +
+    theme(title = element_text(size=12))
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

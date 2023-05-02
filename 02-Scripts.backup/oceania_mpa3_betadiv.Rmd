@@ -1,0 +1,573 @@
+---
+title: "Pacific calculus MetaPhlAn3 beta-diversity analysis"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+# library(edgeR) # needed to run ComBat_seq
+library(mixOmics)
+library(janitor)
+# library(rstatix)
+library(pander)
+library(tidyverse)
+library(ggrepel)
+library(viridis)
+library(patchwork)
+library(RColorBrewer)
+library(microshades)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+
+Load metadata
+```{r}
+metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") 
+```
+
+```{r poorly_preserved}
+# cfdp_fail <- fread("05-Documentation.backup/cfdp_fail_samples_20210413.txt") %>%
+#   pull()
+
+cfdp_fail <- fread("05-Documentation.backup/oceania_cuperdec_mpa3_anc_params_poor_samples.tsv") %>%
+  rename(Library_ID = 1) %>%
+  pull(Library_ID)
+
+poor_samples <- fread("05-Documentation.backup/mpa3_anc_params_poor_samples.tsv")
+
+```
+
+```{r}
+# list all bones that are part of this study
+# the ARS bones are a little different in the PCA, so we won't use them
+bones <- metadata %>%
+  filter(Type == "bone") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(!str_detect(Library_ID, "ARS|HPD"))
+
+# list all samples and blanks from Otago
+otago <- metadata %>%
+  filter(Lab == "Otago") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  arrange(Library_ID) %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all sampmles and blanks from Oklahoma
+oklahoma <- metadata %>%
+  filter(Lab == "Oklahoma") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Type != "bone") %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all samples and blanks from Jena
+jena <- metadata %>%
+  filter(Lab == "Jena") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Type != "bone") %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all samples to include
+sample_list <- c(otago,oklahoma,jena)
+
+```
+
+```{r colors}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =  microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" = microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+Type_colors <- c("Arch. Bone" = "#148F77", "blank" = "#8B8B8B", "Arch. calculus" = "black")
+
+
+```
+
+```{r}
+Island_shapes = c("Tongatapu" = 21, 
+                  "Rurutu" = 21, 
+                  "Flores" = 21, 
+                  "Rapa Nui" = 21, 
+                  "Futuna" = 21, 
+                  "Efate" = 21, 
+                  "Vao" = 21,
+                  "Efate 3000 BP" = 21, 
+                  "Uripiv" = 21, 
+                  "Viti Levu" = 21, 
+                  "Raiatea" = 21, 
+                  "Taumako" = 21, 
+                  "Watom" = 21)
+
+Lab_shapes = c(21,21,21)
+Lab_size = c(4,4,4)
+
+Type_shapes = c(21,21,21,21,21,21,21,21)
+Type_size = c(4,4,4,4,4,4,4,4)
+
+```
+
+
+```{r plot_pca_fxn}
+
+# add functions for:
+# making the input table for PCA?
+
+# plotting PCA with colored dots
+plot_pca <- function(df, pc1, pc2, color_group, shape_group) {
+    metadata_group_colors <- get(paste(color_group, "_colors", sep = ""))
+    metadata_group_shapes <- get(paste(shape_group, "_shapes", sep = ""))
+
+    exp_var <- paste0(round(df$prop_expl_var$X * 100, 2), "%")
+    df_X <- df$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata, by = "Library_ID")
+    
+    color_group = df_X[[color_group]]
+    shape_group = df_X[[shape_group]]
+
+                       if (pc1 == 'PC1') {
+                           pc1 <- df_X$PC1
+                           exp_var_pc1 <- exp_var[1]
+                           xaxis <- c("PC1")
+                       }  else if (pc1 == 'PC2') {
+                           pc1 <- df_X$PC2
+                           exp_var_pc1 <- exp_var[2]
+                           xaxis <- c("PC2")
+                       } else if (pc1 == 'PC3') {
+                           pc1 <- df_X$PC3
+                           exp_var_pc1 <- exp_var[3]
+                           xaxis <- c("PC3")
+                       }
+
+                       if (pc2 == 'PC1') {
+                           pc2 <- df_X$PC1
+                           exp_var_pc2 <- exp_var[1]
+                           yaxis <- c("PC1")
+                       }  else if (pc2 == 'PC2') {
+                           pc2 <- df_X$PC2
+                           exp_var_pc2 <- exp_var[2]
+                           yaxis <- c("PC2")
+                       } else if (pc2 == 'PC3') {
+                           pc2 <- df_X$PC3
+                           exp_var_pc2 <- exp_var[3]
+                           yaxis <- c("PC3")
+                       }
+
+    pca_plot <- ggplot(df_X, aes(pc1, pc2)) +
+                        geom_point(aes(fill = color_group, shape = shape_group), size = 4, stroke = 0.3, shape = 21) +
+                        scale_fill_manual(values = metadata_group_colors) +
+                        xlab(paste(xaxis, " - ", exp_var_pc1)) +
+                        ylab(paste(yaxis, " - ", exp_var_pc2)) +
+                        theme_minimal(base_size = 14) +
+                        theme(legend.position = "right") +
+                        theme(legend.title = element_blank())
+
+    return(pca_plot)
+}
+
+```
+
+
+```{r plot_bi}
+# this function plots the PCA with biplots to look at the categories with strongest loadings
+plot_pca_bi <- function(df, pc1, pc2, metadata_group, columntitle) {
+    metadata_group_colors <- get(paste(metadata_group, "_colors", sep = ""))
+    metadata_group_shapes <- get(paste(metadata_group, "_shapes", sep = ""))
+   
+    arrow_pc <- enquo(columntitle)
+    
+    exp_var <- paste0(round(df$prop_expl_var$X * 100, 2), "%") # explained variance for x- and y-labels
+    
+    # select only the PCs from the PCA and add metadata
+    df_X <- df$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata, by = "Library_ID")
+    
+    metadata_group = df_X[[metadata_group]]
+    
+    corr_lam <- df$sdev[c("PC1", "PC2", "PC3")] * sqrt(nrow(df_X))
+
+    df_X <- df_X %>%
+      mutate(PC1 = PC1 / corr_lam[1],
+             PC2 = PC2 / corr_lam[2], 
+             PC3 = PC3 / corr_lam[3])
+
+    # select the correct PC column and explained variance for PC1
+    if (pc1 == 'PC1') {
+        Pc1 <- df_X$PC1
+        exp_var_pc1 <- exp_var[1]
+        xaxis <- c("PC1")
+    } else if (pc1 == 'PC2') {
+        Pc1 <- df_X$PC2
+        exp_var_pc1 <- exp_var[2]
+        xaxis <- c("PC2")
+    } else if (pc1 == 'PC3') {
+        Pc1 <- df_X$PC3
+        exp_var_pc1 <- exp_var[3]
+        xaxis <- c("PC3")
+   }
+    
+    # select the correct PC column and explained variance for PC2
+    if (pc2 == 'PC1') {
+        Pc2 <- df_X$PC1
+        exp_var_pc2 <- exp_var[1]
+        yaxis <- c("PC1")
+ } else if (pc2 == 'PC2') {
+       Pc2 <- df_X$PC2
+       exp_var_pc2 <- exp_var[2]
+       yaxis <- c("PC2")
+    } else if (pc2 == 'PC3') {
+       Pc2 <- df_X$PC3
+       exp_var_pc2 <- exp_var[3]
+       yaxis <- c("PC3")
+   }
+
+    # Identify the 10 GeneFamilys that have highest positive and negative loadings in the selected PC
+    pws_10 <- df$loadings$X %>%
+      as.data.frame(.) %>%
+      rownames_to_column(var = "Function") %>%
+      top_n(10, !!arrow_pc)
+
+    neg_10 <- df$loadings$X %>%
+      as.data.frame(.) %>%
+      rownames_to_column(var = "Function") %>%
+      top_n(-10, !!arrow_pc)
+
+
+    pca_plot_bi <- ggplot(df_X, aes(x = Pc1, y = Pc2)) +
+      geom_point(aes(shape = metadata_group, fill = metadata_group), size = 3.5, stroke = 0.3) +
+      geom_segment(data = pws_10,
+                   aes(xend = get(paste(pc1)), yend = get(paste(pc2))),
+                   x = 0, y = 0, colour = "black",
+                   size = 0.5,
+                   arrow = arrow(length = unit(0.03, "npc"))) +
+      geom_label_repel(data = pws_10,
+                   aes(x = get(paste(pc1)), y = get(paste(pc2)), label = Function),
+                   size = 2.5, colour = "grey20", label.padding = 0.2, max.overlaps = 12) +
+      geom_segment(data = neg_10,
+                   aes(xend = get(paste(pc1)), yend = get(paste(pc2))),
+                   x = 0, y = 0, colour = "grey50",
+                   size = 0.5,
+                   arrow = arrow(length = unit(0.03, "npc"))) +
+      geom_label_repel(data = neg_10,
+                   aes(x = get(paste(pc1)), y = get(paste(pc2)), label = Function),
+                   size = 2.5, colour = "grey20", label.padding = 0.2, max.overlaps = 12) +
+      labs(x = paste(xaxis, " - ", exp_var_pc1),
+           y = paste(yaxis, " - ", exp_var_pc2)) +
+      scale_fill_manual(values = metadata_group_colors) +
+      scale_shape_manual(values = metadata_group_shapes) +
+      theme_minimal() + theme(text = element_text(size = 14)) +
+      theme(legend.position = "right")
+
+    return(pca_plot_bi)
+}
+
+
+```
+
+```{r pca_plot_cont_fxn}
+# for continuous data
+plot_pca_cont <- function(df_pca, pc1, pc2, color_group, ncomps, title_text) {
+
+    exp_var <- paste0(round(df_pca$prop_expl_var$X * 100, 2), "%")
+    df_X <- df_pca$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata, by = "Library_ID")
+
+    color_group = df_X[[color_group]]
+
+    if (pc1 == 'PC1') {
+        pc1 <- df_X$PC1
+        exp_var_pc1 <- exp_var[1]
+        xaxis <- c("PC1")
+    }  else if (pc1 == 'PC2') {
+        pc1 <- df_X$PC2
+        exp_var_pc1 <- exp_var[2]
+        xaxis <- c("PC2")
+    } else if (pc1 == 'PC3') {
+        pc1 <- df_X$PC3
+        exp_var_pc1 <- exp_var[3]
+        xaxis <- c("PC3")
+    }
+
+    if (pc2 == 'PC1') {
+        pc2 <- df_X$PC1
+        exp_var_pc2 <- exp_var[1]
+        yaxis <- c("PC1")
+    }  else if (pc2 == 'PC2') {
+        pc2 <- df_X$PC2
+        exp_var_pc2 <- exp_var[2]
+        yaxis <- c("PC2")
+    } else if (pc2 == 'PC3') {
+        pc2 <- df_X$PC3
+        exp_var_pc2 <- exp_var[3]
+        yaxis <- c("PC3")
+    }
+
+    pca_plot <- ggplot(df_X, aes(x = pc1, y = pc2)) +
+      geom_point(aes(fill = color_group), size = 3.5, stroke = 0.3, shape = 21) +
+     scale_fill_viridis_c(option = "C") +
+     # scale_shape_manual(values = c(16, 16, 16, 16, 16,16,16,16)) +
+     # scale_shape_manual(values = c(16, 17, 15, 18, 14,9,13,24)) +
+    # stat_ellipse() +
+     xlab(paste(xaxis, " - ", exp_var_pc1)) +
+     ylab(paste(yaxis, " - ", exp_var_pc2)) +
+     theme_minimal(base_size = 16) +
+     theme(text = element_text(size=16)) +
+     theme(legend.title = element_blank(),
+           legend.key.size = unit(2,"mm"),
+           legend.text = element_text(size = 10)) + 
+     theme(legend.position = "right") +
+     ggtitle(title_text) + theme(plot.title = element_text(size = 10))
+
+    return(pca_plot)
+}
+
+```
+
+
+## Species
+```{r load_species_tables}
+
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  mutate(Study = "Pacific",
+         Continent = "Pacific",
+         Age_mean_log = log10(Age_mean)) %>%
+  mutate(Island = str_replace_all(Island, "Rapa_Nui", "Rapa Nui"),
+         Island = str_replace_all(Island, "Viti_Levu", "Viti levu"),
+         Island = str_replace_all(Island, "Efate_3000", "Efate 3000 BP"),
+         Island = str_replace_all(Island, "Taumako_Duff_Islands", "Taumako"))
+
+# read in the species table
+mpa3_raw <- fread("./05-Documentation.backup/mpa3_anc_params_pacific_abundance_table.tsv") %>%
+  select(-clade_taxid) %>%
+  select(-matches("01_S13"))
+
+# clean the file names
+colnames(mpa3_raw) <- gsub(".metaphlan.profile","", colnames(mpa3_raw))
+
+# filter to have only species
+mpa3_sp <- mpa3_raw %>% 
+  filter(str_detect(clade_name, "s__")) %>%
+  separate(clade_name, into = c("K","P","C","O","F","G","Species"), sep = "\\|") %>%
+  select(-c("K","P","C","O","F","G")) %>%
+  mutate(Species = str_replace_all(Species, "s__",""),
+         Species = str_replace_all(Species, "_"," ")) %>%
+  arrange(Species)
+
+# how many species per sample?
+mvm_species <- mpa3_sp %>%
+  select(-matches(cfdp_fail)) %>%
+  select(-matches("EXB|LIB")) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = ifelse(Counts > 0,1,0)) %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  adorn_totals(where = "col") %>%
+  select(Library_ID, Total) %>%
+  as_tibble() %>%
+  arrange(Total) %>%
+  full_join(., fread("./05-Documentation.backup/pe_all_table_species_counts.tsv"),  by = "Library_ID") %>%
+  drop_na(Total) %>%
+  full_join(., pacific_metadata, by = "Library_ID") %>%
+  filter(Type == "calculus") %>%
+  select(Library_ID, Total, no_species, Island, Lab, Age_mean, Lat, seq_len_avg, gc_avg, No_reads_no_human) %>%
+  drop_na(no_species) 
+
+island_counts <- mvm_species %>%
+  ggplot(., aes(x = Total, y = no_species)) + # Species
+         geom_point(aes(fill = Island), size = 2.0, stroke = 0.2, shape = 21) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_manual(values = Island_colors) +
+         scale_color_manual(values = Island_colors) +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         ylim(0,180) +
+         xlim(0,180) +
+         # scale_x_continuous(breaks=scales::pretty_breaks(n=10)) +
+         # scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 100, aes(label = ..rr.label..)) +
+         xlab("MetaPhlAn3 species counts") +
+         ylab("MALT species counts")
+island_counts
+
+ggsave("./06-publication/supplemental_figures/Sup_fig_XX8/island_counts.pdf", plot = island_counts, device = "pdf",
+       scale = 1, width = 5.5, height = 4.2, units = c("in"), dpi = 300)
+
+mvm_species %>%
+  ggplot(., aes(x = Total, y = no_species)) + # Species
+         geom_point(aes(fill = Lab), size = 2.0, stroke = 0.2, shape = 21) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_manual(values = Lab_colors) +
+         scale_color_manual(values = Lab_colors) +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 150, aes(label = ..rr.label..)) +
+         xlab("MetaPhlAn3 species counts") +
+         ylab("MALT species counts")
+
+mvm_species %>%
+  ggplot(., aes(x = Total, y = no_species)) + # Species
+         geom_point(aes(fill = Age_mean), size = 2.0, stroke = 0.2, shape = 21) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_viridis_c(option = "C") +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 40, aes(label = ..rr.label..)) +
+         xlab("MetaPhlAn3 species counts") +
+         ylab("MALT species counts")
+
+```
+
+
+```{r outliers}
+# remove failed samples and select only samples (not blanks or bones)
+# then remove all taxa that have no entry in the remaining sample table
+mpa3_species_pass <- mpa3_sp %>%
+  select(-matches(cfdp_fail)) %>%
+  # remove pca-based poor samples (plot w/blanks)
+  select(-matches(poor_samples %>% pull(Library_ID))) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  filter(str_detect(Library_ID, sample_list %>% str_c(collapse = "|"))) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  # remove all taxa that have no entries anymore
+  adorn_totals(where = "col") %>%
+  select(Total, everything()) %>%
+  filter(Total != 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts")
+
+```
+
+### MetaPhlAn3 species table PCA
+```{r mpa3_sp_plot}
+
+mpa3_sp_1 <- mpa3_species_pass %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.sp_unfilt_1_pca <- tune.pca(mpa3_sp_1, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+mpa3_sp_1.pca <- pca(mpa3_sp_1, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+unfilt_plot <- plot_pca(mpa3_sp_1.pca, "PC1", "PC2", "Lab", "Lab")
+unfilt_plot
+
+
+# top 20 genera separating samples along PC1? (10+, 10-)
+mpa3_sp_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Genus = rownames(mpa3_sp_1.pca$loadings$X)) %>%
+  select(Genus, PC1) %>%
+  arrange(PC1) %>%
+  slice_max(PC1, n = 10) %>%
+  bind_rows(., mpa3_sp_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Genus = rownames(mpa3_sp_1.pca$loadings$X)) %>%
+            select(Genus, PC1) %>%
+            arrange(PC1) %>%
+            slice_min(PC1, n = 10))
+
+mpa3_sp_1.pca$loadings$X %>%
+  as_tibble(.) %>%
+  mutate(Genus = rownames(mpa3_sp_1.pca$loadings$X)) %>%
+  select(Genus, PC2) %>%
+  arrange(PC2) %>%
+  slice_max(PC2, n = 10) %>%
+  bind_rows(., mpa3_sp_1.pca$loadings$X %>%
+            as_tibble(.) %>%
+            mutate(Genus = rownames(mpa3_sp_1.pca$loadings$X)) %>%
+            select(Genus, PC2) %>%
+            arrange(PC2) %>%
+            slice_min(PC2, n = 10))
+
+```
+
+```{r indiv_read_stats}
+# average sequence length
+plot_pca_cont(mpa3_sp_1.pca, "PC1", "PC2", "seq_len_avg", 3, "Avg. Read Length")
+
+# average gc content
+plot_pca_cont(mpa3_sp_1.pca, "PC1", "PC2", "gc_avg", 3, "Average GC (%)")
+
+# total number of reads
+plot_pca_cont(mpa3_sp_1.pca, "PC1", "PC2", "No_reads_no_human", 3, "Total Reads")
+
+# total number of reads
+plot_pca_cont(mpa3_sp_1.pca, "PC1", "PC2", "Age_mean", 3, "Mean Age (BP)")
+
+```
+
+
+Biplots
+```{r unfilt_biplot}
+# PC1
+sp_unfilt_1_pc1 <- plot_pca_bi(mpa3_sp_1.pca, "PC1", "PC2", "Lab", PC1)
+sp_unfilt_1_pc1
+
+# PC2
+sp_unfilt_1_pc2 <- plot_pca_bi(mpa3_sp_1.pca, "PC1", "PC2", "Lab", PC2)
+sp_unfilt_1_pc2
+
+```
+
+Put the plots together to easily compare
+```{r, eval = F}
+
+sp_plot <- unfilt_plot + sp_indiv_plot + sp_all_plot + sp_shared_plot + z_sp_indiv_plot  + 
+  plot_layout(nrow = 1)  + 
+  plot_layout(guides = "collect")
+sp_plot
+
+```
+
+
+
+
+
+

@@ -1,0 +1,185 @@
+---
+title: "MetaPhlAn3 with default and ancient parameters - output comparison"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output: github_document
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(janitor)
+library(data.table)
+library(tidyverse)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+```
+
+
+```{r load_metadata}
+
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  mutate(Study = "Pacific",
+         Continent = "Pacific",
+         Age_mean_log = log10(Age_mean)) %>%
+  mutate(Island = str_replace_all(Island, "Rapa_Nui", "Rapa Nui"),
+         Island = str_replace_all(Island, "Viti_Levu", "Viti levu"),
+         Island = str_replace_all(Island, "Efate_3000", "Efate 3000 BP"),
+         Island = str_replace_all(Island, "Taumako_Duff_Islands", "Taumako"))
+
+```
+
+Modern parameters run
+```{r modern_data}
+# read in the species table
+mpa3_raw <- fread("./05-Documentation.backup/mpa3_pacific_abundance_table.tsv") %>%
+  select(-NCBI_tax_id)
+
+# clean the file names
+colnames(mpa3_raw) <- gsub(".metaphlan3","", colnames(mpa3_raw))
+colnames(mpa3_raw) <- gsub(".SG1.1","", colnames(mpa3_raw))
+
+# filter to have only species
+mpa3_sp <- mpa3_raw %>% 
+  filter(str_detect(clade_name, "s__")) %>%
+  separate(clade_name, into = c("K","P","C","O","F","G","Species"), sep = "\\|") %>%
+  select(-c("K","P","C","O","F","G")) %>%
+  mutate(Species = str_replace_all(Species, "s__",""),
+         Species = str_replace_all(Species, "_"," ")) %>%
+  # remove sample with no information
+  select(-matches("HCLVMBCX2-3505-26-00-01_S26")) %>%
+  arrange(Species)
+
+
+mpa3_short <- mpa3_sp %>%
+  select(matches("Species|HCLVMBCX2"))
+
+```
+
+Ancient parameters run
+```{r ancient_data}
+# read in the species table
+mpa3_anc_params_raw <- fread("./05-Documentation.backup/mpa3_anc_params_pacific_abundance_table.tsv") %>%
+  select(-clade_taxid)
+
+# clean the file names
+colnames(mpa3_anc_params_raw) <- gsub(".metaphlan.profile","", colnames(mpa3_anc_params_raw))
+colnames(mpa3_anc_params_raw) <- gsub(".SG1.1","", colnames(mpa3_anc_params_raw))
+
+# filter to have only species
+mpa3_anc_params_sp <- mpa3_anc_params_raw %>% 
+  filter(str_detect(clade_name, "s__")) %>%
+  separate(clade_name, into = c("K","P","C","O","F","G","Species"), sep = "\\|") %>%
+  select(-c("K","P","C","O","F","G")) %>%
+  mutate(Species = str_replace_all(Species, "s__",""),
+         Species = str_replace_all(Species, "_"," ")) %>%
+  # remove sample with no information
+  select(-matches("HCLVMBCX2-3505-26-00-01_S26")) %>%
+  arrange(Species)
+
+mpa3_anc_params_short <- mpa3_anc_params_sp %>%
+  select(matches("Species|NMU"))
+
+
+```
+
+```{r}
+
+# how many species per sample?
+sp_counts <- mpa3_sp %>%
+  select(-matches("EXB|LIB")) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = ifelse(Counts > 0,1,0)) %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  adorn_totals(where = "col", name = "Modern") %>%
+  select(Library_ID, Modern) %>%
+  full_join(., mpa3_anc_params_sp %>%
+            select(-matches("EXB|LIB")) %>%
+            pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+            mutate(Counts = ifelse(Counts > 0,1,0)) %>%
+            pivot_wider(names_from = "Species", values_from = "Counts") %>%
+            adorn_totals(where = "col", name = "Ancient") %>%
+            select(Library_ID, Ancient), by = "Library_ID") %>%
+  as_tibble(.) %>%
+  arrange(Library_ID) 
+
+sp_counts
+
+# plot with before and after lines and connected dots on each
+mpa3_params_plot <-  sp_counts %>%
+  pivot_longer(!Library_ID, names_to = "Parameters", values_to = "Species") %>%
+  inner_join(., pacific_metadata, by = "Library_ID") %>%
+  mutate(Parameters = fct_relevel(Parameters, "Modern", "Ancient")) %>%
+  filter(!str_detect(Library_ID, "HPD|01_S13|01_S19|01_S32"),
+         !str_detect(Type, "bone")) %>%
+  ggplot(.) +
+         geom_point(aes(x = Parameters, y = Species, fill = Island), shape = 21, color = "black") +
+         geom_line(aes(x = Parameters, y = Species, group = Library_ID), linetype="dotted") +
+         theme_minimal(base_size = 14) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 12),
+               axis.text.y = element_text(size = 12)) +
+         scale_fill_manual(values = Island_colors) +
+         xlab("Parameters") +
+         ylab("No. species") +
+         facet_wrap(~Island, ncol = 5)
+
+mpa3_params_plot
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX8/mpa3_parameters.pdf", plot = mpa3_params_plot, device = "pdf",
+#        scale = 1, width = 9, height = 6, units = c("in"), dpi = 300)
+
+```
+
+
+
+
+Load metadata
+```{r load_metadata}
+
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  # this sample has no information so we'll remove it
+  filter(Library_ID != "HCLVMBCX2-3505-26-00-01_S26",
+         !str_detect(Library_ID, "ARS")) %>%
+  mutate(cuperdec_island = ifelse(Type == "blank","Blank",
+                                  ifelse(Type == "bone","Bone",Island)))
+# in metadata but not mpa3 table
+pacific_metadata %>%
+  select(Library_ID) %>%
+  anti_join(., mpa3_sp %>%
+              pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+              select(Library_ID) %>%
+              distinct())
+# in mpa3 table but not metadata
+mpa3_sp %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  select(Library_ID) %>%
+  distinct() %>%
+  anti_join(., pacific_metadata %>%
+              select(Library_ID), by = "Library_ID")
+
+```
+
+
+
+

@@ -1,0 +1,167 @@
+---
+title: "Middenbeemster, CMB calculus sample cumulative decay curves from nt MALT database"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output: github_document
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(janitor)
+library(cuperdec)
+library(data.table)
+library(magrittr) ## for pipes!
+library(dplyr) # for mutate()!
+library(tidyverse)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+Read in the full species and genus tables.
+```{r load_data}
+# read in the species table
+malt_raw <- fread("./05-Documentation.backup/eisenhoffer2020_malt_refseq_species.tsv") %>%
+  rename(Species = 1) %>%
+  full_join(., fread("./05-Documentation.backup/ottoni2021_malt_refseq_species.tsv") %>%
+              rename(Species = 1)) %>%
+  full_join(., fread("./05-Documentation.backup/mann2018_world_malt_refseq_comparison_species.tsv") %>%
+              rename(Species = 1)) %>%
+  full_join(., fread("./05-Documentation.backup/deep_evo_malt_refseq_comparison_species.tsv") %>%
+              rename(Species = 1))
+
+# clean the file names
+colnames(malt_raw) <- gsub(".unmapped","", colnames(malt_raw))
+
+# replace NA with 0
+malt_sp <- malt_raw %>% 
+  replace(is.na(.), 0) %>%
+  arrange(Species)
+
+```
+
+
+Load metadata
+```{r load_metadata}
+
+metadata_full <- fread("./05-Documentation.backup/eisenhoffer2020_ottoni2021_deepevo_mann2018w_metadata.tsv") %>%
+  # indicate blanks
+  mutate(Study = ifelse(str_detect(Sample_alias, "BLEX|EBC"),"Blank",Study))  %>%
+  mutate(Run_accession = ifelse(Study == "FellowsYates2021",Sample_alias,Run_accession))
+
+metadata <- metadata_full %>%
+  filter(!str_detect(Sample_group, "primate|modern"))
+
+# list the non-human primates and modern calculus to remove from the species table
+nhp <- metadata_full %>%
+  filter(str_detect(Sample_group, "primate|modern")) %>%
+  select(Sample_alias) %>%
+  pull()
+
+
+```
+
+
+Use the example database
+```{r set_database}
+# load the example database
+example_database <- system.file("extdata",
+                                "example_database.tsv",
+                                package = "cuperdec")
+
+# convert the example database to a tibble
+database <- load_database(example_database, target = "oral") # %>% print()
+
+```
+
+```{r taxatable}
+
+# remove non-human primates from the species table
+malt_sp_no_nhp <- malt_sp %>%
+  select(-matches(nhp))
+
+taxatable <- load_taxa_table(malt_sp_no_nhp) # %>% print()
+
+```
+
+```{r metamap}
+metadata_map <- load_map(metadata,
+                     sample_col = "Run_accession",
+                     source_col = "Study") # %>% print()
+
+```
+
+```{r simple_curve}
+curves <- calculate_curve(taxatable, database = database) %>%
+  print()
+
+plot_cuperdec(curves)
+
+
+curves %>%
+  filter(Sample == "CSD")
+
+
+```
+
+```{r metadata_curve}
+plot_cuperdec(curves, metadata_map)
+
+```
+
+```{r filter_curve}
+
+filter_result <- simple_filter(curves, percent_threshold = 40) # percent_threshold = 82 starts to color some of the CMC samples red
+
+plot_cuperdec(curves, metadata_map, filter_result, restrict_x = 150)
+
+```
+
+```{r hard_rank_burnin}
+
+rank_burnin_result <- hard_burnin_filter(curves, percent_threshold = 40, rank_burnin = 0.1) # 
+# plot_cuperdec(curves, metadata_map, rank_burnin_result)
+
+# restrict the plot to only the 1st 250 taxa
+cd_curve_plot <- plot_cuperdec(curves, metadata_map, rank_burnin_result, restrict_x = 150)
+cd_curve_plot
+
+# ggsave("~/Desktop/MID_cuperdec_rank7_pct50.pdf", plot = cd_curve_plot, device = "pdf",
+#        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
+
+```
+
+```{r adaptive_rank_burnin}
+
+adaptive_rank_burnin_result <- adaptive_burnin_filter(curves, percent_threshold = 40) 
+cd_curve_plot <- plot_cuperdec(curves, metadata_map, adaptive_rank_burnin_result, restrict_x = 150)
+cd_curve_plot
+
+
+# ggsave("./06-publication/supplemental_figures/Su_fig_XX2/SXX2_cuperdec_adaptive_world.png", plot = cd_curve_plot, device = "png",
+#        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
+
+```
+
+```{r discard_list, eval = F}
+# this will not have any CMC samples
+discard_list <- adaptive_rank_burnin_result %>% filter(!Passed) %>%
+  inner_join(., metadata %>% rename(Sample = Run_accession) %>% select(Sample, Sample_alias), by = "Sample") %>%
+  filter(!str_detect(Sample_alias, "EBC|BLEX")) %>% # these are blanks, dentin, or soil
+  select(Sample)
+discard_list
+
+# fwrite(discard_list, "../strep_clades/00-documentation/cuperdec_malt_ei_ot_de_poor_samples.tsv", sep = "\t", quote = F)
+
+# list the controls that passed to know which to remove before running decontam
+adaptive_rank_burnin_result %>% filter(Passed) %>%
+  filter(str_detect(Sample, "EXB|LIB|CSD|CSL|CSS|CSN"))
+
+```
+
+
+

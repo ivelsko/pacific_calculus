@@ -1,0 +1,396 @@
+---
+title: "Cameroon plaque stats analysis - Kraken RefSeq database w/ & w/o Pasolli MAGs"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(janitor)
+library(tidyverse)
+library(gplots)
+library(microshades)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r colors}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =  microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" = microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+Study_colors <- c("Pacific" = "#098BD9", 
+                  "Middenbeemster" = "#7472af", 
+                  "Radcliffe" = "#cc79a7", 
+                  "Kilteasheen" = "#f6865e", 
+                  "Iberia" = "#1ec1a7")
+
+
+```
+
+```{r}
+# load the metadata file
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv")
+
+```
+
+```{r}
+# list all bones that are part of this study
+# the ARS bones are a little different in the PCA, so we won't use them
+bones <- pacific_metadata %>%
+  filter(Type == "bone") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(!str_detect(Library_ID, "ARS|HPD"))
+
+# list all samples and blanks from Otago
+otago <- pacific_metadata %>%
+  filter(Lab == "Otago") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  arrange(Library_ID) %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all sampmles and blanks from Oklahoma
+oklahoma <- pacific_metadata %>%
+  filter(Lab == "Oklahoma") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Type != "bone") %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all samples and blanks from Jena
+jena <- pacific_metadata %>%
+  filter(Lab == "Jena") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Type != "bone") %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all samples to include
+sample_list <- c(otago,oklahoma,jena)
+
+```
+
+```{r poorly_preserved}
+cfdp_fail <- fread("05-Documentation.backup/cfdp_fail_samples_20210413.txt") %>%
+  rename(Library_ID = 1) %>%
+  pull(Library_ID)
+
+```
+
+
+Load data files 
+```{r load_data}
+rs_readstats <- fread("./05-Documentation.backup/rs_reads_stats.tsv", sep = "\t") %>%
+  rename(sample = 1,
+         total = 2,
+         classified = 3,
+         unclassified = 4) %>%
+  mutate(sample = str_replace_all(sample, "Job 0: Run ","")) %>%
+  separate(sample, into = c("Library_ID"), sep = " ", extra = "drop") %>%
+  mutate(Library_ID = str_replace_all(Library_ID, ".SG1.1","")) %>%
+  separate(total, into = c("Total"), sep = " ", extra = "drop") %>%
+  mutate(Total = as.numeric(Total)) %>%
+  separate(classified, into = c("Classified"), sep = " ", extra = "drop") %>%
+  mutate(Classified = as.numeric(Classified)) %>%
+  separate(unclassified, into = c("Unclassified"), sep = " ", extra = "drop") %>%
+  mutate(Unclassified = as.numeric(Unclassified)) %>%
+  arrange(Library_ID)
+
+rspm_readstats <- fread("./05-Documentation.backup/rspm_reads_stats.tsv", sep = "\t") %>%
+  rename(sample = 1,
+         total = 2,
+         classified = 3,
+         unclassified = 4) %>%
+  mutate(sample = str_replace_all(sample, "Job 0: Run ","")) %>%
+  separate(sample, into = c("Library_ID"), sep = " ", extra = "drop") %>%
+  mutate(Library_ID = str_replace_all(Library_ID, ".SG1.1","")) %>%
+  separate(total, into = c("Total"), sep = " ", extra = "drop") %>%
+  mutate(Total = as.numeric(Total)) %>%
+  separate(classified, into = c("Classified"), sep = " ", extra = "drop") %>%
+  mutate(Classified = as.numeric(Classified)) %>%
+  separate(unclassified, into = c("Unclassified"), sep = " ", extra = "drop") %>%
+  mutate(Unclassified = as.numeric(Unclassified)) %>%
+  arrange(Library_ID)
+
+```
+
+```{r}
+# merge the tables into 1
+kraken_readstats <- rs_readstats %>%
+  mutate(Percent_classified = Classified / Total *100) %>%
+  pivot_longer(!Library_ID, names_to = "Classification", values_to = "Counts") %>%
+  mutate(DB = "RefSeqOnly") %>%
+  bind_rows(., rspm_readstats %>%
+            mutate(Percent_classified = Classified / Total *100) %>%
+            select(Library_ID, Classified, Unclassified, Percent_classified) %>%
+            pivot_longer(!Library_ID, names_to = "Classification", values_to = "Counts") %>%
+            mutate(DB = "RefSeqPasolliMAGs")) %>%
+  inner_join(., pacific_metadata, by = "Library_ID")
+
+
+# Kraken_db_colors
+
+```
+
+
+
+```{r plot_data}
+RSPM_kraken_compare <- kraken_readstats %>%
+  filter(Classification == "Percent_classified") %>%
+  filter(str_detect(Library_ID, sample_list %>% str_c(collapse = "|"))) %>%
+  filter(!str_detect(Library_ID, cfdp_fail %>% str_c(collapse = "|"))) %>%
+  ggplot(., aes(x = Lab, y = Counts, fill = DB)) +
+    geom_boxplot() +
+    geom_point(alpha = 0.5, size = 0.5, position=position_jitterdodge(dodge.width = 0.75, jitter.width = 0.1)) +
+    # geom_jitter(size = 0.5, alpha = 0.5, width = 0.4) +
+    # scale_fill_manual(values = Kraken_db_colors) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    xlab("Village") +
+    ylab("Percent of reads classified")
+
+RSPM_kraken_compare
+
+ggsave("./06-publication/supplemental_figures/Sup_fig_XX3/kraken_rspm_compare.pdf", plot = RSPM_kraken_compare, device = "pdf",
+       scale = 1, width = 4, height = 3, units = c("in"), dpi = 300)
+
+```
+
+```{r}
+
+kraken_readstats %>%
+  filter(Classification == "Percent_classified") %>%
+  filter(str_detect(Library_ID, sample_list %>% str_c(collapse = "|"))) %>%
+  filter(!str_detect(Library_ID, cfdp_fail %>% str_c(collapse = "|"))) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, sample_list)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x = Library_ID, y = Counts, color = DB)) +
+    geom_point() +
+    # geom_point(alpha = 0.5, size = 0.5, position=position_jitterdodge(dodge.width = 0.75, jitter.width = 0.1)) +
+    # geom_jitter(size = 0.5, alpha = 0.5, width = 0.4) +
+    # scale_fill_manual(values = Kraken_db_colors) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    xlab("Village") +
+    ylab("Percent of reads classified")
+
+```
+
+```{r}
+
+kraken_readstats %>%
+  filter(Classification == "Percent_classified") %>%
+  select(Library_ID, Counts, DB) %>%
+  rename(Pct_classified = Counts) %>%
+  pivot_wider(names_from = "DB", values_from = "Pct_classified") %>%
+  filter(str_detect(Library_ID, sample_list %>% str_c(collapse = "|"))) %>%
+  filter(!str_detect(Library_ID, cfdp_fail %>% str_c(collapse = "|"))) %>%
+  mutate(fold_change = gtools::foldchange(RefSeqPasolliMAGs, RefSeqOnly),
+         log_fold_change = gtools::foldchange2logratio(fold_change, base = 2)) %>%
+  left_join(., pacific_metadata) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, sample_list)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x = Library_ID, y = log_fold_change, fill = Lab)) +
+    geom_bar(stat = "identity", color = "black", size = 0.2) +
+    # geom_point(alpha = 0.5, size = 0.5, position=position_jitterdodge(dodge.width = 0.75, jitter.width = 0.1)) +
+    # geom_jitter(size = 0.5, alpha = 0.5, width = 0.4) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    xlab("Library ID") +
+    ylab("Log(Fold-change)")
+
+```
+
+
+```{r assignment_rl}
+
+percent_rl <- kraken_readstats %>%
+  filter(Classification == "Percent_classified") %>%
+  select(Library_ID, Counts, DB, gc_avg, seq_len_avg, Lab) %>%
+  rename(Pct_classified = Counts) %>%
+  filter(str_detect(Library_ID, sample_list %>% str_c(collapse = "|"))) %>%
+  filter(!str_detect(Library_ID, cfdp_fail %>% str_c(collapse = "|"))) %>%
+  ggplot(., aes(x = Pct_classified, y = seq_len_avg, color = Lab, shape = DB)) +
+    geom_point() +
+    theme_minimal(base_size = 14) +
+    scale_color_manual(values = Lab_colors) +
+    theme(axis.text.x = element_text(hjust = 1)) +
+    xlab("Classified reads (%)") +
+    ylab("Mean read length (bp)")
+percent_rl
+
+ ggsave("./06-publication/supplemental_figures/Sup_fig_XX3/percent_rl.pdf", plot = percent_rl, device = "pdf",
+       scale = 1, width = 7, height = 3, units = c("in"), dpi = 300)
+
+```
+
+```{r assignment_gc}
+
+kraken_readstats %>%
+  filter(Classification == "Percent_classified") %>%
+  select(Library_ID, Counts, DB, gc_avg, seq_len_avg, Lab) %>%
+  rename(Pct_classified = Counts) %>%
+  filter(str_detect(Library_ID, sample_list %>% str_c(collapse = "|"))) %>%
+  filter(!str_detect(Library_ID, cfdp_fail %>% str_c(collapse = "|"))) %>%
+  ggplot(., aes(x = Pct_classified, y = gc_avg, color = Lab, shape = DB)) +
+    geom_point() +
+    theme_minimal(base_size = 14) +
+    scale_color_manual(values = Lab_colors) +
+    theme(axis.text.x = element_text(hjust = 1)) +
+    xlab("Classified reads (%)") +
+    ylab("Mean GC content (%)")
+  
+```
+
+
+```{r}
+
+ton004_cl <- fread("~/archgen/microbiome_calculus/pacific_calculus/04-Analysis/kraken2/output/TON004.B0101.kraken2.output.rs.classified.tsv") %>%
+  rename(Counts = 1,
+         Length = 2) %>%
+  mutate(Status = "Classified")
+
+ton004_uncl <- fread("~/archgen/microbiome_calculus/pacific_calculus/04-Analysis/kraken2/output/TON004.B0101.kraken2.output.rs.unclassified.tsv") %>%
+  rename(Counts = 1,
+         Length = 2) %>%
+  mutate(Status = "Unclassified")
+
+sig034_cl <- fread("~/archgen/microbiome_calculus/pacific_calculus/04-Analysis/kraken2/output/SIG034.A0101.kraken2.output.rs.classified.tsv") %>%
+  rename(Counts = 1,
+         Length = 2) %>%
+  mutate(Status = "Classified")
+
+sig034_uncl <- fread("~/archgen/microbiome_calculus/pacific_calculus/04-Analysis/kraken2/output/SIG034.A0101.kraken2.output.rs.unclassified.tsv") %>%
+  rename(Counts = 1,
+         Length = 2) %>%
+  mutate(Status = "Unclassified")
+
+```
+
+```{r}
+
+ton004_cl %>%
+  bind_rows(., ton004_uncl) %>%
+  group_by(Length) %>%
+  summarize(tot = sum(Counts)) %>%
+  ungroup() %>%
+  full_join(., ton004_cl %>%
+            bind_rows(., ton004_uncl))  %>%
+  mutate(pct = Counts / tot * 100) %>%
+  arrange(Length) %>%
+  ggplot(., aes(x = Length, y = pct, fill = Status)) +
+    geom_bar(stat = "identity", color = "black", size = 0.2) +
+    # scale_fill_manual(values = Lab_colors) +
+    theme_minimal(base_size = 14) +
+    theme(axis.text.x = element_text(vjust = 0.5, hjust = 1)) +
+    xlab("Length (bp)") +
+    ylab("% of reads") +
+    ggtitle("TON004.B0101")
+
+sig034_cl %>%
+  bind_rows(., sig034_uncl) %>%
+  group_by(Length) %>%
+  summarize(tot = sum(Counts)) %>%
+  ungroup() %>%
+  full_join(., sig034_cl %>%
+            bind_rows(., sig034_uncl))  %>%
+  mutate(pct = Counts / tot * 100) %>%
+  arrange(Length) %>%
+  ggplot(., aes(x = Length, y = pct, fill = Status)) +
+    geom_bar(stat = "identity", color = "black", size = 0.2) +
+    # scale_fill_manual(values = Lab_colors) +
+    theme_minimal(base_size = 14) +
+    theme(axis.text.x = element_text(vjust = 0.5, hjust = 1)) +
+    xlab("Length (bp)") +
+    ylab("% of reads") +
+    ggtitle("SIG034.A0101")
+
+
+```
+
+
+```{r}
+
+ton004_cl %>%
+  bind_rows(., ton004_uncl) %>%
+  group_by(Length) %>%
+  summarize(tot = sum(Counts)) %>%
+  ungroup() %>%
+  full_join(., ton004_cl %>%
+            bind_rows(., ton004_uncl))  %>%
+  mutate(pct = Counts / tot * 100) %>%
+  arrange(Length) %>%
+  ggplot(., aes(x = Length, y = Counts, fill = Status)) +
+    geom_bar(stat = "identity", color = "black", size = 0.2) +
+    # scale_fill_manual(values = Lab_colors) +
+    theme_minimal(base_size = 14) +
+    xlab("Length (bp)") +
+    ylab("No. reads") +
+    ggtitle("TON004.B0101")
+
+sig034_cl %>%
+  bind_rows(., sig034_uncl) %>%
+  group_by(Length) %>%
+  summarize(tot = sum(Counts)) %>%
+  ungroup() %>%
+  full_join(., sig034_cl %>%
+            bind_rows(., sig034_uncl))  %>%
+  mutate(pct = Counts / tot * 100) %>%
+  arrange(Length) %>%
+  ggplot(., aes(x = Length, y = Counts, fill = Status)) +
+    geom_bar(stat = "identity", color = "black", size = 0.2) +
+    # scale_fill_manual(values = Lab_colors) +
+    theme_minimal(base_size = 14) +
+    xlab("Length (bp)") +
+    ylab("No. reads") +
+    ggtitle("SIG034.A0101")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

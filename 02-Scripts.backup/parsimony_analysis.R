@@ -1,0 +1,47 @@
+##############################################################################
+# Overview over the three most important heuristics to perform maximum
+# parsimony analysis
+#
+# written by Alexander Huebner, 02/09/15
+# modified by Irina Velsko, 28/03/2023
+##############################################################################
+
+# Load required library
+library(ape)
+library(phangorn)
+
+# set working directory
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+
+# Read FastA file
+fasta <- read.FASTA("./05-Documentation.backup/subset_abot439_snpAlignment.fasta")
+fasta.phyDat  <- as.phyDat(fasta) # convert to phangorn data type
+
+##############################################################################
+# Heuristics
+##############################################################################
+
+# Branch and bound
+tree.bab <- bab(fasta.phyDat) # more information ?bab
+
+# Gene distance plus tree arrangements
+dist.matrix <- ape::dist.dna(fasta, model = "F84",  pairwise.deletion = T) # Calculate distance matrix
+njtree <- nj(dist.matrix) # Calculate NJ tree
+parsimony(njtree, fasta.phyDat) # Determine the tree length of NJ tree
+tree.optim <- optim.parsimony(njtree, fasta.phyDat) # more settings: weight matrix, algorithm
+
+# Parsimony Ratchet
+tree.pratchet <- pratchet(fasta.phyDat, maxit=100, k=10, rearrangements="SPR")
+
+##############################################################################
+# After analysis
+##############################################################################
+# Root tree
+tree.pratchet <- root(tree.pratchet, match("SampleA", tree.pratchet$tip.label), resolve.root=T)
+# Annotate with number of mutations per branch
+tree.pratchet <- acctran(tree.pratchet, fasta.phyDat)
+# Plot tree
+plot(tree.pratchet)
+edgelabels(tree.pratchet$edge.length)
+# Write tree to file
+write.tree(tree.pratchet, file="output.tree")

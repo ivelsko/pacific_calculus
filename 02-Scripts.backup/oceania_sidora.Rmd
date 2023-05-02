@@ -1,0 +1,101 @@
+---
+title: "Pacific calculus sidora stuff"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+```{r install}
+if(!require('remotes')) install.packages('remotes')
+remotes::install_github("sidora-tools/sidora.core")
+
+```
+
+```{r, load_libraries, message = F}
+library(data.table)
+library(sidora.core)
+library(tidyverse)
+
+```
+
+Need to set up tunnel with ssh -L 10001:pandora.eva.mpg.de:3306 irina_marie_velsko@daghead1
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r db_connection}
+# establish database connection
+con <- get_pandora_connection(cred_file = "~/.credentials")
+
+```
+
+```{r get_data}
+# use shorthand to get a list of data.frames
+df_list_all <- get_df_list(c(
+  make_complete_table_list(c("TAB_Site", "TAB_Sequencing"))
+), con = con)
+
+jt_all <- join_pandora_tables(df_list_all)
+
+jt_all <- jt_all %>% convert_all_ids_to_values(., con)
+
+```
+
+```{r}
+# read in the metadata file for which we want the DNA molecule counts
+metadta <- fread("./05-Documentation.backup/oceana_metadata_merged.tsv")
+
+libraries <- metadata %>%
+  select(Library_ID)
+
+```
+
+
+```{r}
+# save the file with the DNA molecules per library information, then move it to 05-Documentation.backup
+jt_all %>%
+  select(library.Full_Library_Id, `library.Quantification_post-Indexing_total`) %>%
+  distinct() %>%
+  rename(Library_ID = 1,
+         DNA_conc = 2) %>%
+  inner_join(., libraries) %>%
+  full_join(., metadata) %>%
+  arrange(Library_ID) %>%
+  fwrite("../strep_clades/00-documentation/oceania_metadata_full.tsv", quote = F, sep = "\t")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

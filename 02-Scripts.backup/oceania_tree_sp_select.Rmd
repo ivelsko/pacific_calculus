@@ -1,0 +1,145 @@
+---
+title: "Selection of species for phylogenetic trees for Pacific calculus project"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(janitor)
+library(tidyverse)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r malt_refseq_table}
+
+malt_rs <- fread("./05-Documentation.backup/oceania_malt_cRefSeq_summarized_species_20201105.txt", sep = "\t") %>%
+  rename(Species = `#Datasets`) %>%
+  # remove blanks
+  select(-c("HCLVMBCX2-3505-13-00-01_S13.unmapped","HCLVMBCX2-3505-19-00-01_S19.unmapped","HCLVMBCX2-3505-32-00-01_S32.unmapped")) # HCLVMBCX2-3505-32-00-01_S32
+
+colnames(malt_rs) <- gsub(".unmapped","", colnames(malt_rs))
+
+```
+
+```{r poor_samples}
+
+poor_samples <- fread("./05-Documentation.backup/cfdp_fail_samples_20210413.txt") %>%
+  pull(Sample)
+
+```
+
+```{r}
+
+malt_rs <- malt_rs %>%
+  select(-matches(poor_samples))
+
+```
+
+```{r abundance}
+
+malt_rs %>%
+  adorn_totals(where = "col") %>%
+  arrange(desc(Total)) %>%
+  top_n(20) %>%
+  as.tibble(.)
+
+top_abund <- malt_rs %>%
+  adorn_totals(where = "col") %>%
+  arrange(desc(Total)) %>%
+  top_n(20) %>%
+  as.tibble(.) %>%
+  select(Species)
+
+```
+
+```{r prevalence}
+
+malt_rs %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = ifelse(Counts == 0, 0, 1)) %>%
+  pivot_wider(Species, names_from = "Library_ID", values_from = "Counts") %>%
+  adorn_totals(where = "col") %>%
+  arrange(desc(Total)) %>%
+  top_n(20) %>%
+  as.tibble(.) %>%
+  select(Species, Total)
+
+top_prev <- malt_rs %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = ifelse(Counts == 0, 0, 1)) %>%
+  pivot_wider(Species, names_from = "Library_ID", values_from = "Counts") %>%
+  adorn_totals(where = "col") %>%
+  arrange(desc(Total)) %>%
+  top_n(20) %>%
+  as.tibble(.) %>%
+  select(Species, Total)
+
+```
+
+```{r}
+
+top10 <- top_abund %>%
+  inner_join(., top_prev)
+
+top10v <- top_abund %>%
+  inner_join(., top_prev) %>%
+  pull(Species)
+
+
+```
+
+```{r}
+malt_rs %>%
+  adorn_totals(where = "col") %>%
+  arrange(desc(Total)) %>%
+  top_n(20) %>%
+  as.tibble(.) %>%
+  filter(Species %in% top10v)
+
+
+
+```
+
+Number of genomes in NCBI Genome:
+Abot439 - 1 complete
+-Eubacterium minutum - 1 chromosome
+Actinomyces dentalis - 1 scaffold
+-Desulfobulbus oralis - 1 complete
+Olsenella sp. oral taxon 807 - 1 complete
+Tannerella forsythia - 3 complete
+-Peptostreptococcaceae bacterium oral taxon 113 - 1 scaffold
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

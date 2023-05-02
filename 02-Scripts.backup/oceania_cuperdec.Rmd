@@ -1,0 +1,209 @@
+---
+title: "Pacific calculus sample cumulative decay curves from nt MALT database"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output: github_document
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(janitor)
+library(cuperdec)
+library(data.table)
+library(magrittr) ## for pipes!
+library(dplyr) # for mutate()!
+library(tidyverse)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r}
+source_table <- fread("./05-Documentation.backup/oceania_malt_cRefSeq_summarized_species_20201105.txt") %>%
+  rename(Species = 1) %>%
+  full_join(., fread("./05-Documentation.backup/sources_MALT_cRefSeq_JFY_species_summarized.txt") %>%
+              rename(Species = 1) %>%
+              select(matches("Species|SRR|ERR|ARS")) %>%
+              select(-matches("SRR059425|SRR1761692|SRR1761697|SRR1761710|SRR1761718")), by = "Species") %>%
+  full_join(., fread("./05-Documentation.backup/oceania_malt_blanks_cRefSeq_species_summarized_20201130.txt") %>%
+              rename(Species = 1), by = "Species") %>%
+  full_join(., fread("./05-Documentation.backup/oceania_malt_bones_cRefSeq_species_summarized_20201202.txt") %>%
+              rename(Species = 1), by = "Species") %>%
+   full_join(., fread("./05-Documentation.backup/deep_evo_malt_refseq_comparison_species.tsv") %>%
+              rename(Species = 1) %>%
+              select(matches("Species|JAE006|JAE007|JAE008|JAE009|JAE012|VLC001|VLC002|VLC003|VLC004|VLC005")), by = "Species") %>%
+ filter(!str_detect(Species, "Homo")) %>%
+  # remove HPD samples 
+  select(-matches("HPD"))
+
+# clean the file names
+colnames(source_table) <- gsub("MeganServer::", "", colnames(source_table)) 
+colnames(source_table) <- gsub(".unmapped", "", colnames(source_table)) 
+colnames(source_table) <- gsub(".SG1.1", "", colnames(source_table)) 
+colnames(source_table) <- gsub(".SG1.2", "", colnames(source_table)) 
+colnames(source_table) <- gsub("_L001_R1_001.fastq.combined.fq.prefixed.extractunmapped.bam", "", colnames(source_table)) 
+colnames(source_table) <- gsub("_S0_L000_R1_000.fastq.merged.prefixed.hg19unmapped", "", colnames(source_table)) 
+colnames(source_table) <- gsub("_S0_L001_R1_001.fastq.truncated.prefixed.extractunmapped.bam", "", colnames(source_table)) 
+colnames(source_table) <- gsub("_S0_L001_R1_000.fastq.merged.prefixed.hg1", "", colnames(source_table)) 
+colnames(source_table) <- gsub("_S0_L000_R1_000.fastq.merged.prefixed.hg1", "", colnames(source_table)) 
+colnames(source_table) <- gsub(".SG1.2_S0_L003_R1_001.fastq.combined.fq.prefixed.extrac.bam", "", colnames(source_table))  
+colnames(source_table) <- gsub("_S0_L003_R1_001.fastq.combined.fq.prefixed.extrac.bam", "", colnames(source_table)) 
+
+# replace all NA with 0
+source_table <- source_table %>% 
+  replace(is.na(.), 0) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  arrange(Library_ID) %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts")
+
+```
+
+
+Load metadata
+```{r load_metadata}
+
+mapfile <- fread("./05-Documentation.backup/source_tracker_mappingfile_20220722.tsv") %>%
+  rename(Library_ID = 1) %>%
+  arrange(Library_ID) %>%
+  filter(!str_detect(Library_ID, "SRR059454|SRR513449")) %>%
+  # mutate_all(na_if,"") %>%
+  replace(is.na(.), "NA")
+
+# now get the rest of the metadata from the pacific metadata table
+mapfile <- mapfile %>%
+  full_join(., fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+              select(Library_ID, Island, Lab)) %>%
+  filter(!str_detect(Library_ID, "HPD")) %>%
+  mutate_all(na_if,"") %>%
+  mutate(Env = ifelse(is.na(Env),"Blank",Env),
+         Island = ifelse(is.na(Island),Env,Island)) %>%
+  mutate(Island = ifelse(str_detect(Library_ID, "NMU|SIG") & Env == "archBone","archBone",Island)) %>%
+# make Island a factor for plotting
+  mutate(Island = fct_relevel(Island, "Efate","Efate_3000","Flores","Futuna","Raiatea","Rapa_Nui","Rurutu","Taumako_Duff_Islands","Tongatapu","Uripiv","Vao","Viti_Levu","Watom","modernCalculus", "subPlaque", "supPlaque", "urbanGut",  "ruralGut", "skin", "sediment", "archBone"))
+
+```
+
+
+# Species-level
+Use the example database
+```{r set_database}
+# load the example database
+example_database <- system.file("extdata",
+                                "example_database.tsv",
+                                package = "cuperdec")
+
+# convert the example database to a tibble
+database <- load_database(example_database, target = "oral") # %>% print()
+
+```
+
+```{r taxatable}
+
+taxatable <- load_taxa_table(source_table) # %>% print()
+
+```
+
+```{r metamap}
+metadata_map <- load_map(mapfile,
+                     sample_col = "Library_ID",
+                     source_col = "Island") # %>% print()
+
+```
+
+```{r simple_curve}
+curves <- calculate_curve(taxatable, database = database) %>%
+  print()
+
+plot_cuperdec(curves)
+
+
+curves %>%
+  filter(Sample == "CSD")
+
+
+```
+
+```{r metadata_curve}
+plot_cuperdec(curves, metadata_map)
+
+```
+
+```{r filter_curve}
+
+filter_result <- simple_filter(curves, percent_threshold = 63) # percent_threshold = 82 starts to color some of the CMC samples red
+
+plot_cuperdec(curves, metadata_map, filter_result, restrict_x = 250)
+
+```
+
+```{r hard_rank_burnin}
+
+rank_burnin_result <- hard_burnin_filter(curves, percent_threshold = 53, rank_burnin = 0.1) # percent_threshold = 50, rank_burnin = 0.7 allows only the highest ExtractionBlank line to turn turquoise, and the 2 library samples that really look like samples stay turquoise
+# plot_cuperdec(curves, metadata_map, rank_burnin_result)
+
+# restrict the plot to only the 1st 250 taxa
+cd_curve_plot <- plot_cuperdec(curves, metadata_map, rank_burnin_result, restrict_x = 250)
+cd_curve_plot
+
+# ggsave("~/Desktop/MID_cuperdec_rank7_pct50.pdf", plot = cd_curve_plot, device = "pdf",
+#        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
+
+```
+
+```{r adaptive_rank_burnin}
+
+adaptive_rank_burnin_result <- adaptive_burnin_filter(curves, percent_threshold = 50)
+cd_curve_plot <- plot_cuperdec(curves, metadata_map, adaptive_rank_burnin_result, restrict_x = 350)
+cd_curve_plot
+
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX1/cuperdec_species_pacific.pdf", plot = cd_curve_plot, device = "pdf",
+#        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX1/cuperdec_species_pacific.png", plot = cd_curve_plot, device = "png",
+#        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
+
+```
+
+```{r discard_list, eval = F}
+# this will not have any CMC samples
+discard_list <- adaptive_rank_burnin_result %>% filter(!Passed) %>%
+  left_join(., mapfile %>% rename(Sample = 1)) %>%
+  filter(!str_detect(Island, "Calculus|Plaque|Gut|skin|sediment|Bone|Blank")) %>% # these are blanks, sources, or soil
+  select(Sample)
+discard_list
+
+# fwrite(discard_list, "../strep_clades/00-documentation/oceania_cuperdec_species_poor_samples.tsv", sep = "\t", quote = F)
+
+# list the controls that passed to know which to remove before running decontam
+adaptive_rank_burnin_result %>% filter(Passed) %>%
+  filter(str_detect(Sample, "EXB|LIB|CSD|CSL|CSS|CSN"))
+
+
+keep_list <- adaptive_rank_burnin_result %>% filter(Passed) %>%
+  left_join(., mapfile %>% rename(Sample = 1)) %>%
+  filter(!str_detect(Island, "Calculus|Plaque|Gut|skin|sediment|Bone|Blank")) %>% # these are blanks, sources, or soil
+  select(Sample)
+keep_list
+
+fwrite(keep_list, "~/Desktop/pacific_preserved_good.tsv", quote = F, sep = "\t")
+```
+
+```{r}
+discard_list %>% mutate(Preserved = "No") %>%
+  full_join(., mapfile %>% rename(Sample = Library_ID), by = "Sample") %>%
+  filter(Env == "calculus") %>%
+  mutate(Preserved = ifelse(is.na(Preserved),"Yes",Preserved)) %>%
+  # filter(Island == "Viti_Levu") %>% arrange(Lab)
+  group_by(Island,Preserved) %>%
+  count()
+
+
+
+```
+
+

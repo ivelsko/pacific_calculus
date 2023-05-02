@@ -1,0 +1,408 @@
+---
+title: "Pacific calculus polymut score compare Abot439 and Tf"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(janitor)
+library(tidyverse)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+
+Load metadata
+```{r metadata}
+metadata_full <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  full_join(., fread("./05-Documentation.backup/oceana_climate.tsv"))
+
+```
+
+```{r colors}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades::microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =  microshades::microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" = microshades::microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+
+```
+
+```{r}
+# read in metadata for adding later
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  select(Library_ID, Lab, Island, Type, Age_mean, Lat) %>%
+  mutate(Study = "Pacific",
+         Age_mean_log = log10(Age_mean),
+         Island = str_replace_all(Island, "Efate_3000", "Efate 3000 BP"),
+         Island = str_replace_all(Island, "Rapa_Nui", "Rapa Nui"),
+         Island = str_replace_all(Island, "Viti_Levu", "Viti Levu"),
+         Island = str_replace_all(Island, "Taumako_Duff_Islands", "Taumako")) %>%
+  drop_na(Age_mean)
+
+```
+
+```{r poorly_preserved}
+cfdp_fail <- fread("05-Documentation.backup/cfdp_fail_samples_20210413.txt") %>%
+  rename(Library_ID = 1)
+
+```
+
+```{r}
+# list all samples to include
+sample_list <- metadata_full %>%
+  anti_join(., cfdp_fail) %>%
+  # remove the blank
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  filter(Type == "calculus",
+         !str_detect(Library_ID, "HPD")) %>%
+  select(Library_ID)
+  
+```
+
+
+```{r}
+# compare the # of sites looked at between Tf and Abot439
+abot_439_Tf <- fread("./05-Documentation.backup/masked_Tf_polymut_out.tsv", header = F, col.names = c("Library_ID", "Scores")) %>%
+  separate(Scores, into = c("Non_synonymous", "Synonymous",  "Total_sites"), sep = " ") %>%
+  # convert to numeric columns
+  mutate(Non_synonymous = as.numeric(Non_synonymous),
+         Synonymous = as.numeric(Synonymous),
+         Total_sites = as.numeric(Total_sites)) %>%
+  mutate(dN_dS = Non_synonymous / Synonymous,
+         Total_snps = Non_synonymous + Synonymous) %>%
+  pivot_longer(!Library_ID, names_to = "Sites", values_to = "Counts") %>%
+  mutate(Species = "Tf") %>%
+  bind_rows(., fread("./05-Documentation.backup/masked_abot439_polymut_out.tsv") %>%
+            rename(Library_ID = 1,
+                   Scores = 2) %>%
+            separate(Scores, into = c("Non_synonymous", "Synonymous",  "Total_sites"), sep = " ") %>%
+            # convert to numeric columns
+            mutate(Non_synonymous = as.numeric(Non_synonymous),
+                   Synonymous = as.numeric(Synonymous),
+                   Total_sites = as.numeric(Total_sites)) %>%
+            mutate(dN_dS = Non_synonymous / Synonymous,
+                   Total_snps = Non_synonymous + Synonymous) %>%
+            pivot_longer(!Library_ID, names_to = "Sites", values_to = "Counts") %>%
+            mutate(Species = "Abot439")) 
+
+```
+
+```{r masked_bam_polymut}
+# read in the aboto439 table
+masked_abot439_polymut <- fread("./05-Documentation.backup/masked_abot439_polymut_out.tsv", header = F, col.names = c("Library_ID", "Scores")) %>%
+  separate(Scores, into = c("Non_synonymous", "Synonymous",  "Total_sites"), sep = " ") %>%
+  # convert to numeric columns
+  mutate(Non_synonymous = as.numeric(Non_synonymous),
+         Synonymous = as.numeric(Synonymous),
+         Total_sites = as.numeric(Total_sites)) %>%
+  mutate(dN_dS = Non_synonymous / Synonymous,
+         Total_snps = Non_synonymous + Synonymous)
+
+
+# read in the Tf table
+masked_Tf_polymut <- fread("./05-Documentation.backup/masked_Tf_polymut_out.tsv", header = F, col.names = c("Library_ID", "Scores")) %>%
+  separate(Scores, into = c("Non_synonymous", "Synonymous",  "Total_sites"), sep = " ") %>%
+  # convert to numeric columns
+  mutate(Non_synonymous = as.numeric(Non_synonymous),
+         Synonymous = as.numeric(Synonymous),
+         Total_sites = as.numeric(Total_sites)) %>%
+  mutate(dN_dS = Non_synonymous / Synonymous,
+         Total_snps = Non_synonymous + Synonymous)
+
+```
+
+```{r}
+abot_439_list <- list.files(path = "./04-Analysis/polymut/bwa_mapping/", pattern = ".cov", full.names = T)
+
+abot439_cov <- map_dfr(abot_439_list, function(fn) {
+  fread(fn, col.names = c("Genome", "Start_coord", "End_coord","Depth","Breadth","Genome_length","Proportion_covered"), sep = "\t", fill = T) %>%
+  mutate(Library_ID = basename(fn))
+}) %>%
+  arrange(Library_ID) %>%
+# remove the end of the file name from the Library_ID
+  mutate(Library_ID = str_replace_all(Library_ID, ".abot439.m_s_r.cov","")) %>%
+  filter(Genome != "all")
+
+abot439_cov_depth <- abot439_cov %>%
+  filter(Depth > 0) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_1X = sum(Proportion_covered)) %>%
+  full_join(., abot439_cov %>%
+               filter(Depth > 2) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_2X = sum(Proportion_covered))) %>%
+  full_join(., abot439_cov %>%
+               filter(Depth > 5) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_5X = sum(Proportion_covered))) %>%
+  ungroup()
+
+```
+
+```{r}
+Tf_list <- list.files(path = "./04-Analysis/polymut/T_forsythia/bwa_mapping/", pattern = ".cov", full.names = T)
+
+Tf_cov <- map_dfr(Tf_list, function(fn) {
+  fread(fn, col.names = c("Genome", "Start_coord", "End_coord","Depth","Breadth","Genome_length","Proportion_covered"), sep = "\t", fill = T) %>%
+  mutate(Library_ID = basename(fn))
+}) %>%
+  arrange(Library_ID) %>%
+# remove the end of the file name from the Library_ID
+  mutate(Library_ID = str_replace_all(Library_ID, ".Tf.m_s_r.cov","")) %>%
+  filter(Genome != "all")
+
+Tf_cov_depth <- Tf_cov %>%
+  filter(Depth > 0) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_1X = sum(Proportion_covered)) %>%
+  full_join(., Tf_cov %>%
+               filter(Depth > 2) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_2X = sum(Proportion_covered))) %>%
+  full_join(., Tf_cov %>%
+               filter(Depth > 5) %>%
+  group_by(Library_ID) %>%
+  summarize(cov_5X = sum(Proportion_covered))) %>%
+  ungroup()
+
+```
+
+```{r}
+
+abot_439_Tf %>%
+  filter(Sites == "Total_sites") %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x = Library_ID, y = Counts, fill = Species)) +
+         geom_bar(stat = "identity", position = position_dodge2(width = 0.9, preserve = "single"), color = "black") +
+         # scale_fill_manual(values = Market_integration_colors) +
+         theme_minimal(base_size = 8) +
+         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust =0.5),
+               axis.text = element_text(size = 8)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=8)) +
+         ylab("Number of sites") #+
+
+```
+
+```{r}
+abot_439_Tf %>%
+  filter(Sites == "Total_sites") %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x = Species, y = Counts, fill = Species)) +
+         geom_boxplot(outlier.color = NA) +
+         geom_point(alpha = 0.5) +
+         scale_fill_manual(values = c("#7D3560","#098BD9")) +
+         theme_minimal(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 1, vjust =0.5),
+               axis.text = element_text(size = 12)) +
+         scale_y_log10() +
+         # scale_y_continuous(breaks=scales::pretty_breaks(n=8)) +
+         ylab("Number of sites")
+
+
+```
+
+```{r}
+abot_439_Tf %>%
+  filter(Sites == "Total_sites",
+         Counts > 0) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x = Species, y = Counts, fill = Species)) + 
+  ## add half-violin from {ggdist} package
+  ggdist::stat_halfeye(
+    ## custom bandwidth
+    adjust = .5, 
+    ## adjust height
+    width = .6, 
+    ## move geom to the right
+    justification = -.2, 
+    ## remove slab interval
+    .width = 0, 
+    point_colour = NA
+  ) + 
+  geom_boxplot(
+    width = .12, 
+    ## remove outliers
+    outlier.color = NA, ## `outlier.shape = NA` works as well
+    color = "grey30"
+  ) +
+  ## add dot plots from {ggdist} package
+  ggdist::stat_dots(
+    ## orientation to the left
+    side = "left", 
+    ## move geom to the left
+    justification = 1.1, 
+    ## adjust grouping (binning) of observations 
+    binwidth = 25000
+  ) + 
+  ## remove white space on the left
+  coord_cartesian(xlim = c(1.2, NA)) +
+  theme_minimal(base_size = 10) +
+  scale_fill_manual(values = c("#7D3560","#098BD9")) +
+  theme(axis.text.y = element_text(size = 10)) +
+  theme(legend.position = "none") +
+  xlab("Cluster") +
+  ylab("No. Sites") +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1)) 
+
+
+```
+
+```{r tf_abot_lolipop}
+
+tf_order <- abot_439_Tf %>%
+  filter(Species == "Tf") %>%
+  filter(Sites == "Total_sites",
+         Counts > 0) %>%
+  full_join(., pacific_metadata, by = "Library_ID") %>%
+  filter(Type == "calculus") %>%
+  drop_na(Sites) %>%
+  select(Library_ID, Sites, Counts, Species) %>%
+  filter(!str_detect(Library_ID, "EXB|LIB|HPD")) %>%
+  arrange(Library_ID) %>%
+  pivot_wider(names_from = "Species", values_from = "Counts")%>%
+  mutate(Tf = replace_na(Tf,0)) %>%
+  arrange(Tf) %>%
+  pull(Library_ID)
+
+df <- abot_439_Tf %>%
+  filter(Sites == "Total_sites",
+         Counts > 0) %>%
+  full_join(., pacific_metadata, by = "Library_ID") %>%
+  filter(Type == "calculus") %>%
+  drop_na(Sites) %>%
+  select(Library_ID, Sites, Counts, Species) %>%
+  filter(!str_detect(Library_ID, "EXB|LIB|HPD")) %>%
+  arrange(Library_ID) %>%
+  pivot_wider(names_from = "Species", values_from = "Counts")%>%
+  mutate(Tf = replace_na(Tf,0)) %>%
+  arrange(desc(Tf))
+
+df %>%
+  mutate(Library_ID = fct_relevel(Library_ID, tf_order)) %>%
+  arrange(Library_ID) %>%
+  ggplot(.) +
+         geom_bar(aes(x = Library_ID, y = Tf, fill = "Stat"), stat = "identity", color = "black") +
+         geom_point(data = df, aes(x = Library_ID, y = Abot439), shape = 21, color = "black", fill = "#766df8") +
+         geom_segment(data = df, aes(x = Library_ID, xend=Library_ID, y = 0, yend=Abot439), linetype="dotted") +
+         theme_minimal(base_size = 8) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 8),
+               axis.text.y = element_text(size = 4)) +
+         coord_flip() +
+         # scale_x_continuous(breaks=scales::pretty_breaks(n=8)) +
+         # geom_vline(xintercept = 3, linetype = "dashed") +
+         xlab("Library_ID") +
+         ylab("Total sites considered - Tf (bars) Abot439 (dots)")
+
+
+```
+
+```{r}
+
+abot_439_Tf %>%
+  filter()
+
+```
+
+```{r}
+# need to add the Tf data, then shape by species
+masked_abot439_polymut %>%
+  left_join(., abot439_cov_depth, by = "Library_ID") %>%
+  filter(dN_dS != 0) %>%
+  mutate(dN_dS = ifelse(dN_dS > 1, 1, dN_dS)) %>%
+  mutate(Species = "Abot439") %>%
+  bind_rows(.,  masked_Tf_polymut %>%
+            left_join(., Tf_cov_depth, by = "Library_ID") %>%
+            filter(dN_dS != 0) %>%
+            mutate(dN_dS = ifelse(dN_dS > 1, 1, dN_dS)) %>%
+            mutate(Species = "Tf")) %>%
+  ggplot(., aes(x = Total_sites, y = Total_snps)) + # Species
+         ggstar::geom_star(aes(starshape = Species, fill = dN_dS), position = "jitter", size = 2.5, starstroke = 0.3, color = "black") +
+         ggstar::scale_starshape_manual(values = c(4,1)) +
+         scale_fill_viridis_c(option = "C") +
+         scale_x_log10() +
+         scale_y_log10() +
+         theme_minimal(base_size = 10) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         # ylab("Total SNPs/Genome") +
+         ggtitle("")
+
+```
+
+```{r}
+
+# mean dN/dS of Fn mapping to wrong Fn genome
+# 1.942339	
+
+abot_439_Tf_plot <- abot_439_Tf %>%
+  filter(Sites == "dN_dS",
+         !is.infinite(Counts),
+         !is.na(Counts)) %>%
+  ggplot(., aes(x = Species, y = Counts, fill = Species)) +
+         geom_boxplot(outlier.color = NA) +
+         geom_point(alpha = 0.7, position = position_jitter(width = 0.2), aes(fill = Species), shape = 21) +
+         scale_fill_manual(values = c("#cc79a7","#148f77")) +
+         theme_minimal(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5),
+               axis.text = element_text(size = 12)) +
+         geom_hline(yintercept = 1.94, linetype = "dotted") +
+         # scale_y_continuous(breaks=scales::pretty_breaks(n=8)) +
+         ylab("dN/dS")
+
+abot_439_Tf_plot
+
+ggsave("./06-publication/supplemental_figures/Sup_fig_XX12/abot_439_Tf_dNdS_plot.pdf", plot = abot_439_Tf_plot, device = "pdf",
+        scale = 1, width = 3, height = 3, units = c("in"), dpi = 300)
+
+ggsave("./06-publication/supplemental_figures/Sup_fig_XX12/abot_439_Tf_dNdS_plot.svg", plot = abot_439_Tf_plot, device = "svg",
+        scale = 1, width = 3, height = 3, units = c("in"), dpi = 300)
+
+ggsave("./06-publication/supplemental_figures/Sup_fig_XX12/abot_439_Tf_dNdS_plot.png", plot = abot_439_Tf_plot, device = "png",
+        scale = 1, width = 3, height = 3, units = c("in"), dpi = 300)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

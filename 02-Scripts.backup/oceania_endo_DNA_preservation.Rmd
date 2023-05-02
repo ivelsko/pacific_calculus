@@ -1,0 +1,397 @@
+---
+title: "Pacific calculus endogenous content preservation"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(janitor)
+library(tidyverse)
+library(patchwork)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+
+Load metadata
+```{r}
+metadata_full <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  full_join(., fread("./05-Documentation.backup/oceana_climate.tsv")) %>%
+  # this sample has no information so we'll remove it
+  filter(Library_ID != "HCLVMBCX2-3505-26-00-01_S26")
+
+```
+
+
+```{r poorly_preserved}
+cfdp_fail <- fread("05-Documentation.backup/cfdp_fail_samples_20210413.txt") %>%
+  rename(Library_ID = 1)
+
+```
+
+```{r}
+# list all samples to include
+sample_list <- metadata_full %>%
+  anti_join(., cfdp_fail) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13",
+         Library_ID != "HCLVMBCX2-3505-17-00-01_S26") %>%
+  filter(Type == "calculus",
+         !str_detect(Library_ID, "HPD")) %>%
+  select(Library_ID)
+  
+```
+
+
+## Pacific
+```{r pacific_sourcetracker}
+# read in the SourceTracker table
+calculus_pacific <- fread("./05-Documentation.backup/sink_predictions_species.txt")
+
+calc_condensed <- calculus_pacific %>%
+  pivot_longer(!SampleID, names_to = "Source", values_to = "Prop") %>%
+  mutate(Group = ifelse(str_detect(Source, "Calculus|Plaque"),"Oral",
+                        ifelse(str_detect(Source, "Gut"),"Gut",Source))) %>%
+  group_by(SampleID,Group) %>%
+  summarize(topprop = sum(Prop)) %>%
+  ungroup()  %>%
+  filter(Group == "Oral") %>%
+  mutate(Percent = topprop * 100)
+
+```
+
+
+```{r pacific_human}
+# read in the table from Posth, et al. 2018
+
+human_pacific <- fread("./05-Documentation.backup/posth_2018_supp_table_S3_human_endo.tsv")
+
+# # assume value is proportion out of 1
+# human_pacific_liu <- fread("./05-Documentation.backup/liu2022_supp_table_S1_human_endo.tsv") %>%
+#   mutate(`Endogenous by Libraries` = as.numeric(`Endogenous by Libraries`),
+#          Pct = `Endogenous by Libraries` * 100) %>%
+#   rename(Sample = `Individual ID`) %>%
+#   group_by(Sample) %>%
+#   summarize(Percent  = mean(Pct))
+
+# assume value is percent
+human_pacific_liu <- fread("./05-Documentation.backup/liu2022_supp_table_S2_human_endo.tsv") %>%
+  mutate(Pct = as.numeric(`Endogenous by Libraries`)) %>%
+  rename(Sample = `Individual ID`) %>%
+  group_by(Sample) %>%
+  summarize(Percent  = mean(Pct))
+
+human_condensed <- human_pacific %>%
+  select(Sample, `End. DNA Shotgun (%)`) %>%
+  rename(Percent = `End. DNA Shotgun (%)`)  %>%
+  bind_rows(., human_pacific_liu)
+
+```
+
+```{r combine_pacific}
+
+comb_pacific <- calc_condensed %>%
+  select(-Group, -topprop) %>%
+  rename(Sample = SampleID) %>%
+  mutate(Type = "Calculus") %>%
+  bind_rows(., human_condensed %>%
+              select(Sample, Percent) %>%
+              mutate(Type = "Human"))
+
+```
+
+```{r plot_pacific}
+
+require("scales")
+pacific_plot <- comb_pacific %>%
+  group_by(Type) %>%
+  arrange(desc(Percent)) %>%
+  mutate(Sample = fct_relevel(Sample, Sample)) %>%
+  arrange(Type) %>%
+  # mutate(Percent = Percent + 1) %>%
+  ggplot(., aes(x = Sample, y = Percent, fill = Type)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = c("#7d3560","#148f77")) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    # theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(axis.text.x = element_blank()) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    # geom_hline(yintercept = 50, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Endogenous DNA (%)")
+
+pacific_plot
+
+```
+
+```{r}
+require("scales")
+comb_pacific %>%
+  group_by(Type) %>%
+  arrange(desc(Percent)) %>%
+  arrange(Type) %>%
+  # mutate(Percent = Percent + 1) %>%
+  ggplot(., aes(x = Type, y = Percent, fill = Type)) +
+    geom_boxplot(color = "grey30") +
+    geom_jitter() +
+    scale_fill_manual(values = c("#7d3560","#148f77")) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    # theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    # theme(axis.text.x = element_blank()) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    # geom_hline(yintercept = 50, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Endogenous DNA (%)")
+
+```
+
+
+## Europe (England and the Netherlands)
+```{r england_sourcetracker}
+# read in the SourceTracker table
+calculus_england <- fread("../smoking_calculus/05-results.backup/sink_predictions_full_sources_rarefied_51500.tsv")
+
+calc_england_condensed <- calculus_england %>%
+  filter(str_detect(SampleID, "CS|MID"),
+         !str_detect(SampleID, "CSS|CSN|CSD|CSL")) %>%
+  pivot_longer(!SampleID, names_to = "Source", values_to = "Prop") %>%
+  mutate(Group = ifelse(str_detect(Source, "Calculus|Plaque"),"Oral",
+                        ifelse(str_detect(Source, "Gut"),"Gut",Source))) %>%
+  group_by(SampleID,Group) %>%
+  summarize(topprop = sum(Prop)) %>%
+  ungroup()  %>%
+  filter(Group == "Oral") %>%
+  mutate(Percent = topprop * 100)
+
+```
+
+
+```{r england_human}
+# read in the table from Schiffels, et al. 2016
+
+human_england <- fread("./05-Documentation.backup/schiffels_2016_supp_table_S1_human_endo.tsv")
+
+human_england_condensed <- human_england %>%
+  select(Library_ID, `%_endog_DNA`) %>%
+  rename(Percent = `%_endog_DNA`) %>%
+  mutate(Percent = str_replace_all(Percent, "%","")) %>%
+  mutate(Percent = as.numeric(Percent))
+
+# read in the table from Patterson, et al. 2021
+
+human_england_netherlands <- fread("./05-Documentation.backup/patterson2021_supp_table_S1_human_endo.tsv")  %>%
+  rename(Sample = 1,
+         Percent = shotgun_pct_endo) %>%
+  filter(!str_detect(Percent, "shotgun")) %>%
+  mutate(Percent = as.numeric(Percent)) %>%
+  group_by(Sample, Country) %>%
+  summarize(Percent = mean(Percent)) %>%
+  ungroup()
+
+
+```
+
+```{r combine_europe}
+
+comb_europe <- calc_england_condensed %>%
+  select(-Group, -topprop) %>%
+  rename(Sample = SampleID) %>%
+  mutate(Type = "Calculus") %>%
+  bind_rows(., human_england_condensed %>%
+              select(Library_ID, Percent) %>%
+              mutate(Type = "Human") %>%
+              rename(Sample = Library_ID)) %>%
+  full_join(., human_england_netherlands %>%
+              select(-Country) %>%
+              mutate(Type = "Human")) %>%
+  drop_na(Percent)
+
+```
+
+```{r plot_europe}
+
+require("scales")
+europe_plot <- comb_europe %>%
+  group_by(Type) %>%
+  arrange(desc(Percent)) %>%
+  mutate(Sample = fct_relevel(Sample, Sample)) %>%
+  arrange(Type) %>%
+  # mutate(Percent = Percent + 1) %>%
+  ggplot(., aes(x = Sample, y = Percent, fill = Type)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = c("#7d3560","#148f77")) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    # theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(axis.text.x = element_blank()) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    # geom_hline(yintercept = 50, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Endogenous DNA (%)")
+
+europe_plot
+
+```
+
+```{r}
+wrap_plot <- comb_pacific %>%
+  mutate(Site = "Pacific") %>%
+  full_join(., comb_europe %>%
+              mutate(Site = "Europe")) %>%
+  group_by(Type) %>%
+  arrange(desc(Percent)) %>%
+  mutate(Sample = fct_relevel(Sample, Sample)) %>%
+  arrange(Type) %>%
+  # mutate(Percent = Percent + 1) %>%
+  ggplot(., aes(x = Sample, y = Percent, fill = Type)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = c("#7d3560","#148f77")) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    # theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(axis.text.x = element_blank()) +
+    theme(panel.grid.major.x = element_blank(),
+          strip.text = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    # geom_hline(yintercept = 50, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Endogenous DNA (%)") +
+    facet_wrap(Site~Type, scales = "free_x")
+
+ggsave("./06-publication/main_figures/Figure_XX1/endo_dna_preservation.svg", plot = wrap_plot, device = "svg",
+       scale = 1, width = 10, height = 5, units = c("in"), dpi = 300)
+
+```
+
+
+```{r}
+require("scales")
+comb_pacific %>%
+  mutate(Site = "Pacific") %>%
+  full_join(., comb_europe %>%
+              mutate(Site = "Europe")) %>%
+  group_by(Type) %>%
+  arrange(desc(Percent)) %>%
+  arrange(Type) %>%
+  # mutate(Percent = Percent + 1) %>%
+  ggplot(., aes(x = Site, y = Percent, fill = Type)) +
+    geom_boxplot(color = "grey30") +
+    geom_jitter() +
+    scale_fill_manual(values = c("#7d3560","#148f77")) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    # theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    # theme(axis.text.x = element_blank()) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    # geom_hline(yintercept = 50, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Endogenous DNA (%)")
+
+```
+```{r}
+comb_pacific %>%
+  mutate(Site = "Pacific") %>%
+  full_join(., comb_europe %>%
+              mutate(Site = "Europe")) %>%
+  ggplot(., aes(x = Site, y = Percent, fill = Type)) + 
+  ## add half-violin from {ggdist} package
+  ggdist::stat_halfeye(
+    ## custom bandwidth
+    adjust = .5, 
+    ## adjust height
+    width = .6, 
+    ## move geom to the right
+    justification = -.2, 
+    ## remove slab interval
+    .width = 0, 
+    point_colour = NA
+  ) + 
+  geom_boxplot(
+    width = .12, 
+    ## remove outliers
+    outlier.color = NA, ## `outlier.shape = NA` works as well
+    color = "grey30"
+  ) +
+  ## add dot plots from {ggdist} package
+  ggdist::stat_dots(
+    ## orientation to the left
+    side = "left", 
+    ## move geom to the left
+    justification = 1.1, 
+    ## adjust grouping (binning) of observations 
+    binwidth = 1
+  ) + 
+  ## remove white space on the left
+  coord_cartesian(xlim = c(1.2, NA)) +
+  theme_minimal(base_size = 12) +
+  scale_fill_manual(values = c("#7d3560","#148f77")) +
+  theme(axis.text.y = element_text(size = 12)) +
+  theme(legend.position = "none") +
+  xlab("") +
+  ylab("Endogenous DNA (%)") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+  # theme(axis.title.x = element_text(vjust=-1.5)) +
+  theme(axis.title.y = element_text(vjust=1.9))
+
+
+```
+
+```{r}
+
+combined_plot <- pacific_plot / europe_plot  + 
+  # plot_layout(nrow = 1)  + 
+  plot_annotation(tag_levels = 'A') +
+  plot_layout(guides = "collect")
+
+combined_plot
+
+# ggsave("./06-publication/main_figures/Figure_XX1/endo_dna_preservation.svg", plot = combined_plot, device = "svg",
+#        scale = 1, width = 10, height = 5, units = c("in"), dpi = 300)
+
+```
+
+```{r}
+comb_pacific %>%
+  arrange(Type, desc(Percent)) %>%
+  filter(Type == "Human",
+         Percent >= 5) 
+
+comb_europe %>%
+  arrange(Type, desc(Percent)) %>%
+  filter(Type == "Human",
+         Percent >= 5) 
+
+```
+
+
+
+
+
+
+
+
+
+

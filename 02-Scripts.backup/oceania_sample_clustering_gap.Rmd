@@ -1,0 +1,457 @@
+---
+title: "Pacific calculus clustering as in Quagliariello, et al. 2022 Nat Comm"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+## **NOTE** ## 
+This can only be run on the cluster b/c of gfortran issues with getting SpiecEasi installed for NetCoMi.
+Or not, nevermind b/c the optimal # of clusters is 1, and therefore no network analysis is necessary
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(janitor)
+library(rstatix)
+library(vegan)
+library(tidyverse)
+library(patchwork)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+On the gap statistic: https://towardsdatascience.com/k-means-clustering-and-the-gap-statistics-4c5d414acd29
+
+# contaminant tables 
+```{r load_contam_lists}
+# genus lists
+cont_otago_gn <- fread("./05-Documentation.backup/contaminant_otago_gn.tsv")
+cont_oklahoma_gn <- fread("./05-Documentation.backup/contaminant_oklahoma_gn.tsv")
+cont_jena_gn <- fread("./05-Documentation.backup/contaminant_jena_gn.tsv")
+
+cont_all_gn <- fread("./05-Documentation.backup/contaminant_pacific_ooj_gn.tsv")
+
+# make sure the same contaminants are in the individual and combined tables (expect 874 - yes, same total)
+cont_otago_gn %>%
+  bind_rows(., cont_oklahoma_gn) %>%
+  bind_rows(., cont_jena_gn) %>%
+  distinct() %>%
+  count()
+
+
+# species lists
+cont_otago_sp <- fread("./05-Documentation.backup/contaminant_otago_sp.tsv", sep = "\t")
+cont_oklahoma_sp <- fread("./05-Documentation.backup/contaminant_oklahoma_sp.tsv", sep = "\t")
+cont_jena_sp <- fread("./05-Documentation.backup/contaminant_jena_sp.tsv", sep = "\t")
+
+cont_all_sp <- fread("./05-Documentation.backup/contaminant_pacific_ooj_sp.tsv", sep = "\t")
+
+```
+
+Load metadata
+```{r load_metadata, eval = F}
+#only need to run this once, then read in the file with the DNA concentration added
+metadata <- fread("./05-Documentation.backup/oceana_metadata.tsv") %>%
+  rename(Library_ID = Library_ID) %>%
+  mutate(Library_ID = str_replace_all(Library_ID, ".SG1.1","")) %>%
+  full_join(., fread("./05-Documentation.backup/oceana_meta_decontam.tsv") %>%
+              select(-Lab) %>%
+              rename(Library_ID = SampleID), by = "Library_ID") %>%
+  mutate(Sample_or_Control = ifelse(SourceSink == "sink", "sample","control")) %>%
+  mutate(Sample_or_Control = ifelse(Env == "blank", "control",Sample_or_Control)) %>%
+  mutate(Sample_or_Control = ifelse(is.na(Sample_or_Control) & Type == "blank", "control",Sample_or_Control)) %>%
+  mutate(Sample_or_Control = ifelse(is.na(Sample_or_Control) & Type == "bone", "control",Sample_or_Control)) %>%
+  mutate(Sample_or_Control = ifelse(is.na(Sample_or_Control) & Type == "calculus","sample",Sample_or_Control)) %>%
+  mutate(Type = ifelse(str_detect(Library_ID, "ARS"),"bone",Type))
+
+# can't write into the Pacific folder, so write it here and move it to 05-Documentation.backup
+# fwrite(metadata, "../strep_clades/00-documentation/oceana_metadata_merged.tsv", quote = F, sep = "\t", na = "NA")
+
+```
+
+```{r}
+metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  # make the island names match the colors/shapes
+  mutate(Island = str_replace_all(Island, "_"," "),
+         Island = str_replace_all(Island, " Duff Islands",""),
+         Island = str_replace_all(Island, "3000","3000 BP")) %>%
+  # convert all numeric to character otherwise get an error about converting integers and characters
+  mutate(DNA_conc = as.character(DNA_conc),
+         Age_mean = as.character(Age_mean),
+         Lat = as.character(Lat),
+         Long = as.character(Long),
+         seq_len_avg = as.character(seq_len_avg),
+         gc_avg = as.character(gc_avg),
+         No_reads_no_human = as.character(No_reads_no_human)) %>%
+  mutate_all(na_if,"") %>%
+  # now convert back to numeric
+  mutate(DNA_conc = as.numeric(DNA_conc),
+         Age_mean = as.numeric(Age_mean),
+         Lat = as.numeric(Lat),
+         Long = as.numeric(Long),
+         seq_len_avg = as.numeric(seq_len_avg),
+         gc_avg = as.numeric(gc_avg),
+         No_reads_no_human = as.numeric(No_reads_no_human))
+
+```
+
+
+```{r poorly_preserved}
+cfdp_fail <- fread("05-Documentation.backup/oceania_cuperdec_species_poor_samples.tsv") %>%
+  rename(Library_ID = 1)
+
+```
+
+```{r}
+# list all bones that are part of this study
+# the ARS bones are a little different in the PCA, so we won't use them
+bones <- metadata %>%
+  filter(Type == "bone") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(!str_detect(Library_ID, "ARS|HPD"))
+
+# list all samples and blanks from Otago
+otago <- metadata %>%
+  anti_join(., cfdp_fail) %>%
+  filter(Lab == "Otago") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  arrange(Library_ID) %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all samples and blanks from Oklahoma
+oklahoma <- metadata %>%
+  anti_join(., cfdp_fail) %>%
+  filter(Lab == "Oklahoma") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Type != "bone") %>%
+  filter(Type != "blank") %>%
+  pull(Library_ID)
+
+# list all samples and blanks from Jena
+jena <- metadata %>%
+  anti_join(., cfdp_fail) %>%
+  filter(Lab == "Jena") %>%
+  select(Library_ID, Lab, Type) %>%
+  filter(Type != "bone") %>%
+  filter(Type != "blank") %>%
+  filter(!str_detect(Library_ID, "HPD")) %>%
+  pull(Library_ID)
+
+# list all samples to include
+sample_list <- c(otago,oklahoma,jena)
+
+```
+
+```{r load_species_tables}
+# read in the species table
+rs_raw_sp <- fread("./05-Documentation.backup/oceania_malt_cRefSeq_summarized_species_20201105.txt") %>%
+  rename(Species = 1) %>%
+  filter(Species != "Homo")
+
+# clean the file names
+colnames(rs_raw_sp) <- gsub("MeganServer::", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".unmapped", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".SG1.1", "", colnames(rs_raw_sp)) 
+colnames(rs_raw_sp) <- gsub(".SG1.2", "", colnames(rs_raw_sp)) 
+
+# now do a pretend transpose to replace the NAs with 0s
+rs_raw_sp <- rs_raw_sp %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = replace_na(Counts, 0)) %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts")
+
+```
+
+
+```{r outliers}
+# HCLVMBCX2-3505-13-00-01_S13 appears to be a sample, although it's supposed to be a blank
+# remove it from all further analyses
+
+metadata_filt <- metadata %>%
+  anti_join(., cfdp_fail) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13")
+
+species_raw_pass <- rs_raw_sp %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  anti_join(., cfdp_fail) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  # remove all taxa that have to entries anymore
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  adorn_totals(where = "col") %>%
+  select(Total, everything()) %>%
+  filter(Total != 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Species", values_from = "Counts")
+
+```
+
+
+### Decontam all together
+
+```{r all_table}
+# note that all poorly-preserved samples are removed from species_raw_pass although they're still in the lab lists
+
+# select all samples and remove all contaminants
+# save row names
+rownames_sp_all_filt <- species_raw_pass %>%
+  filter(Library_ID %in% sample_list) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_all_sp %>%
+              select(Species), by = "Species") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total) %>%
+  pull(Species)
+
+sp_all_filt <- species_raw_pass %>%
+  filter(Library_ID %in% sample_list) %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_all_sp %>%
+              select(Species), by = "Species") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total) %>%
+  # remove the totals attribute so can make column sums later if necessary by converting to matrix and back
+  as.matrix(., rownames = "Species") %>%
+  as_tibble(.) %>%
+  mutate(Species = rownames_sp_all_filt) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = as.numeric(Counts)) %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts")
+
+# remove the totals attribute so can make column sums later if necessary
+# attr(sp_all_filt, "totals") <- NULL
+
+```
+
+
+Remove species that are present at <0.005% relative abundance in each lab
+```{r each_plot_abund005_filt}
+
+# species present at <0.005% per lab
+sp_abund005_each <- sp_all_filt %>%
+  # Jena
+  select(matches(c("Species",jena))) %>%
+  adorn_totals(where = "col") %>%
+  mutate(Percent = Total / sum(Total) * 100) %>%
+  filter(Percent <= 0.005) %>%
+  select(Species) %>%
+  full_join(., sp_all_filt %>%
+            # Oklahoma
+            select(matches(c("Species",oklahoma))) %>%
+            adorn_totals(where = "col") %>%
+            mutate(Percent = Total / sum(Total) * 100) %>%
+            filter(Percent <= 0.005) %>%
+            select(Species)) %>%
+  full_join(., sp_all_filt %>%
+            # Otago
+            select(matches(c("Species",otago))) %>%
+            adorn_totals(where = "col") %>%
+            mutate(Percent = Total / sum(Total) * 100) %>%
+            filter(Percent <= 0.005) %>%
+            select(Species))
+
+
+sp_each_abund005_filt_1 <- sp_all_filt %>%
+  anti_join(., sp_abund005_each) %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  pivot_wider(names_from = "Species", values_from = "Counts") %>%
+  column_to_rownames("Library_ID")
+
+```
+
+```{r}
+# Run a pca to get a clr-transformed table for input to clustering
+sp_each_abund005_filt_1.pca <- mixOmics::pca(sp_each_abund005_filt_1)
+
+# The clr-transformed matrix from the mixOmics PCA above
+sp_each_abund005_filt_1_clr <- sp_each_abund005_filt_1.pca$X %>%
+  as.data.frame(.)
+
+sp_each_abund005_filt_1_clr_t <- sp_each_abund005_filt_1_clr %>%
+  rownames_to_column("Library_ID") %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  column_to_rownames("Species")
+
+```
+
+```{r}
+
+# cluster samples with the Gap statsitic, like in Quagliariello
+
+gp_cluster_out <- cluster::clusGap(sp_each_abund005_filt_1_clr_t, d.power = 2, FUN = kmeans, K.max = 10, B = 500) # nstart = 20, B = 500 for real run, spaceH0 = "scaledPCA"
+
+gp_cluster_out$Tab %>%
+  as.data.frame.matrix() %>%
+  mutate(No_clusters = c(1:10)) %>%
+  select(No_clusters, everything())
+
+sp_gap_plot <- gp_cluster_out$Tab %>%
+  as.data.frame.matrix() %>%
+  mutate(No_clusters = c(1:10)) %>%
+  select(No_clusters, everything()) %>%
+  ggplot(., aes(x = No_clusters, y = gap)) +
+         geom_line() +
+         geom_point() +
+         geom_errorbar(aes(ymin = gap-SE.sim, ymax = gap+SE.sim), width = 0.2) +
+         theme_minimal(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 12)) +
+         theme(axis.text.y = element_text(size = 10)) +
+         theme(panel.grid.minor = element_blank()) +
+         scale_x_continuous(breaks=scales::pretty_breaks(n=10)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+        ylab("Gap statistic") +
+        xlab("Number of clusters") +
+        ggtitle("Species table")
+
+sp_gap_plot
+
+```
+
+## Genus
+```{r load_genus_tables}
+# read in the species table
+rs_raw_gn <- fread("./05-Documentation.backup/oceania_malt_cRefSeq_summarized_genus_20201105.txt") %>%
+  rename(Genus = 1) %>%
+  filter(Genus != "Homo")
+
+# clean the file names
+colnames(rs_raw_gn) <- gsub("MeganServer::", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub(".unmapped", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub(".SG1.1", "", colnames(rs_raw_gn)) 
+colnames(rs_raw_gn) <- gsub(".SG1.2", "", colnames(rs_raw_gn)) 
+
+# now do a pretend transpose to replace the NAs with 0s
+rs_raw_gn <- rs_raw_gn %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = replace_na(Counts, 0)) %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts")
+
+# make sure there are no genera with no counts in any sample
+rs_raw_gn %>%
+  adorn_totals(where = "col") %>%
+  select(Genus, Total) %>%
+  arrange(Total) %>%
+  slice_min(Total)
+
+```
+
+```{r all_table}
+genus_raw_pass <- rs_raw_gn %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Genus", values_from = "Counts") %>%
+  anti_join(., cfdp_fail %>%
+              as_data_frame(.) %>%
+              rename(Library_ID = 1)) %>%
+  filter(Library_ID != "HCLVMBCX2-3505-13-00-01_S13") %>%
+  # remove all taxa that have to entries anymore
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total) %>%
+  pivot_longer(!Genus, names_to = "Library_ID", values_to = "Counts") %>%
+  pivot_wider(names_from = "Genus", values_from = "Counts")
+
+
+# note that all poorly-preserved samples are removed from genus_raw_pass although they're still in the lab lists
+
+# select all samples and remove all contaminants, and remove all genera with no counts in any sample
+gn_all_filt <- genus_raw_pass %>%
+  filter(Library_ID %in% sample_list) %>%
+  pivot_longer(!Library_ID, names_to = "Genus", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  anti_join(., cont_all_gn %>%
+              select(Genus), by = "Genus") %>%
+  adorn_totals(where = "col") %>%
+  filter(Total != 0) %>%
+  select(-Total)
+
+
+```
+
+```{r}
+# Run a pca to get a clr-transformed table for input to clustering
+gn_all_filt.pca <- mixOmics::pca(gn_all_filt)
+
+# The clr-transformed matrix from the mixOmics PCA above
+gn_all_filt_clr <- gn_all_filt.pca$X %>%
+  as.data.frame(.)
+
+gn_all_filt_clr_t <- gn_all_filt_clr %>%
+  rownames_to_column("Library_ID") %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  column_to_rownames("Species")
+
+```
+
+```{r}
+
+# cluster samples with the Gap statsitic, like in Quagliariello
+# set.seed(501) # 4, 250, 501
+gp_cluster_out <- cluster::clusGap(gn_all_filt_clr_t, d.power = 2, FUN = kmeans, K.max = 10, B = 500) # nstart = 20, B = 500 for real run, spaceH0 = "scaledPCA"
+
+gp_cluster_out$Tab %>%
+  as.data.frame.matrix() %>%
+  mutate(No_clusters = c(1:10)) %>%
+  select(No_clusters, everything())
+
+gn_gap_plot <- gp_cluster_out$Tab %>%
+  as.data.frame.matrix() %>%
+  mutate(No_clusters = c(1:10)) %>%
+  select(No_clusters, everything()) %>%
+  ggplot(., aes(x = No_clusters, y = gap)) +
+         geom_line() +
+         geom_point() +
+         geom_errorbar(aes(ymin = gap-SE.sim, ymax = gap+SE.sim), width = 0.2) +
+         theme_minimal(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 12)) +
+         theme(axis.text.y = element_text(size = 10)) +
+         theme(panel.grid.minor = element_blank()) +
+         scale_x_continuous(breaks=scales::pretty_breaks(n=10)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+        ylab("Gap statistic") +
+        xlab("Number of clusters") +
+        ggtitle("Genus table")
+
+gn_gap_plot
+
+```
+
+```{r}
+
+gap_plot <- sp_gap_plot / gn_gap_plot +
+  plot_layout()
+
+gap_plot
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX13/SXX13_pacific_gap_statistic.pdf", plot = gap_plot, device = "pdf",
+#        scale = 1, width = 8, height = 7, units = c("in"), dpi = 300)
+# 
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX13/SXX13_pacific_gap_statistic.png", plot = gap_plot, device = "png",
+#        scale = 1, width = 8, height = 7, units = c("in"), dpi = 300)
+
+```
+
+

@@ -1,0 +1,1496 @@
+---
+title: "Strep amylase-binding protein dRep clusters"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+```{r load_libraries, message = F}
+library(knitr)
+library(data.table)
+library(tidyverse)
+library(viridis)
+opts_chunk$set(eval=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r metadata}
+# load the metadata file
+metadata <- fread("./05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  full_join(., fread("./05-Documentation.backup/oceana_climate.tsv")) %>%
+  mutate(Island = ifelse(Type == "blank", "Blank",Island)) %>%
+  mutate(Island = ifelse(Type == "bone", "Bone", Island)) %>%
+  mutate(Library_ID = str_replace_all(Library_ID, ".SG1.1","")) %>%
+  mutate(Island = str_replace_all(Island, "Efate_3000", "Efate 3000 BP"),
+         Island = str_replace_all(Island, "Rapa_Nui", "Rapa Nui"),
+         Island = str_replace_all(Island, "Viti_Levu", "Viti Levu"),
+         Island = str_replace_all(Island, "Taumako_Duff_Islands", "Taumako")) %>%
+  mutate(Type = str_replace_all(Type, "bone","Arch. Bone"),
+         Type = str_replace_all(Type, "calculus","Arch. calculus"))
+         
+```
+
+```{r}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades::microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =  microshades::microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" = microshades::microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+```
+
+
+## Coverage
+```{r}
+# load the standard format output tables
+masked_cov_list <- list.files(path = "./04-Analysis/inStrain/output", pattern = ".IS_genome_info.tsv", full.names = T, recursive = TRUE)
+
+masked_cov <- map_dfr(masked_cov_list, function(fn) {
+  fread(fn, col.names = c("genome","coverage","breadth","nucl_diversity","length","true_scaffolds","detected_scaffolds","coverage_median","coverage_std","coverage_SEM","breadth_minCov","breadth_expected","nucl_diversity_rarefied","conANI_reference","popANI_reference","iRep","iRep_GC_corrected","linked_SNV_count","SNV_distance_mean","r2_mean","d_prime_mean","consensus_divergent_sites","population_divergent_sites","SNS_count","SNV_count","filtered_read_pair_count","reads_unfiltered_pairs","reads_mean_PID","divergent_site_count","reads_unfiltered_reads"), sep = "\t") %>%
+  mutate(Sample_ID = basename(fn))
+}) %>%
+  arrange(Sample_ID) %>%
+  mutate(Sample_ID = str_replace_all(Sample_ID, ".mask_1_1.bam.IS_genome_info.tsv",""),
+         Sample_ID = str_replace_all(Sample_ID, ".mask_13_13.bam.IS_genome_info.tsv","")) %>%
+  select(Sample_ID, everything()) %>%
+  filter(!str_detect(Sample_ID, "HCLVMBCX2-3505-13"))
+
+```
+
+
+## popANI
+```{r}
+genome_wide <- fread("./04-Analysis/inStrain/output/pac_reference_genomes.IS.COMPARE/output/pac_reference_genomes.IS.COMPARE_genomeWide_compare.tsv") %>%
+  filter(!str_detect(name1, "HCLVMBCX2-3505-13"),
+         !str_detect(name2,"HCLVMBCX2-3505-13"))
+
+comparison_table <- fread("./04-Analysis/inStrain/output/pac_reference_genomes.IS.COMPARE/output/pac_reference_genomes.IS.COMPARE_comparisonsTable.tsv") %>%
+  filter(!str_detect(name1, "HCLVMBCX2-3505-13"),
+         !str_detect(name2,"HCLVMBCX2-3505-13"))
+
+strain_clusters <- fread("./04-Analysis/inStrain/output/pac_reference_genomes.IS.COMPARE/output/pac_reference_genomes.IS.COMPARE_strain_clusters.tsv") %>%
+  filter(!str_detect(sample, "HCLVMBCX2-3505-13"),
+         !str_detect(genome,"HCLVMBCX2-3505-13"))
+
+```
+
+```{r}
+
+gw_dup <- genome_wide %>%
+  bind_rows(genome_wide %>%
+              rename(name2 = 2,
+                     name1 = 3) %>%
+              select(genome, name1, name2, everything())) %>%
+  distinct()  %>%
+  arrange(genome, name1, name2)
+
+
+comparison_table %>%
+  select(name1,name2) %>%
+  distinct() %>%
+  arrange(name1, name2)
+
+
+```
+
+
+```{r popANI_heatmap}
+
+gw_dup %>%
+  # filter(genome == "Bacillus_subtilis_complete_genome.fasta") %>%
+  mutate(name1 = str_replace_all(name1, ".pac_reference_genomes.sorted.bam",""),
+         name2 = str_replace_all(name2, ".pac_reference_genomes.sorted.bam","")) %>%
+  # mutate(name1 = fct_relevel(name1, "udg_half.is12","udg_half.is24","udg_half.is36","udg_half.is48",
+  #                            "udg_half.mask_1_1.is12","udg_half.mask_1_1.is24","udg_half.mask_1_1.is36",),
+  #        name2 = fct_relevel(name2, "udg_half.is12","udg_half.is24","udg_half.is36","udg_half.is48",
+  #                            "udg_half.mask_1_1.is12","udg_half.mask_1_1.is24","udg_half.mask_1_1.is36","udg_half.mask_1_1.is48",
+  #                            "non_udg.is12","non_udg.is24","non_udg.is36","non_udg.is48")) %>%
+  ggplot(., aes(name1, name2, fill = popANI)) +
+         geom_tile() +
+         # scale_fill_gradient(low = "#f5fbfc", high = "#272b77") +
+         scale_fill_viridis(option = "A", direction = -1) +
+         theme_minimal(base_size = 12) +
+         theme(plot.margin = margin(0, 0, 0, 0, "pt"),
+               axis.title.y = element_blank(),
+               legend.position = "right") +
+         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+         xlab("Data set") + 
+         labs(fill='popANI') +
+         facet_wrap(~genome)
+
+
+```
+
+
+```{r shared_coverage_heatmap}
+
+gw_dup %>%
+  mutate(name1 = str_replace_all(name1, ".pac_reference_genomes.sorted.bam",""),
+         name2 = str_replace_all(name2, ".pac_reference_genomes.sorted.bam","")) %>%
+  # mutate(name1 = fct_relevel(name1, "udg_half.is12","udg_half.is24","udg_half.is36","udg_half.is48",
+  #                            "non_udg.mask_15_15.is12","non_udg.mask_15_15.is24","non_udg.mask_15_15.is36","non_udg.mask_15_15.is48"),
+  #        name2 = fct_relevel(name2, "udg_half.is12","udg_half.is24","udg_half.is36","udg_half.is48",
+  #                            "non_udg.mask_15_15.is12","non_udg.mask_15_15.is24","non_udg.mask_15_15.is36","non_udg.mask_15_15.is48")) %>%
+  ggplot(., aes(name1, name2, fill = percent_compared)) +
+         geom_tile() +
+         # scale_fill_gradient(low = "#f5fbfc", high = "#272b77") +
+         scale_fill_viridis(option = "A", direction = -1) +
+         theme_minimal(base_size = 12) +
+         theme(plot.margin = margin(0, 0, 0, 0, "pt"),
+               axis.title.y = element_blank(),
+               legend.position = "right") +
+         theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+         xlab("Gene cluster") + 
+         labs(fill='Percent compared') +
+         facet_wrap(~genome)
+
+
+# ggsave("~/Desktop/ani_clusters.pdf", plot = ani_clusters, device = "pdf",
+#         scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
+    
+```
+
+```{r colors}
+# set colors for heat maps
+colorset <- c("#ffffff","#e4f4fe","#c8e9fd","#addefc","#92d3fa","#77c8f9","#5bbdf8","#40b2f7","#25a8f6","#0a9cf4","#098BD9") # ,"#087dc3","#076fae","#066198","#055382"
+col_fun = circlize::colorRamp2(c(99, 99.5, 100), c("#ffffff", "#77c8f9", "#098BD9"))
+
+```
+
+```{r}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades::microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =   microshades::microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" =  microshades::microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+```
+
+```{r adentalis}
+gw_wide_ad <- gw_dup %>%
+  filter(genome == "Actinomyces_dentalis_DSM_19115.fa") %>%
+  filter(percent_compared >= 0.5) %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 98.13975) %>% # for full bams use 97.96557
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 98.13975) %>% # for full bams use 97.96557
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+fake_pvals <- gw_dup %>%
+  filter(genome == "Actinomyces_dentalis_DSM_19115.fa") %>%
+  filter(percent_compared >= 0.5) %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(popANI = ifelse(popANI >= 99.99, 0.0001,
+                         ifelse(popANI < 99.99 & popANI >= 99,  0.009,
+                                ifelse(popANI < 99 & popANI >= 98, 0.05,1)))) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 1) %>% # for full bams use 97.96557
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 1, popANI)) %>%
+  select(-same) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 1) %>% # for full bams use 97.96557
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+  
+  
+
+gw_wide_ad %>%
+  corrplot::corrplot(., 
+                     p.mat = fake_pvals,
+                     order = "hclust", 
+                     sig.level = c(0.001), pch.cex = 0.7,
+                     insig = 'label_sig',
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(98.13975, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = FALSE, 
+                     # 
+                     tl.col = 'black')
+
+ComplexHeatmap::Heatmap(gw_wide_ad, 
+                        name = "popANI", 
+                        col = col_fun, 
+                        rect_gp = grid::gpar(col = "white", lwd = 0.5), 
+                        clustering_method_rows = "complete", 
+                        clustering_method_columns = "complete", 
+                        show_column_dend = FALSE, 
+                        row_dend_side = "left",
+                        layer_fun = function(j, i, x, y, width, height, fill) {
+                                    v = ComplexHeatmap::restore_matrix(j, i, x, y)
+                                    l = v > 99.999
+                                    grid::grid.points(x[l], y[l], pch = 16, size = unit(0.5, "mm"))
+                                    })
+
+
+ComplexHeatmap::Heatmap(gw_wide_ad, 
+                        name = "popANI", 
+                        col = col_fun, 
+                        rect_gp = grid::gpar(col = "white", lwd = 0.5), 
+                        clustering_method_rows = "complete", 
+                        clustering_method_columns = "complete", 
+                        show_column_dend = FALSE, 
+                        row_dend_side = "left",
+                        layer_fun = function(j, i, x, y, width, height, fill) {
+                                    v = ComplexHeatmap::restore_matrix(j, i, x, y)
+                                    l = v > 99.999
+                                    grid::grid.points(x[l], y[l], pch = 16, size = unit(0.5, "mm"))
+                                    })
+
+ComplexHeatmap::Heatmap(gw_wide_ad, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left")
+
+```
+
+```{r adentalis_cov}
+
+masked_cov %>%
+  filter(genome == "Actinomyces_dentalis_DSM_19115.fa") %>%
+  select(Sample_ID, coverage, breadth) %>%
+  left_join(., metadata %>%
+              separate(Library_ID, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(coverage)) %>%
+  mutate(Sample_ID = fct_relevel(Sample_ID, Sample_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Sample_ID, y = coverage, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    # scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    theme(panel.grid.minor.y = element_blank()) +
+    geom_hline(yintercept = 5, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Average coverage depth")
+
+masked_cov %>%
+  filter(genome == "Actinomyces_dentalis_DSM_19115.fa") %>%
+  select(Sample_ID, coverage, breadth) %>%
+  left_join(., metadata %>%
+              separate(Library_ID, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(breadth)) %>%
+  mutate(Sample_ID = fct_relevel(Sample_ID, Sample_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Sample_ID, y = breadth, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1.0)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    geom_hline(yintercept = 1.0, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Breadth 1X coverage") +
+    ggtitle("Actinomyces dentalis")
+
+
+masked_cov %>%
+  filter(genome == "Actinomyces_dentalis_DSM_19115.fa") %>%
+  select(Sample_ID, breadth_minCov) %>%
+  left_join(., metadata %>%
+              separate(Library_ID, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(breadth_minCov)) %>%
+  mutate(Sample_ID = fct_relevel(Sample_ID, Sample_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Sample_ID, y = breadth_minCov, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1.0)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    geom_hline(yintercept = 1.0, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Breadth 5X coverage") +
+    ggtitle("Actinomyces dentalis")
+
+
+```
+
+
+```{r eminutum}
+gw_wide_em <- gw_dup %>%
+  filter(genome == "Eubacterium_minutum_ATCC_700079.fna") %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 97.96557) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 97.96557) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+fake_pvals <- gw_dup %>%
+  filter(genome == "Eubacterium_minutum_ATCC_700079.fna") %>%
+  filter(percent_compared >= 0.5) %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(popANI = ifelse(popANI >= 99.99, 0.0001,
+                         ifelse(popANI < 99.99 & popANI >= 99,  0.009,
+                                ifelse(popANI < 99 & popANI >= 98, 0.05,1)))) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 1) %>% # for full bams use 97.96557
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 1, popANI)) %>%
+  select(-same) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 1) %>% # for full bams use 97.96557
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+  
+  
+
+gw_wide_em %>%
+  corrplot::corrplot(., 
+                     p.mat = fake_pvals,
+                     order = "hclust", 
+                     sig.level = c(0.001), pch.cex = 0.7,
+                     insig = 'label_sig',
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(97.96557, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = FALSE, 
+                     # 
+                     tl.col = 'black')
+
+ComplexHeatmap::Heatmap(gw_wide_em, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left")
+
+```
+
+```{r eminutum_chm}
+
+selected_metadata <- metadata %>%
+  select(Library_ID, Island, Lab, Age_mean) %>%
+  separate(Library_ID, into = "SampleID", extra = "drop", sep = "\\.") %>%
+  filter(!str_detect(Island, "Bone|Blank")) %>%
+  mutate(SampleID = str_replace_all(SampleID, "-00-01","")) %>%
+  separate(SampleID, into = "SampleID", extra = "drop", sep = "_") %>%
+  inner_join(., gw_wide_em %>%
+               as.data.frame(.) %>%
+               rownames_to_column("SampleID") %>%
+               select(SampleID), by = "SampleID") %>%
+  # mutate(SampleID = str_replace_all(SampleID, "_"," ")) %>%
+  column_to_rownames("SampleID")
+
+col_age = circlize::colorRamp2(c(0, 3000), c("#098BD9", "#7D3560"))
+
+row_ha <- ComplexHeatmap::HeatmapAnnotation(df = selected_metadata, col = list(Island = Island_colors,
+                                                                               Lab = Lab_colors,
+                                                                               Age_mean = col_age))
+
+ComplexHeatmap::Heatmap(gw_wide_em, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
+
+# svg(file = "./06-publication/supplemental_figures/Sup_fig_XX5/eminutum_strain_corr_plot.svg", width = 14, height = 12) 
+# 
+# ComplexHeatmap::Heatmap(gw_wide_em, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
+# 
+# dev.off()
+
+
+```
+
+
+```{r abot439}
+gw_wide <- gw_dup %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 98.55) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  arrange(name2) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 98.55) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     order = "hclust", # original
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(98.55, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black')
+
+```
+
+```{r abot439_chm}
+selected_metadata <- metadata %>%
+  select(Library_ID, Lab, Age_mean, Island) %>%
+  separate(Library_ID, into = "SampleID", extra = "drop", sep = "\\.") %>%
+  filter(!str_detect(Island, "Bone|Blank")) %>%
+  mutate(SampleID = str_replace_all(SampleID, "-00-01","")) %>%
+  separate(SampleID, into = "SampleID", extra = "drop", sep = "_") %>%
+  inner_join(., gw_wide %>%
+               as.data.frame(.) %>%
+               rownames_to_column("SampleID") %>%
+               select(SampleID), by = "SampleID") %>%
+  # mutate(SampleID = fct_relevel(SampleID, abot439_hm_order)) %>%
+  arrange(SampleID) %>%
+  column_to_rownames("SampleID") %>%
+  as.data.frame()
+
+col_age = circlize::colorRamp2(c(0, 3000), c("#098BD9", "#7D3560"))
+col_fun = circlize::colorRamp2(c(98.5, 99, 100), c("#ffffff", "#77c8f9", "#098BD9"))
+
+
+row_ha <- ComplexHeatmap::HeatmapAnnotation(df = selected_metadata, col = list(Island = Island_colors,
+                                                                               Age_mean = col_age,
+                                                                               Lab = Lab_colors))
+
+ht_abot439 = ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
+
+ht_abot439 = ComplexHeatmap::draw(ht_abot439)
+
+
+svg(file = "./06-publication/supplemental_figures/Sup_fig_XX5/abot439_strain_corr_plot.svg", width = 14, height = 12)
+
+ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
+
+dev.off()
+
+
+```
+
+```{r}
+roworder <- ComplexHeatmap::row_order(ht_abot439)
+
+row_clusters <- roworder %>%
+  as.data.frame(.) %>%
+  rename(line_number = 1) %>%
+  mutate(dendro_order = 1:n())
+
+abot439_hm_order <- gw_wide %>%
+  as.data.frame(.) %>%
+  rownames_to_column("Samples")  %>%
+  select(Samples) %>%
+  mutate(Samples = str_replace_all(Samples, ".mask_1_1.bam",""),
+         Samples = str_replace_all(Samples, ".mask_13_13.bam","")) %>%
+  mutate(line_number = 1:n()) %>%
+  full_join(., row_clusters, by  = "line_number") %>%
+  arrange(dendro_order) %>%
+  pull(Samples)
+
+
+```
+
+```{r}
+gw_wide <- gw_dup %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  select(name1, name2, percent_compared)%>%
+  mutate(percent_compared = percent_compared * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "percent_compared", values_fill = 34) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "percent_compared") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(percent_compared = ifelse(same == TRUE, 100, percent_compared)) %>%
+  select(-same) %>%
+  # filter(name1 == "ANN001.mask_1_1.bam") %>%
+  # arrange(desc(percent_compared))
+  mutate(name2 = fct_relevel(name2, abot439_hm_order)) %>%
+  arrange(name2) %>%
+  pivot_wider(names_from = "name2", values_from = "percent_compared", values_fill = 34) %>%
+  mutate(name1 = fct_relevel(name1, abot439_hm_order)) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+col_fun = circlize::colorRamp2(c(30, 70, 100), c("#ffffff", "#77c8f9", "#098BD9"))
+# col_fun = circlize::colorRamp2(c(40, 50, 60, 70, 80, 90, 100), c("#C70E7B", "#007BC3", "#EFEF46", "#009F3F", "#AF6125", "#B25D91", "#EF7C12"))
+gw_wide %>%
+  corrplot::corrplot(., 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(30, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black')
+
+ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left")
+
+# try w/o clustering
+ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
+
+# svg(file = "./06-publication/supplemental_figures/Sup_fig_XX5/abot439_strain_pct_genome_compared_plot.svg", width = 14, height = 12)
+# 
+# ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
+# 
+# dev.off()
+
+```
+
+```{r}
+pct_comp <- gw_dup %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  select(name1, name2, percent_compared)%>%
+  mutate(percent_compared = percent_compared * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "percent_compared", values_fill = 34) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "percent_compared") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(percent_compared = ifelse(same == TRUE, 100, percent_compared)) %>%
+  select(-same) %>%
+  # filter(name1 == "ANN001.mask_1_1.bam") %>%
+  # arrange(desc(percent_compared))
+  mutate(name1 = fct_relevel(name1, abot439_hm_order),
+         name2 = fct_relevel(name2, abot439_hm_order)) %>%
+  filter(percent_compared < 100) %>%
+  filter(percent_compared >= 90) %>%
+  arrange(name1, name2) 
+# %>%
+#   fwrite(., "05-Documentation.backup/inStrain_abot439_pct_compared_90.tsv", sep = "\t", quote = F)
+
+gw_dup %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  select(name1, name2, popANI) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 34) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  # filter(name1 == "ANN001.mask_1_1.bam") %>%
+  # arrange(desc(popANI))
+  mutate(name1 = fct_relevel(name1, abot439_hm_order),
+         name2 = fct_relevel(name2, abot439_hm_order)) %>%
+  filter(popANI < 1) %>%
+  filter(popANI >= 0.9999) %>%
+  arrange(name1, name2) %>%
+  full_join(., pct_comp, by = c("name1", "name2")) %>%
+  drop_na(popANI) %>%
+  arrange(desc(popANI))
+
+```
+
+
+```{r abot439}
+gw_wide <- gw_dup %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  filter(percent_compared >= 0.5) %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 98.854) %>% # for full bams use 97.96557
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 98.854) %>% # for full bams use 97.96557
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+fake_pvals <- gw_dup %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  filter(percent_compared >= 0.5) %>%
+  select(name1, name2, popANI) %>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(popANI = ifelse(popANI >= 99.99, 0.0001,
+                         ifelse(popANI < 99.99 & popANI >= 99,  0.009,
+                                ifelse(popANI < 99 & popANI >= 98, 0.05,1)))) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 1) %>% # for full bams use 97.96557
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 1, popANI)) %>%
+  select(-same) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 1) %>% # for full bams use 97.96557
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+  
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     p.mat = fake_pvals,
+                     order = "hclust", 
+                     addrect = 2,
+                     sig.level = c(0.001), pch.cex = 0.6,
+                     insig = 'label_sig',
+                     type = "upper", 
+                     method = "circle",
+                     col = colorset,
+                     col.lim = c(97.96557, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = FALSE, 
+                     tl.col = 'black')
+
+ComplexHeatmap::Heatmap(gw_wide, 
+                        name = "popANI", 
+                        col = col_fun, 
+                        rect_gp = grid::gpar(col = "white", lwd = 0.5), 
+                        clustering_method_rows = "complete", 
+                        clustering_method_columns = "complete", 
+                        show_column_dend = FALSE, 
+                        row_dend_side = "left",
+                        layer_fun = function(j, i, x, y, width, height, fill) {
+                                    v = ComplexHeatmap::restore_matrix(j, i, x, y)
+                                    l = v > 99.999
+                                    grid::grid.points(x[l], y[l], pch = 16, size = unit(0.5, "mm"))
+                                    })
+
+
+ComplexHeatmap::Heatmap(gw_wide, 
+                        name = "popANI", 
+                        col = col_fun, 
+                        rect_gp = grid::gpar(col = "white", lwd = 0.5), 
+                        clustering_method_rows = "complete", 
+                        clustering_method_columns = "complete", 
+                        show_column_dend = FALSE, 
+                        row_dend_side = "left",
+                        layer_fun = function(j, i, x, y, width, height, fill) {
+                                    v = ComplexHeatmap::restore_matrix(j, i, x, y)
+                                    l = v > 99.999
+                                    grid::grid.points(x[l], y[l], pch = 16, size = unit(0.5, "mm"))
+                                    })
+
+
+```
+
+```{r, eval = F}
+svg(file = "./06-publication/prelim_figs/abot439_strain_corr_plot.svg") 
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     p.mat = fake_pvals,
+                     order = "hclust", 
+                     sig.level = c(0.01), pch.cex = 0.5,
+                     insig = 'label_sig',
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(97.96557, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = FALSE, 
+                     # 
+                     tl.col = 'black')
+
+dev.off()
+
+```
+
+
+```{r abot439_cov}
+
+masked_cov %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  select(Sample_ID, coverage, breadth) %>%
+  left_join(., metadata %>%
+              mutate(libid = Library_ID) %>%
+              separate(libid, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Library_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(coverage)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = coverage, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    # scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    geom_hline(yintercept = 5, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Average coverage depth") +
+    ggtitle("Anaerolineaceae bacterium oral taxon 439")
+
+
+masked_cov %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  select(Sample_ID, coverage, breadth) %>%
+  left_join(., metadata %>%
+              mutate(libid = Library_ID) %>%
+              separate(libid, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Library_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(breadth)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = breadth, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1.0)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    geom_hline(yintercept = 1.0, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Breadth 1X coverage") +
+    ggtitle("Anaerolineaceae bacterium oral taxon 439")
+
+
+masked_cov %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  select(Sample_ID, breadth_minCov) %>%
+  left_join(., metadata %>%
+              mutate(libid = Library_ID) %>%
+              separate(libid, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Library_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(breadth_minCov)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = breadth_minCov, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1.0)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    geom_hline(yintercept = 1.0, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Breadth 5X coverage") +
+    ggtitle("Anaerolineaceae bacterium oral taxon 439")
+
+
+```
+
+```{r abot439_cov_polymut}
+
+# compare mapping stats with those used by polymut
+polymut  <- fread("./05-Documentation.backup/abot439_polymut_stats.tsv")
+
+# average depth of coverage (only includes covered bases)
+masked_cov %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  select(Sample_ID, coverage, breadth) %>%
+  left_join(., metadata %>%
+              mutate(libid = Library_ID) %>%
+              separate(libid, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Library_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  full_join(., polymut, by = "Library_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(coverage)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = coverage, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    geom_point(aes(x = Library_ID, y = avg_depth), size =  1) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    # scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    geom_hline(yintercept = 5, linetype = "dotted") +
+    scale_y_continuous(breaks=scales::pretty_breaks(n=8)) +
+    xlab("Sample") +
+    ylab("Average coverage depth") +
+    ggtitle("Anaerolineaceae bacterium oral taxon 439")
+
+
+```
+
+
+```{r}
+gw_wide <- gw_dup %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam","")) %>%
+  # remove the blank HCLVMBCX2-3505-13
+  filter(!str_detect(name1, "HCLVMBCX2-3505-13")) %>%
+  filter(!str_detect(name2, "HCLVMBCX2-3505-13")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 98.55) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 98.55) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide_euc <- vegan::vegdist(gw_wide, method = "euclidean", na.rm = F)
+
+col_fun = circlize::colorRamp2(c(98.55, 99.5, 100), c("#ffffff", "#77c8f9", "#098BD9"))
+# colorset <- c("#ffffff","#e4f4fe","#c8e9fd","#addefc","#92d3fa","#77c8f9","#5bbdf8","#40b2f7","#25a8f6","#0a9cf4","#098BD9") # ,"#087dc3","#076fae","#066198","#055382"
+
+ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left")
+
+```
+
+```{r}
+hm_samples <-  gw_dup %>%
+  filter(genome == "Anaerolineaceae_b_oral_taxon_439.fna") %>%
+  select(name1) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam","")) %>%
+  rename(SampleID = name1) %>%
+  distinct() %>%
+  filter(!str_detect(SampleID, "HPD")) %>%
+  pull()
+
+
+plot_meta <- metadata %>%
+  select(Library_ID, Island, Lab, Age_mean) %>%
+  separate(Library_ID, into = c("SampleID","LibID"), sep = "\\.", extra = "merge") %>%
+  select(-LibID) %>%
+  filter(!str_detect(Island, "Blank|Bone|Taiwan")) %>%
+  separate(SampleID, into = c("SampleID","rest"), sep = "-00", extra = "merge") %>%
+  select(-rest) %>%
+  filter(SampleID %in% hm_samples) %>%
+  distinct() %>%
+  mutate(Island = str_replace_all(Island, " ","_"))
+
+
+ann <- data.frame(plot_meta$Island, plot_meta$Lab, plot_meta$Age_mean)
+
+colnames(ann) <- c("Island","Lab", "Age (BP)")
+rownames(ann) <- plot_meta$SampleID
+
+ann_colors= list('Island' = Island_colors)
+col_age = circlize::colorRamp2(c(0, 3000), c("#098BD9", "#7D3560"))
+ 
+ha = ComplexHeatmap::rowAnnotation(df = ann, name = "Island", col = list(Island = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa_Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate_3000_BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti_Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a"),
+                  Lab = c(Otago = "#4E7705", Oklahoma = "#098BD9", Jena = "#7D3560"),
+                  `Age (BP)` = col_age))
+
+hm <- ComplexHeatmap::Heatmap(gw_wide, 
+                        name = "popANI", 
+                        col = col_fun, 
+                        clustering_method_rows = "complete", 
+                        clustering_method_columns = "complete", 
+                        show_column_dend = FALSE, 
+                        row_dend_side = "left")
+
+hm + ha
+
+
+```
+
+
+
+
+## Other taxa, not using
+```{r doralis, eval = F}
+gw_wide <- gw_dup %>%
+  filter(genome == "Desulfobulbus_oralis.fna") %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".pac_reference_genomes.sorted.bam",""),
+         name2 = str_replace_all(name2, ".pac_reference_genomes.sorted.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 97.96557) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 97.96557) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     order = "hclust", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(97.96557, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = FALSE, 
+                     tl.col = 'black')
+
+ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left")
+
+```
+
+
+```{r o807, eval = F}
+gw_wide <- gw_dup %>%
+  filter(genome == "Olsenella_oral_taxon_807.fna") %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".pac_reference_genomes.sorted.bam",""),
+         name2 = str_replace_all(name2, ".pac_reference_genomes.sorted.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 97.49325) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 97.49325) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     order = "hclust", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(97.49325, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = FALSE, 
+                     tl.col = 'black')
+
+ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left")
+
+```
+
+```{r tforsythia}
+gw_wide <- gw_dup %>%
+  filter(genome == "Tannerella_forsythia_9212.fa") %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.545) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  arrange(name2) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.545) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+gw_wide %>%
+  corrplot::corrplot(., 
+                     order = "hclust", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.545, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = FALSE, 
+                     tl.col = 'black')
+
+col_fun = circlize::colorRamp2(c(99.5, 99.75, 100), c("#ffffff", "#77c8f9", "#098BD9"))
+
+ht1 = ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left")
+
+ht1 = ComplexHeatmap::draw(ht1)
+
+
+gw_dup %>%
+  filter(genome == "Tannerella_forsythia_9212.fa") %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.545) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  filter(popANI != 100) %>%
+  filter(popANI >= 95) %>%
+  arrange(desc(popANI))
+
+```
+
+```{r}
+roworder <- ComplexHeatmap::row_order(ht1)
+
+row_clusters <- roworder %>%
+  as.data.frame(.) %>%
+  rename(line_number = 1) %>%
+  mutate(dendro_order = 1:n())
+
+Tf_hm_order <- gw_wide %>%
+  as.data.frame(.) %>%
+  rownames_to_column("Samples")  %>%
+  select(Samples) %>%
+  mutate(Samples = str_replace_all(Samples, ".mask_1_1.bam",""),
+         Samples = str_replace_all(Samples, ".mask_13_13.bam","")) %>%
+  mutate(line_number = 1:n()) %>%
+  full_join(., row_clusters, by  = "line_number") %>%
+  arrange(dendro_order) %>%
+  pull(Samples)
+
+```
+
+
+```{r tf_chm}
+selected_metadata <- metadata %>%
+  select(Library_ID, Lab, Age_mean, Island) %>%
+  separate(Library_ID, into = "SampleID", extra = "drop", sep = "\\.") %>%
+  filter(!str_detect(Island, "Bone|Blank")) %>%
+  mutate(SampleID = str_replace_all(SampleID, "-00-01","")) %>%
+  separate(SampleID, into = "SampleID", extra = "drop", sep = "_") %>%
+  inner_join(., gw_wide %>%
+               as.data.frame(.) %>%
+               rownames_to_column("SampleID") %>%
+               select(SampleID), by = "SampleID") %>%
+  # mutate(SampleID = fct_relevel(SampleID, Tf_hm_order)) %>%
+  arrange(SampleID) %>%
+  column_to_rownames("SampleID") %>%
+  as.data.frame()
+
+col_age = circlize::colorRamp2(c(0, 3000), c("#098BD9", "#7D3560"))
+col_fun = circlize::colorRamp2(c(99.5, 99.75, 100), c("#ffffff", "#77c8f9", "#098BD9"))
+
+
+row_ha <- ComplexHeatmap::HeatmapAnnotation(df = selected_metadata, col = list(Island = Island_colors,
+                                                                               Age_mean = col_age,
+                                                                               Lab = Lab_colors))
+
+ht_tf = ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
+
+ht_tf = ComplexHeatmap::draw(ht_tf)
+
+# svg(file = "./06-publication/supplemental_figures/Sup_fig_XX10/Tf_strain_corr_plot.svg", width = 7, height = 5)
+# 
+# ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
+# 
+# dev.off()
+
+
+```
+
+```{r tf_heatmap_order}
+
+gw_wide <- gw_dup %>%
+  filter(genome == "Tannerella_forsythia_9212.fa") %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.545) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  # filter(name1 == "ANN001.mask_1_1.bam") %>%
+  # arrange(desc(popANI))
+  mutate(name2 = fct_relevel(name2, Tf_hm_order)) %>%
+  arrange(name2) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.545) %>%
+  mutate(name1 = fct_relevel(name1, Tf_hm_order)) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+col_fun = circlize::colorRamp2(c(45, 72.5, 100), c("#ffffff", "#77c8f9", "#098BD9"))
+# col_fun = circlize::colorRamp2(c(40, 50, 60, 70, 80, 90, 100), c("#C70E7B", "#007BC3", "#EFEF46", "#009F3F", "#AF6125", "#B25D91", "#EF7C12"))
+gw_wide %>%
+  corrplot::corrplot(., 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.545, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black')
+
+
+
+```
+
+```{r tf_tree_order}
+
+tree_order <- fread("./05-Documentation.backup/Tf_tip_order.tsv") %>%
+  separate(tip_order, into = c("Sample","rest"), sep = "\\.") %>%
+  pull(Sample)
+
+gw_wide <- gw_dup %>%
+  filter(genome == "Tannerella_forsythia_9212.fa") %>%
+  select(name1, name2, popANI)%>%
+  mutate(popANI = popANI * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.545) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "popANI") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(popANI = ifelse(same == TRUE, 100, popANI)) %>%
+  select(-same) %>%
+  # filter(name1 == "ANN001.mask_1_1.bam") %>%
+  # arrange(desc(popANI))
+  mutate(name2 = fct_relevel(name2, tree_order)) %>%
+  arrange(name2) %>%
+  pivot_wider(names_from = "name2", values_from = "popANI", values_fill = 99.545) %>%
+  mutate(name1 = fct_relevel(name1, tree_order)) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+col_fun = circlize::colorRamp2(c(45, 72.5, 100), c("#ffffff", "#77c8f9", "#098BD9"))
+# col_fun = circlize::colorRamp2(c(40, 50, 60, 70, 80, 90, 100), c("#C70E7B", "#007BC3", "#EFEF46", "#009F3F", "#AF6125", "#B25D91", "#EF7C12"))
+gw_wide %>%
+  corrplot::corrplot(., 
+                     order = "original", 
+                     type = "lower", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(99.545, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black')
+
+
+
+```
+
+```{r}
+gw_wide <- gw_dup %>%
+  filter(genome == "Tannerella_forsythia_9212.fa") %>%
+  select(name1, name2, percent_compared)%>%
+  mutate(percent_compared = percent_compared * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "percent_compared", values_fill = 45) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "percent_compared") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(percent_compared = ifelse(same == TRUE, 100, percent_compared)) %>%
+  select(-same) %>%
+  # filter(name1 == "ANN001.mask_1_1.bam") %>%
+  # arrange(desc(percent_compared))
+  mutate(name2 = fct_relevel(name2, Tf_hm_order)) %>%
+  arrange(name2) %>%
+  pivot_wider(names_from = "name2", values_from = "percent_compared", values_fill = 45) %>%
+  mutate(name1 = fct_relevel(name1, Tf_hm_order)) %>%
+  arrange(name1) %>%
+  column_to_rownames("name1") %>%
+  as.matrix()
+
+col_fun = circlize::colorRamp2(c(45, 72.5, 100), c("#ffffff", "#77c8f9", "#098BD9"))
+# col_fun = circlize::colorRamp2(c(40, 50, 60, 70, 80, 90, 100), c("#C70E7B", "#007BC3", "#EFEF46", "#009F3F", "#AF6125", "#B25D91", "#EF7C12"))
+gw_wide %>%
+  corrplot::corrplot(., 
+                     order = "original", 
+                     type = "upper", 
+                     method = "color",
+                     col = colorset,
+                     col.lim = c(45, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     tl.col = 'black')
+
+ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left")
+
+# try w/o clustering
+ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
+
+# svg(file = "./06-publication/supplemental_figures/Sup_fig_XX10/Tf_strain_pct_comp_plot.svg", width = 7, height = 5)
+# 
+# ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
+# 
+# dev.off()
+
+
+gw_dup %>%
+  filter(genome == "Tannerella_forsythia_9212.fa") %>%
+  select(name1, name2, percent_compared)%>%
+  mutate(percent_compared = percent_compared * 100) %>%
+  mutate(name1 = str_replace_all(name1, ".mask_1_1.bam",""),
+         name2 = str_replace_all(name2, ".mask_13_13.bam",""),
+         name1 = str_replace_all(name1, ".mask_13_13.bam",""),
+         name2 = str_replace_all(name2, ".mask_1_1.bam","")) %>%
+  pivot_wider(names_from = "name2", values_from = "percent_compared", values_fill = 34) %>%
+  pivot_longer(!name1, names_to = "name2", values_to = "percent_compared") %>%
+  mutate(same = name1 == name2) %>%
+  mutate(percent_compared = ifelse(same == TRUE, 100, percent_compared)) %>%
+  select(-same) %>%
+  # filter(name1 == "ANN001.mask_1_1.bam") %>%
+  # arrange(desc(percent_compared))
+  mutate(name1 = fct_relevel(name1, abot439_hm_order),
+         name2 = fct_relevel(name2, abot439_hm_order)) %>%
+  filter(percent_compared < 100) %>%
+  # filter(percent_compared >= 80) %>%
+  arrange(percent_compared)
+
+```
+
+```{r Tf_cov}
+
+masked_cov %>%
+  filter(genome == "Tannerella_forsythia_9212.fa") %>%
+  select(Sample_ID, coverage, breadth) %>%
+  left_join(., metadata %>%
+              mutate(libid = Library_ID) %>%
+              separate(libid, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Library_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(coverage)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = coverage, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    # scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    geom_hline(yintercept = 5, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Average coverage depth") +
+    ggtitle("Tannerella forsythia")
+
+
+masked_cov %>%
+  filter(genome == "Tannerella_forsythia_9212.fa") %>%
+  select(Sample_ID, coverage, breadth) %>%
+  left_join(., metadata %>%
+              mutate(libid = Library_ID) %>%
+              separate(libid, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Library_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(breadth)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = breadth, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1.0)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    geom_hline(yintercept = 1.0, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Breadth 1X coverage") +
+    ggtitle("Tannerella forsythia")
+
+
+masked_cov %>%
+  filter(genome == "Tannerella_forsythia_9212.fa") %>%
+  select(Sample_ID, breadth_minCov) %>%
+  left_join(., metadata %>%
+              mutate(libid = Library_ID) %>%
+              separate(libid, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Library_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(breadth_minCov)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = breadth_minCov, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1.0)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    # theme(panel.grid.minor.y = element_blank()) +
+    geom_hline(yintercept = 1.0, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Breadth 5X coverage") +
+    ggtitle("Tannerella forsythia")
+
+
+```
+
+```{r Tf_cov_polymut}
+
+# compare mapping stats with those used by polymut
+polymut  <- fread("./05-Documentation.backup/Tf_polymut_stats.tsv")
+
+# average depth of coverage (only includes covered bases)
+masked_cov %>%
+  filter(genome == "Tannerella_forsythia_9212.fa") %>%
+  select(Sample_ID, coverage, breadth) %>%
+  left_join(., metadata %>%
+              mutate(libid = Library_ID) %>%
+              separate(libid, into = "SampleID", extra = "drop", sep = "\\.") %>%
+              separate(SampleID, into = c("Sampleid","nextid","oneagain","other"), extra = "merge", sep = "-") %>%
+              unite(Sample_ID, Sampleid:oneagain, sep = "-") %>%
+              select(-other) %>%
+              select(Sample_ID, Library_ID, Lab, Island) %>%
+              mutate(Sample_ID = str_replace_all(Sample_ID, "-NA-NA","")), by = "Sample_ID") %>%
+  full_join(., polymut, by = "Library_ID") %>%
+  group_by(Lab) %>%
+  arrange(Lab, desc(coverage)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, Library_ID)) %>%
+  arrange(Lab) %>%
+  ggplot(., aes(x = Library_ID, y = coverage, fill = Lab)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    geom_point(aes(x = Library_ID, y = avg_depth), size =  1) +
+    scale_fill_manual(values = Lab_colors) +
+    theme_minimal() +
+    # scale_y_log10(breaks = c(1, 10, 25, 50, 100)) +
+    # scale_y_continuous(trans=scales::pseudo_log_trans(base = 10),  breaks = c(0.1, 1, 10, 50, 100)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    theme(panel.grid.major.x = element_blank()) +
+    geom_hline(yintercept = 5, linetype = "dotted") +
+    xlab("Sample") +
+    ylab("Average coverage depth") +
+    ggtitle("Anaerolineaceae bacterium oral taxon 439")
+
+
+```
+
+
+
+

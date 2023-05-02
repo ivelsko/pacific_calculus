@@ -1,0 +1,205 @@
+---
+title: "Middenbeemster, CMB calculus sample cumulative decay curves from nt MALT database"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output: github_document
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(janitor)
+library(cuperdec)
+library(data.table)
+library(magrittr) ## for pipes!
+library(dplyr) # for mutate()!
+library(tidyverse)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+Read in the full species and genus tables
+```{r ancient_params_table}
+# read in the species table
+mpa3_anc_params_raw <- fread("./05-Documentation.backup/mpa3_anc_params_pacific_abundance_table.tsv") %>%
+  select(-clade_taxid)
+
+# clean the file names
+colnames(mpa3_anc_params_raw) <- gsub(".metaphlan.profile","", colnames(mpa3_anc_params_raw))
+colnames(mpa3_anc_params_raw) <- gsub(".SG1.1","", colnames(mpa3_anc_params_raw))
+
+# filter to have only species
+mpa3_anc_params_sp <- mpa3_anc_params_raw %>% 
+  filter(str_detect(clade_name, "s__")) %>%
+  separate(clade_name, into = c("K","P","C","O","F","G","Species"), sep = "\\|") %>%
+  select(-c("K","P","C","O","F","G")) %>%
+  mutate(Species = str_replace_all(Species, "s__",""),
+         Species = str_replace_all(Species, "_"," ")) %>%
+  # remove sample with no information
+  select(-matches("HCLVMBCX2-3505-26-00-01_S26")) %>%
+  arrange(Species)
+
+mpa3_anc_params_short <- mpa3_anc_params_sp %>%
+  select(matches("Species|NMU"))
+
+
+```
+
+
+```{r default_params_table, eval = F}
+# read in the species table
+# this is the default parameters, don't use this one - use the ancient parameters output table
+mpa3_default_raw <- fread("./05-Documentation.backup/mpa3_pacific_abundance_table.tsv") %>%
+  select(-NCBI_tax_id)
+
+# clean the file names
+colnames(mpa3_default_raw) <- gsub(".metaphlan3","", colnames(mpa3_default_raw))
+colnames(mpa3_default_raw) <- gsub(".SG1.1","", colnames(mpa3_default_raw))
+
+# filter to have only species
+mpa3_default_sp <- mpa3_default_raw %>% 
+  filter(str_detect(clade_name, "s__")) %>%
+  separate(clade_name, into = c("K","P","C","O","F","G","Species"), sep = "\\|") %>%
+  select(-c("K","P","C","O","F","G")) %>%
+  mutate(Species = str_replace_all(Species, "s__",""),
+         Species = str_replace_all(Species, "_"," ")) %>%
+  # remove sample with no information
+  select(-matches("HCLVMBCX2-3505-26-00-01_S26")) %>%
+  arrange(Species)
+
+```
+
+
+Load metadata
+```{r load_metadata}
+
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  # this sample has no information so we'll remove it
+  filter(Library_ID != "HCLVMBCX2-3505-26-00-01_S26",
+         !str_detect(Library_ID, "ARS")) %>%
+  mutate(cuperdec_island = ifelse(Type == "blank","Blank",
+                                  ifelse(Type == "bone","Bone",Island)))
+# in metadata but not mpa3 table
+pacific_metadata %>%
+  select(Library_ID) %>%
+  anti_join(., mpa3_anc_params_sp %>%
+              pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+              select(Library_ID) %>%
+              distinct())
+# in mpa3 table but not metadata
+mpa3_anc_params_sp %>%
+  pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+  select(Library_ID) %>%
+  distinct() %>%
+  anti_join(., pacific_metadata %>%
+              select(Library_ID), by = "Library_ID")
+
+```
+
+
+# MetaPhlAn3
+
+Use the example database
+```{r set_database}
+# load the example database
+example_database <- system.file("extdata",
+                                "example_database.tsv",
+                                package = "cuperdec")
+
+# convert the example database to a tibble
+database <- load_database(example_database, target = "oral") # %>% print()
+
+```
+
+```{r taxatable}
+
+taxatable <- load_taxa_table(mpa3_anc_params_sp) # %>% print()
+
+```
+
+```{r metamap}
+metadata_map <- load_map(pacific_metadata,
+                     sample_col = "Library_ID",
+                     source_col = "cuperdec_island") # %>% print()
+
+```
+
+```{r simple_curve}
+curves <- calculate_curve(taxatable, database = database) %>%
+  print()
+
+plot_cuperdec(curves)
+
+
+curves %>%
+  filter(Sample == "CSD")
+
+
+```
+
+```{r metadata_curve}
+plot_cuperdec(curves, metadata_map)
+
+```
+
+```{r filter_curve}
+
+filter_result <- simple_filter(curves, percent_threshold = 50) # percent_threshold = 82 starts to color some of the CMC samples red
+
+plot_cuperdec(curves, metadata_map, filter_result, restrict_x = 50)
+
+```
+
+```{r hard_rank_burnin}
+
+rank_burnin_result <- hard_burnin_filter(curves, percent_threshold = 40, rank_burnin = 0.1) 
+
+# restrict the plot to only the 1st 250 taxa
+cd_curve_plot <- plot_cuperdec(curves, metadata_map, rank_burnin_result, restrict_x = 50)
+cd_curve_plot
+
+# ggsave("~/Desktop/MID_cuperdec_rank7_pct50.pdf", plot = cd_curve_plot, device = "pdf",
+#        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
+
+```
+
+```{r adaptive_rank_burnin}
+
+adaptive_rank_burnin_result <- adaptive_burnin_filter(curves, percent_threshold = 45) 
+cd_curve_plot <- plot_cuperdec(curves, metadata_map, adaptive_rank_burnin_result, restrict_x = 50)
+cd_curve_plot
+
+
+# ggsave("./06-publication/supplemental_figures/SXX1/SXX1_cuperdec_adaptive_68pct.png", plot = cd_curve_plot, device = "png",
+#        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
+
+```
+
+```{r discard_list, eval = F}
+
+controls <- pacific_metadata %>%
+  filter(Type != "calculus") %>%
+  pull(Library_ID)
+
+# this will not have any CMC samples
+discard_list <- adaptive_rank_burnin_result %>% filter(!Passed) %>%
+  filter(!str_detect(Sample, controls %>%
+                      str_c(collapse = "|"))) %>%
+  select(Sample)
+discard_list
+
+# fwrite(discard_list, "./05-Documentation.backup/oceania_cuperdec_mpa3_anc_params_poor_samples.tsv", sep = "\t", quote = F)
+# fwrite(discard_list, "../strep_clades/00-documentation/oceania_cuperdec_mpa3_anc_params_poor_samples.tsv", sep = "\t", quote = F)
+
+# list the controls that passed to know which to remove before running decontam
+adaptive_rank_burnin_result %>% filter(Passed) %>%
+  filter(str_detect(Sample, "EXB|LIB"))
+
+```
+
+
+

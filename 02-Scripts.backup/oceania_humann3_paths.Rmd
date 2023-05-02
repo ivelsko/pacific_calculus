@@ -1,0 +1,984 @@
+---
+title: "Pacific calculus humann3 pahway analysis"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(decontam)
+library(data.table)
+# library(vegan)
+library(edgeR) # needed to run ComBat_seq
+library(mixOmics)
+library(janitor)
+library(rstatix)
+library(pander)
+library(variancePartition)
+library(tidyverse)
+library(gplots)
+library(ggrepel)
+library(viridis)
+library(patchwork)
+library(RColorBrewer)
+library(microshades)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+
+# humann3 tables 
+```{r load_data}
+## load the species and genus tables generated with humann3
+humann3_path_full <- fread("04-Analysis/humann3/pathabundance_anc_params_joined_cpm.tsv")
+humann3_path_full <- as_tibble(humann3_path_full)
+
+# clean the file names
+humann3_path_full <- rename(humann3_path_full, Pathway = `# Pathway`)
+colnames(humann3_path_full) <- gsub("_Abundance","", colnames(humann3_path_full))
+colnames(humann3_path_full) <- gsub(".SG1.1","", colnames(humann3_path_full))
+
+# remove unmapped and ungrouped reads
+humann3_path <- humann3_path_full %>% 
+  filter(!str_detect(Pathway, "UNMAPPED|UNINTEGRATED")) %>%
+  # remove Heping Dao calculus
+  select(-c("HPD005.B0101","HPD006.B0101","HPD007.B0101"))
+
+```
+
+```{r metadata}
+# load the metadata file
+metadata <- fread("./05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  full_join(., fread("./05-Documentation.backup/oceana_climate.tsv")) %>%
+  mutate(Island = ifelse(Type == "blank", "Blank",Island)) %>%
+  mutate(Island = ifelse(Type == "bone", "Bone", Island)) %>%
+  # mutate(Library_ID = str_replace_all(Library_ID, ".SG1.1","")) %>%
+  mutate(Island = str_replace_all(Island, "Efate_3000", "Efate 3000 BP"),
+         Island = str_replace_all(Island, "Rapa_Nui", "Rapa Nui"),
+         Island = str_replace_all(Island, "Viti_Levu", "Viti Levu"),
+         Island = str_replace_all(Island, "Taumako_Duff_Islands", "Taumako")) %>%
+  mutate(Type = str_replace_all(Type, "bone","Arch. Bone"),
+         Type = str_replace_all(Type, "calculus","Arch. calculus"))
+         
+```
+
+```{r}
+# make a list of blanks b/c they don't all have the same prefixes
+blanks <- metadata %>%
+  filter(str_detect(Type, "blank|Bone")) %>%
+  filter(!str_detect(Library_ID, "ARS")) %>%
+  select(Library_ID) %>%
+  pull()
+
+```
+
+
+```{r cuperdec_poor_samples}
+# poor_samples <- fread("./05-Documentation.backup/cfdp_fail_samples_20210413.txt") %>%
+#   pull(Sample)
+
+cfdp_fail <- fread("05-Documentation.backup/oceania_cuperdec_mpa3_anc_params_poor_samples.tsv") %>%
+  rename(Library_ID = 1) %>%
+  pull(Library_ID)
+
+poor_samples <- fread("05-Documentation.backup/mpa3_anc_params_poor_samples.tsv")
+
+
+```
+
+```{r colors}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Rurutu" = "#9d654c", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =  microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" = microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+Type_colors <- c("Arch. Bone" = "#148F77", "blank" = "#8B8B8B", "Arch. calculus" = "black")
+
+
+```
+
+```{r}
+Island_shapes = c("Tongatapu" = 21, 
+                  "Rurutu" = 21, 
+                  "Flores" = 21, 
+                  "Rapa Nui" = 21, 
+                  "Futuna" = 21, 
+                  "Efate" = 21, 
+                  "Vao" = 21,
+                  "Efate 3000 BP" = 21, 
+                  "Uripiv" = 21, 
+                  "Viti Levu" = 21, 
+                  "Raiatea" = 21, 
+                  "Taumako" = 21, 
+                  "Watom" = 21)
+
+Lab_shapes = c(21,21,21)
+Lab_size = c(4,4,4)
+
+Type_shapes = c(21,21,21,21,21,21,21,21)
+Type_size = c(4,4,4,4,4,4,4,4)
+
+```
+
+
+```{r plot_pca_fxn}
+
+# add functions for:
+# making the input table for PCA?
+
+# plotting PCA with colored dots
+plot_pca <- function(df, pc1, pc2, color_group, shape_group) {
+    metadata_group_colors <- get(paste(color_group, "_colors", sep = ""))
+    metadata_group_shapes <- get(paste(shape_group, "_shapes", sep = ""))
+
+    exp_var <- paste0(round(df$prop_expl_var$X * 100, 2), "%")
+    df_X <- df$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata, by = "Library_ID")
+    
+    color_group = df_X[[color_group]]
+    shape_group = df_X[[shape_group]]
+
+                       if (pc1 == 'PC1') {
+                           pc1 <- df_X$PC1
+                           exp_var_pc1 <- exp_var[1]
+                           xaxis <- c("PC1")
+                       }  else if (pc1 == 'PC2') {
+                           pc1 <- df_X$PC2
+                           exp_var_pc1 <- exp_var[2]
+                           xaxis <- c("PC2")
+                       } else if (pc1 == 'PC3') {
+                           pc1 <- df_X$PC3
+                           exp_var_pc1 <- exp_var[3]
+                           xaxis <- c("PC3")
+                       }
+
+                       if (pc2 == 'PC1') {
+                           pc2 <- df_X$PC1
+                           exp_var_pc2 <- exp_var[1]
+                           yaxis <- c("PC1")
+                       }  else if (pc2 == 'PC2') {
+                           pc2 <- df_X$PC2
+                           exp_var_pc2 <- exp_var[2]
+                           yaxis <- c("PC2")
+                       } else if (pc2 == 'PC3') {
+                           pc2 <- df_X$PC3
+                           exp_var_pc2 <- exp_var[3]
+                           yaxis <- c("PC3")
+                       }
+
+    pca_plot <- ggplot(df_X, aes(pc1, pc2)) +
+                        geom_point(aes(fill = color_group, shape = shape_group), size = 4, stroke = 0.3, shape = 21) +
+                        scale_fill_manual(values = metadata_group_colors) +
+                        xlab(paste(xaxis, " - ", exp_var_pc1)) +
+                        ylab(paste(yaxis, " - ", exp_var_pc2)) +
+                        theme_minimal(base_size = 14) +
+                        theme(legend.position = "right") +
+                        theme(legend.title = element_blank())
+
+    return(pca_plot)
+}
+
+```
+
+
+```{r plot_bi}
+# this function plots the PCA with biplots to look at the categories with strongest loadings
+plot_pca_bi <- function(df, pc1, pc2, metadata_group, columntitle, Pathways = c("TRUE","FALSE")) {
+    metadata_group_colors <- get(paste(metadata_group, "_colors", sep = ""))
+    metadata_group_shapes <- get(paste(metadata_group, "_shapes", sep = ""))
+   
+    arrow_pc <- enquo(columntitle)
+    
+    exp_var <- paste0(round(df$prop_expl_var$X * 100, 2), "%") # explained variance for x- and y-labels
+    
+    # select only the PCs from the PCA and add metadata
+    df_X <- df$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata, by = "Library_ID")
+    
+    metadata_group = df_X[[metadata_group]]
+    
+    corr_lam <- df$sdev[c("PC1", "PC2", "PC3")] * sqrt(nrow(df_X))
+
+    df_X <- df_X %>%
+      mutate(PC1 = PC1 / corr_lam[1],
+             PC2 = PC2 / corr_lam[2], 
+             PC3 = PC3 / corr_lam[3])
+
+    # select the correct PC column and explained variance for PC1
+    if (pc1 == 'PC1') {
+        Pc1 <- df_X$PC1
+        exp_var_pc1 <- exp_var[1]
+        xaxis <- c("PC1")
+    } else if (pc1 == 'PC2') {
+        Pc1 <- df_X$PC2
+        exp_var_pc1 <- exp_var[2]
+        xaxis <- c("PC2")
+    } else if (pc1 == 'PC3') {
+        Pc1 <- df_X$PC3
+        exp_var_pc1 <- exp_var[3]
+        xaxis <- c("PC3")
+   }
+    
+    # select the correct PC column and explained variance for PC2
+    if (pc2 == 'PC1') {
+        Pc2 <- df_X$PC1
+        exp_var_pc2 <- exp_var[1]
+        yaxis <- c("PC1")
+ } else if (pc2 == 'PC2') {
+       Pc2 <- df_X$PC2
+       exp_var_pc2 <- exp_var[2]
+       yaxis <- c("PC2")
+    } else if (pc2 == 'PC3') {
+       Pc2 <- df_X$PC3
+       exp_var_pc2 <- exp_var[3]
+       yaxis <- c("PC3")
+   }
+
+    # Identify the 10 Pathways that have highest positive and negative loadings in the selected PC
+    pws_10 <- df$loadings$X %>%
+      as.data.frame(.) %>%
+      rownames_to_column(var = "Function") %>%
+      top_n(10, !!arrow_pc)
+   if (Pathways == T) {
+      pws_10 <- pws_10 %>%
+        rename(Pathway = Function) %>%
+        mutate(Function = sapply(Pathway, function(f) {
+                                  unlist(str_split(f, ":"))[1]
+                           })) 
+    }
+
+    neg_10 <- df$loadings$X %>%
+      as.data.frame(.) %>%
+      rownames_to_column(var = "Function") %>%
+      top_n(-10, !!arrow_pc)
+    if (Pathways == T) {
+      neg_10 <- neg_10 %>%
+      rename(Pathway = Function) %>%
+       mutate(Function = sapply(Pathway, function(f) {
+                                  unlist(str_split(f, ":"))[1]
+                           })) 
+    }
+
+
+    pca_plot_bi <- ggplot(df_X, aes(x = Pc1, y = Pc2)) +
+      geom_point(aes(shape = metadata_group, fill = metadata_group), size = 3.5, stroke = 0.3) +
+      geom_segment(data = pws_10,
+                   aes(xend = get(paste(pc1)), yend = get(paste(pc2))),
+                   x = 0, y = 0, colour = "black",
+                   size = 0.5,
+                   arrow = arrow(length = unit(0.03, "npc"))) +
+      geom_label_repel(data = pws_10,
+                   aes(x = get(paste(pc1)), y = get(paste(pc2)), label = Function),
+                   size = 1.5, colour = "grey20", label.padding = 0.2, max.overlaps = 12) +
+      geom_segment(data = neg_10,
+                   aes(xend = get(paste(pc1)), yend = get(paste(pc2))),
+                   x = 0, y = 0, colour = "grey50",
+                   size = 0.5,
+                   arrow = arrow(length = unit(0.03, "npc"))) +
+      geom_label_repel(data = neg_10,
+                   aes(x = get(paste(pc1)), y = get(paste(pc2)), label = Function),
+                   size = 1.5, colour = "grey20", label.padding = 0.2, max.overlaps = 12) +
+      labs(x = paste(xaxis, " - ", exp_var_pc1),
+           y = paste(yaxis, " - ", exp_var_pc2)) +
+      scale_fill_manual(values = metadata_group_colors) +
+      scale_shape_manual(values = metadata_group_shapes) +
+      theme_minimal() + theme(text = element_text(size = 14)) +
+      theme(legend.position = "right")
+
+    return(pca_plot_bi)
+}
+
+
+```
+
+
+```{r pca_plot_cont_fxn}
+# for continuous data
+plot_pca_cont <- function(df_pca, pc1, pc2, color_group, ncomps, title_text) {
+
+    exp_var <- paste0(round(df_pca$prop_expl_var$X * 100, 2), "%")
+    df_X <- df_pca$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(metadata, by = "Library_ID")
+
+    color_group = df_X[[color_group]]
+
+    if (pc1 == 'PC1') {
+        pc1 <- df_X$PC1
+        exp_var_pc1 <- exp_var[1]
+        xaxis <- c("PC1")
+    }  else if (pc1 == 'PC2') {
+        pc1 <- df_X$PC2
+        exp_var_pc1 <- exp_var[2]
+        xaxis <- c("PC2")
+    } else if (pc1 == 'PC3') {
+        pc1 <- df_X$PC3
+        exp_var_pc1 <- exp_var[3]
+        xaxis <- c("PC3")
+    }
+
+    if (pc2 == 'PC1') {
+        pc2 <- df_X$PC1
+        exp_var_pc2 <- exp_var[1]
+        yaxis <- c("PC1")
+    }  else if (pc2 == 'PC2') {
+        pc2 <- df_X$PC2
+        exp_var_pc2 <- exp_var[2]
+        yaxis <- c("PC2")
+    } else if (pc2 == 'PC3') {
+        pc2 <- df_X$PC3
+        exp_var_pc2 <- exp_var[3]
+        yaxis <- c("PC3")
+    }
+
+    pca_plot <- ggplot(df_X, aes(x = pc1, y = pc2)) +
+      geom_point(aes(fill = color_group), size = 3.5, stroke = 0.3, shape = 21) +
+     scale_fill_viridis_c(option = "C") +
+     # scale_shape_manual(values = c(16, 16, 16, 16, 16,16,16,16)) +
+     # scale_shape_manual(values = c(16, 17, 15, 18, 14,9,13,24)) +
+    # stat_ellipse() +
+     xlab(paste(xaxis, " - ", exp_var_pc1)) +
+     ylab(paste(yaxis, " - ", exp_var_pc2)) +
+     theme_minimal(base_size = 16) +
+     theme(text = element_text(size=16)) +
+     theme(legend.title = element_blank(),
+           legend.key.size = unit(2,"mm"),
+           legend.text = element_text(size = 10)) + 
+     theme(legend.position = "right") +
+     ggtitle(title_text) + theme(plot.title = element_text(size = 10))
+
+    return(pca_plot)
+}
+
+```
+
+# Pathway analysis
+
+```{r all_pca}
+ # all samples and blanks
+humann3_path_l1_all <- humann3_path %>%
+  filter(!str_detect(Pathway, "\\|")) %>%
+  pivot_longer(!Pathway, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Pathway,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.humann3_path_pca <- tune.pca(humann3_path_l1_all, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+humann3_path_l1_all.pca <- pca(humann3_path_l1_all, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+plot_pca(humann3_path_l1_all.pca, "PC1", "PC2", "Type", "Type")
+
+
+```
+
+Remove the poorly-preserved samples based on cuperdec. 
+These were removed from the taxonomic analyses.
+```{r cuperdec_poor_rem_pca}
+# make a list of blanks b/c they don't all have the same prefixes
+blanks <- metadata %>%
+  filter(str_detect(Type, "blank|Bone"),
+         !str_detect(Library_ID, "ARS")) %>%
+  select(Library_ID) %>%
+  pull()
+
+# create the input matrix
+humann3_path_l1_cpdrm <- humann3_path %>%
+  filter(!str_detect(Pathway, "\\|")) %>%
+  # remove poorly preserved samples
+  select(-matches(cfdp_fail)) %>%
+  select(-all_of(poor_samples %>% pull(Library_ID))) %>%
+  pivot_longer(!Pathway, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Pathway,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.humann3_path_pca <- tune.pca(humann3_path_l1_cpdrm, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+humann3_path_l1_cpdrm.pca <- pca(humann3_path_l1_cpdrm, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+plot_pca(humann3_path_l1_cpdrm.pca, "PC1", "PC2", "Type", "Type")
+
+```
+
+Clearly estimating preservation based on functional profile gives a different
+result than based on taxonomic profile. There are several samples with
+apparently blank/bone-like functional profiles, but good taxonomic profiles.
+Let's see what a PCA looks like with all samples, colored/shaped by
+cuperdec-determined preservation.
+
+```{r, eval = F}
+#  list taxonomicly well-preserved samples that plot with blanks to remove from downstream analysis
+other_poor <- humann3_path_l1_cpdrm.pca$variates$X %>%
+  as.data.frame() %>%
+  rownames_to_column("Library_ID") %>%
+  inner_join(metadata, by = "Library_ID") %>%
+  filter(PC1 > 0) %>%
+  select(Library_ID, Type) %>%
+  filter(Type == "Arch. calculus") %>%
+  pull(Library_ID)
+
+```
+
+
+```{r poor_marked}
+# mark the taxonomically poorly-preserved samples to see where they fall in pathway preservation
+poor_df <- poor_samples %>%
+  as_tibble(.) %>%
+  rename(Library_ID = 1) %>%
+  # add the cuperdec poor samples
+  bind_rows(., cfdp_fail %>%
+              as_tibble(.) %>%
+              rename(Library_ID = 1)) %>%
+  mutate(Preservation = "Poor")
+
+exp_var <- paste0(round(humann3_path_l1_all.pca$prop_expl_var$X * 100, 2), "%")
+df_X_all <- humann3_path_l1_all.pca$variates$X %>%
+           as.data.frame() %>%
+           rownames_to_column("Library_ID") %>%
+           left_join(metadata, by = "Library_ID") %>%
+           full_join(., poor_df, by = "Library_ID") %>%
+           mutate(Preservation = ifelse(is.na(Preservation), "Good", Preservation)) %>%
+           mutate(Preservation = ifelse(Type == "blank","Blank",
+                                        ifelse(Type == "Arch. Bone", "Arch. Bone", Preservation))) %>%
+           # there's one sample with NA and no metadata, so call it poorly-preserved
+           mutate(Preservation = ifelse(is.na(Preservation), "Poor", Preservation))
+
+# test plot
+df_X_all %>%
+  ggplot(., aes(PC1, PC2, color = Preservation, shape = Preservation)) +
+                  geom_point(size = 4) +
+                  xlab(paste("PC1 - ", exp_var[1])) +
+                  ylab(paste("PC2 - ", exp_var[2])) +
+                  # xlim(5, 10) +
+                  # ylim(-1,1) +
+                  theme_minimal(base_size = 14) +
+                  theme(legend.position = "right") +
+                  theme(legend.title = element_blank())
+
+
+
+```
+
+```{r path_poor}
+# Based on the PCA above, try all samples with PC1 loadings < 7.5 as "poorly preserved"
+path_poor <- humann3_path_l1_all.pca$variates$X %>%
+  as.data.frame() %>%
+  rownames_to_column("Library_ID") %>%
+  inner_join(metadata, by = "Library_ID") %>%
+  filter(PC1 < 7.5) %>%
+  select(Library_ID, Type) %>%
+  filter(Type == "Arch. calculus") %>%
+  arrange(Library_ID) %>%
+  pull(Library_ID)
+
+
+```
+
+Remove the path_poor samples and see what the PCA looks like
+```{r poor_removed_marked}
+df_X_all %>%
+  filter(!str_detect(Library_ID, path_poor %>%
+                       str_c(collapse = "|"))) %>%
+  ggplot(., aes(PC1, PC2, color = Preservation, shape = Preservation)) +
+                  geom_point(size = 4) +
+                  xlab(paste("PC1 - ", exp_var[1])) +
+                  ylab(paste("PC2 - ", exp_var[2])) +
+                  theme_minimal(base_size = 14) +
+                  theme(legend.position = "right") +
+                  theme(legend.title = element_blank())
+
+
+
+```
+
+What does the PCA look like if we filter low-prevalence pathways and remove
+poorly-preserved samples?
+
+```{r filter_all_pca}
+# try filtering the table
+# list all pathways that are present in at least 1/3 of samples, as a way to reduce the input
+humann3_path.decontam_noblanks_presence_more_30 <- humann3_path %>%
+  filter(!str_detect(Pathway, "\\|")) %>%
+  # remove poorly preserved samples and blanks
+  select(-all_of(blanks)) %>%
+  select(-all_of(path_poor)) %>%
+  mutate_if(is.numeric, ~1 * (. > 0)) %>%
+  pivot_longer(!Pathway, names_to = "Library_ID", values_to = "Counts") %>%
+  group_by(Pathway) %>%
+  summarize(Percent_presence = sum(Counts)/length(Library_ID)*100) %>%
+  # select the pathways that are present in at least 1/3 of samples
+  ungroup() %>%
+  # pathways present in > 1/3 of samples 
+  filter(Percent_presence >= 33.33) %>%
+  # pull out these pathways to keep
+  select(Pathway)
+
+# create the input matrix
+humann3_path_l1_filt <- humann3_path %>%
+  filter(!str_detect(Pathway, "\\|")) %>%
+  # remove poorly preserved samples
+  select(-all_of(path_poor)) %>%
+  inner_join(., humann3_path.decontam_noblanks_presence_more_30, by = "Pathway") %>%
+  pivot_longer(!Pathway, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Pathway,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.humann3_path_filt_pca <- tune.pca(humann3_path_l1_filt, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+humann3_path_l1_filt.pca <- pca(humann3_path_l1_filt, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+plot_pca(humann3_path_l1_filt.pca, "PC1", "PC2", "Type", "Type")
+
+exp_var <- paste0(round(humann3_path_l1_filt.pca$prop_expl_var$X * 100, 2), "%")
+df_X_filt <- humann3_path_l1_filt.pca$variates$X %>%
+           as.data.frame() %>%
+           rownames_to_column("Library_ID") %>%
+           left_join(metadata, by = "Library_ID") %>%
+           # full_join(., poor_df, by = "Library_ID") %>%
+           mutate(Preservation = "Good") %>%
+           mutate(Preservation = ifelse(Type == "blank","Blank",
+                                        ifelse(Type == "Arch. Bone", "Arch. Bone", Preservation)))
+
+# test plot
+df_X_filt %>%
+  ggplot(., aes(PC1, PC2, color = Preservation, shape = Preservation)) +
+                  geom_point(size = 4) +
+                  xlab(paste("PC1 - ", exp_var[1])) +
+                  ylab(paste("PC2 - ", exp_var[2])) +
+                  # xlim(5, 10) +
+                  # ylim(-1,1) +
+                  theme_minimal(base_size = 14) +
+                  theme(legend.position = "right") +
+                  theme(legend.title = element_blank())
+
+
+```
+
+
+Plot a PCA with only the well-preserved samples
+```{r pca_paths_noblanks}
+
+humann3_path_l1_noblanks <- humann3_path %>%
+  filter(!str_detect(Pathway, "\\|")) %>%
+  # remove poorly prserved samples
+  select(-all_of(path_poor)) %>%
+  select(-all_of(blanks)) %>%
+  # select(-all_of(poor_samples)) %>%
+  # select(-all_of(other_poor)) %>%
+  # inner_join(., humann3_path.decontam_noblanks_presence_more_30, by = "Pathway") %>%
+  pivot_longer(!Pathway, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Pathway,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.humann3_path_pca <- tune.pca(humann3_path_l1_noblanks, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+humann3_path_l1_noblanks.pca <- pca(humann3_path_l1_noblanks, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+plot_pca(humann3_path_l1_noblanks.pca, "PC1", "PC2", "Island", "Island")
+plot_pca(humann3_path_l1_noblanks.pca, "PC1", "PC2", "Lab", "Lab")
+
+```
+
+Plot a PCA with only the well-preserved samples and filter the pathways by prevalence
+```{r pca_paths_filt_noblanks}
+humann3_path_l1_noblanks_filt <- humann3_path %>%
+  filter(!str_detect(Pathway, "\\|")) %>%
+  # remove poorly preserved samples
+  select(-all_of(path_poor)) %>%
+  select(-all_of(blanks)) %>%
+  # select(-all_of(poor_samples)) %>%
+  # select(-all_of(other_poor)) %>%
+  inner_join(., humann3_path.decontam_noblanks_presence_more_30, by = "Pathway") %>%
+  pivot_longer(!Pathway, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Pathway,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.humann3_path_pca <- tune.pca(humann3_path_l1_noblanks_filt, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+humann3_path_l1_noblanks_filt.pca <- pca(humann3_path_l1_noblanks_filt, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+plot_pca(humann3_path_l1_noblanks_filt.pca, "PC1", "PC2", "Island", "Island")
+plot_pca(humann3_path_l1_noblanks_filt.pca, "PC1", "PC2", "Lab", "Lab")
+
+```
+
+## Batch correction with ComBat
+```{r}
+source("./02-Scripts.backup/ComBat-seq/ComBat_seq.R")
+source("./02-Scripts.backup/ComBat-seq/helper_seq.R")
+
+```
+
+Use the filtered table for batch-correction
+```{r}
+# transpose dataframe for ComBat
+# this table has the poorly-preserved samples removed
+humann3_path_l1_noblanks_filt_t <- humann3_path_l1_noblanks_filt %>%
+  rownames_to_column("Library_ID") %>%
+  pivot_longer(!Library_ID, names_to = "Pathway", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  column_to_rownames("Pathway")
+
+h3_path_mat <- as.matrix(humann3_path_l1_noblanks_filt_t)
+
+lab_batch <- humann3_path_l1_noblanks_filt %>%
+  rownames_to_column("Library_ID") %>%
+  left_join(., metadata) %>%
+  select(Library_ID, Lab, everything()) %>%
+  mutate(Lab = ifelse(is.na(Lab),"Otago",Lab)) %>%
+  select(Lab) %>%
+  pull()
+
+```
+
+Or use the non-filtered tale
+```{r eval = F}
+# transpose dataframe for ComBat
+# this table has the poorly-preserved samples removed
+humann3_path_l1_noblanks_t <- humann3_path_l1_noblanks %>%
+  rownames_to_column("Library_ID") %>%
+  pivot_longer(!Library_ID, names_to = "Pathway", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  column_to_rownames("Pathway")
+
+h3_path_mat <- as.matrix(humann3_path_l1_noblanks_t)
+
+lab_batch <- humann3_path_l1_noblanks %>%
+  rownames_to_column("Library_ID") %>%
+  left_join(., metadata) %>%
+  select(Library_ID, Lab, everything()) %>%
+  mutate(Lab = ifelse(is.na(Lab),"Otago",Lab)) %>%
+  select(Lab) %>%
+  pull()
+
+```
+
+```{r}
+h3_path_mat_adjusted <- ComBat_seq(h3_path_mat, batch=lab_batch)
+
+```
+
+```{r}
+h3_path_mat_cor <- h3_path_mat_adjusted %>%
+  as.data.frame(.) %>%
+  rownames_to_column("Pathway")
+
+# fwrite(h3_path_mat_cor, "./04-Analysis/humann3/humann3_paths_batch_corrected.tsv")
+
+```
+
+
+```{r}
+# now check the PCA after batch correction
+h3_path_cor <- h3_path_mat_cor %>%
+  pivot_longer(!Pathway, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(Pathway,Counts) %>%
+  column_to_rownames("Library_ID")
+
+
+# check the number of components to retain by tuning the PCA
+tune.humann3_path_pca <- tune.pca(h3_path_cor, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+h3_path_cor.pca <- pca(h3_path_cor, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+plot_pca(h3_path_cor.pca, "PC1", "PC2", "Island", "Island")
+plot_pca(h3_path_cor.pca, "PC1", "PC2", "Lab", "Lab")
+
+
+```
+
+
+
+Now let's look at which pathways are driving separation of the sample groups.
+Which of the pathways have the strongest loadings in PC1 and PC2?
+```{r pca_path_biplot}
+# which paths distinguish sample types when HMP and JAE are included?
+h3_path_cor_biplot_pc1 <- plot_pca_bi(humann3_path_l1_noblanks.pca, "PC1", "PC2", "Island", PC1, Pathway = T)
+h3_path_cor_biplot_pc1
+
+# ggsave("./05-results.backup/presentation_pdfs/pca_EG_bi_noyanomami_paths.pdf", plot = h3_path_cor_biplot_pc1, device = "pdf",
+#        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
+
+# what are those pathways?
+pandoc.table(h3_path_cor_biplot_pc1$plot_env$pws_10 %>% select(-Function) %>% arrange(desc(PC1)),
+             digits = 5,
+             keep.trailing.zeros = T,
+             justify = "lccr",
+             split.tables = Inf,
+             caption = "PC1 positive loadings")
+
+pandoc.table(h3_path_cor_biplot_pc1$plot_env$neg_10 %>% select(-Function) %>% arrange(PC1),
+             digits = 5,
+             keep.trailing.zeros = T,
+             justify = "lccr",
+             split.tables = Inf,
+             caption = "PC1 negative loadings")
+
+# make a table of the pathways to save, to use again later in another R notebook
+humann3_pathway_biplot_list <- h3_path_cor_biplot_pc1$plot_env$pws_10 %>% select(-Function) %>% arrange(desc(PC1)) %>% select(Pathway) %>% mutate(Direction = "PC1+")
+humann3_pathway_biplot_list <- humann3_pathway_biplot_list %>%
+  bind_rows(h3_path_cor_biplot_pc1$plot_env$neg_10 %>% select(-Function) %>% arrange(desc(PC1)) %>% select(Pathway)%>% mutate(Direction = "PC1-"))
+
+# which paths distinguish sample types when HMP and JAE are included?
+h3_path_cor_biplot_pc2 <- plot_pca_bi(humann3_path_l1_noblanks.pca, "PC1", "PC2", "Island", PC2, Pathway = T)
+h3_path_cor_biplot_pc2
+
+# what are those pathways?
+pandoc.table(h3_path_cor_biplot_pc2$plot_env$pws_10 %>% select(-Function) %>% arrange(desc(PC2)),
+             digits = 5,
+             keep.trailing.zeros = T,
+             justify = "lccr",
+             split.tables = Inf,
+             caption = "PC2 positive loadings")
+
+pandoc.table(h3_path_cor_biplot_pc2$plot_env$neg_10 %>% select(-Function) %>% arrange(PC2),
+             digits = 5,
+             keep.trailing.zeros = T,
+             justify = "lccr",
+             split.tables = Inf,
+             caption = "PC2 negative loadings")
+
+humann3_pathway_biplot_list <- humann3_pathway_biplot_list %>%
+  bind_rows(h3_path_cor_biplot_pc2$plot_env$pws_10 %>% select(-Function) %>% arrange(desc(PC2)) %>% select(Pathway) %>% mutate(Direction = "PC2+"))
+humann3_pathway_biplot_list <- humann3_pathway_biplot_list %>%
+  bind_rows(h3_path_cor_biplot_pc2$plot_env$neg_10 %>% select(-Function) %>% arrange(desc(PC2)) %>% select(Pathway) %>% mutate(Direction = "PC2-"))
+
+
+fwrite(humann3_pathway_biplot_list, file = "./04-Analysis/humann3/humann3_pathway_biplot_list.tsv", quote = F, sep = "\t")
+
+```
+
+## Other factors
+```{r mean_age}
+# mean age (BP) 
+plot_pca_cont(humann3_path_l1_noblanks.pca, "PC1", "PC2", "Age_mean", 3, "Mean age (BP)")
+
+```
+
+```{r temp}
+# temperature (oC)
+plot_pca_cont(humann3_path_l1_noblanks.pca, "PC1", "PC2", "Temperature", 3, "Mean temperature (oC)")
+
+```
+
+```{r latitude}
+# latitude
+plot_pca_cont(humann3_path_l1_noblanks.pca, "PC1", "PC2", "Lat", 3, "Latitude")
+
+```
+
+```{r longtitude}
+# longtitude
+plot_pca_cont(humann3_path_l1_noblanks.pca, "PC1", "PC2", "Long", 3, "Longitude")
+
+```
+
+```{r rainfall}
+# mean rainfall
+plot_pca_cont(humann3_path_l1_noblanks.pca, "PC1", "PC2", "Rainfall", 3, "Mean rainfall")
+
+```
+
+```{r ann_evapotransporation}
+# mean ann_evapotransporation
+plot_pca_cont(humann3_path_l1_noblanks.pca, "PC1", "PC2", "ann_evapotransporation", 3, "Mean ann. evapotransporation")
+
+```
+
+## Canonical Correlation Analysis
+Add acerage GC and average read length of classified reads? Of total input read set?
+```{r pca_species_all}
+
+exp_var_all <- paste0(round(humann3_path_l1_noblanks.pca$prop_expl_var$X * 100, 2), "%")
+all_pca_values <- humann3_path_l1_noblanks.pca$variates$X %>%
+  as.data.frame() %>%
+  rownames_to_column("Library_ID") %>%
+  full_join(metadata, by = "Library_ID") %>%
+  full_join(., poor_df, by = "Library_ID") %>%
+  mutate(Preservation = ifelse(is.na(Preservation), "Good", Preservation)) %>%
+  mutate(Preservation = ifelse(Type == "blank","Blank",
+                               ifelse(Type == "Arch. Bone", "Arch. Bone", Preservation))) %>%
+  drop_na(PC1) %>%
+  # now convert all non-numeric columns to numbers
+  left_join(., metadata %>%
+    select(Site) %>%
+    unique() %>%
+    mutate(Site_n = 1:n()), by = "Site") %>%
+  left_join(., metadata %>%
+    select(Island) %>%
+    unique() %>%
+    mutate(Island_n = 1:n()), by = "Island") %>%
+  mutate(Lab_n = ifelse(Lab == "Jena",0,
+                        ifelse(Lab == "Oklahoma",1,2))) 
+
+
+```
+
+```{r all_corrs}
+# rename variables to look nice in figures
+all_pca_values_select <- all_pca_values %>%
+  select(Library_ID,PC1, PC2, PC3, Island_n, Site_n, Age_mean, Lab_n, Lat, Long, Rainfall, Temperature, ann_evapotransporation) %>%
+  rename(Lab = Lab_n,
+         Site = Site_n,
+         Island = Island_n,
+         `Mean age (BP)` = Age_mean,
+         Latitude = Lat,
+         Longitude = Long,
+         `Ann. evapotransporation` = ann_evapotransporation)
+
+form <- ~ PC1 + PC2 + PC3 + `Mean age (BP)` + Lab + Site + Island + Latitude + Longitude  + Rainfall + Temperature + `Ann. evapotransporation`
+C_all = canCorPairs(form, all_pca_values_select)
+plotCorrMatrix( C_all )
+
+```
+
+
+```{r pearson_corr_mid}
+# test for significant differences in diversity between the metadata categories
+
+pearson_all <- all_pca_values %>%
+  # remove columns to avoid duplicates in renaming
+  select(-Island, -Site, -Lab)  %>%
+  # rename to match the chunk above
+  rename(Lab = Lab_n,
+         Site = Site_n,
+         Island = Island_n,
+         `Mean age (BP)` = Age_mean,
+         Latitude = Lat,
+         Longitude = Long,
+         `Ann. evapotransporation` = ann_evapotransporation) %>%
+  rstatix::cor_test(., PC1, PC2, PC3, Island, Site, `Mean age (BP)`, Lab, Latitude, Longitude, Rainfall, Temperature, `Ann. evapotransporation`, method="pearson")
+
+pearson_all
+
+pearson_all %>%
+  mutate(same = var1 == var2) %>%
+  filter(same == FALSE) %>%
+  select(-same) %>%
+  filter(p <= 0.001) %>%
+  filter(cor > 0.40 | cor < -0.40) %>%
+  distinct(statistic, .keep_all = TRUE) %>%
+  arrange(p)
+  
+```
+
+```{r}
+
+C_all %>%
+  as_data_frame(.) %>%
+  mutate(names = rownames(C_all)) %>%
+  select(names, everything()) %>%
+  pivot_longer(!names, names_to = "Corrs", values_to = "values") %>%
+  filter(values != 1) %>%
+  filter(values >= 0.4) %>%
+  distinct(values, .keep_all = TRUE)
+
+```
+
+
+```{r}
+# colorset <- rev(colorspace::sequential_hcl(10, palette = "BuPu"))
+# maybe get colors from here: https://colordesigner.io/
+
+colorset <- c("#ffffff","#e4f4fe","#c8e9fd","#addefc","#92d3fa","#77c8f9","#5bbdf8","#40b2f7","#25a8f6","#0a9cf4","#098BD9") # ,"#087dc3","#076fae","#066198","#055382"
+
+ pvals_all <- all_pca_values_select %>%
+  column_to_rownames("Library_ID") %>%
+  as.matrix(.) %>%
+  corrplot::cor.mtest(., method="pearson")
+
+C_all %>%
+  corrplot::corrplot(., 
+                     p.mat = pvals_all$p, 
+                     order = "original", 
+                     type = "upper", 
+                     col = colorset, 
+                     is.corr = FALSE, 
+                     cl.cex = 1.0, 
+                     diag = FALSE, 
+                     tl.cex = 1.0,
+                     tl.col = 'black', 
+                     sig.level = c(0.001), 
+                     pch.cex = 2.2, 
+                     insig = 'label_sig', 
+                     pch.col = 'grey20')
+
+```
+
+```{r, eval = F}
+svg(file = "./XXXXXX/genefamilies_corr_plot.svg") 
+
+C_all %>%
+  corrplot::corrplot(., p.mat = pvals_all$p, order = "hclust", type = "upper", col = colorset, is.corr = FALSE, cl.cex = 1.5, diag = FALSE, tl.cex = 1.7,
+                     tl.col = 'black', sig.level = c(0.001), pch.cex = 2.2, insig = 'label_sig', pch.col = 'grey20')
+
+dev.off()
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

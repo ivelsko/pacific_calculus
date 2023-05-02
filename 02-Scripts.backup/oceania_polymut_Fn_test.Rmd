@@ -1,0 +1,349 @@
+---
+title: "Pacific calculus polymut score testing with F. nucleatum subspecies"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(janitor)
+library(tidyverse)
+library(patchwork)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r polymut}
+# read in the polymut table
+Fn_polymut_raw <- fread("./05-Documentation.backup/Fn_subspecies_polymut_out.tsv", header = F, col.names = c("Library_ID","Scores")) %>%
+  separate(Scores, into = c("Non_synonymous", "Synonymous",  "Total_sites"), sep = " ") %>%
+  # convert to numeric columns
+  mutate(Non_synonymous = as.numeric(Non_synonymous),
+         Synonymous = as.numeric(Synonymous),
+         Total_sites = as.numeric(Total_sites)) %>%
+  mutate(dN_dS = Non_synonymous / Synonymous,
+         Total_snps = Non_synonymous + Synonymous) 
+
+Fn_polymut <- Fn_polymut_raw %>%
+  separate(Library_ID, into = c("reads_subspecies","length", "dist", "deam"), sep = "-", extra = "merge") %>%
+  select(-dist) %>%
+  mutate(deam = str_replace_all(deam, "-deamination", ""),
+         reads_subspecies = str_replace_all(reads_subspecies, "F_nucleatum_","")) %>%
+  separate(deam, into = c("deam","mapped_against","polymut_against"), sep = "\\.", extra = "merge") %>%
+  mutate(mapped_polymut = mapped_against == polymut_against) %>%
+  filter(mapped_polymut == TRUE) %>%
+  select(-mapped_polymut, -polymut_against) %>%
+  mutate(mapped_against = str_replace_all(mapped_against, "Fnn", "nucleatum"),
+         mapped_against = str_replace_all(mapped_against, "Fnp", "polymorphum"),
+         mapped_against = str_replace_all(mapped_against, "Fnv", "vincentii"))
+
+```
+
+```{r}
+
+Fn_polymut %>%
+  filter(reads_subspecies != mapped_against,
+         length == "short") %>%
+  summarise(mean_dN_dS = mean(dN_dS))
+
+```
+
+
+```{r dN_dS}
+
+fn_polymut_all <- Fn_polymut %>%
+  mutate(dN_dS = ifelse(is.infinite(dN_dS), 0, dN_dS)) %>%
+  ggplot(., aes(x = length, y = dN_dS, color = mapped_against, shape = mapped_against)) +
+    # geom_jitter(size = 2, width = 0.3) +
+    ggstar::geom_star(aes(starshape = deam, fill = mapped_against), position = "jitter", size = 2, starstroke = 0.4, color = "black") +
+    ggstar::scale_starshape_manual(values = c(4,2,14)) +
+    scale_fill_manual(values = c("#7D3560","#EFB6D6", "#fbf0f6")) + # "#b34c89"  "#CC79A7"
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.major.y = element_line()) +
+    geom_hline(yintercept = 1, linetype = "dotted", color = "gray40") +
+    xlab("Length") +
+    ylab("dN/dS") +
+    # ggtitle("") +
+    facet_grid(deam~reads_subspecies)
+
+fn_polymut_all
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX11/Fn_dN_dS_test.svg", plot = fn_polymut_all, device = "svg",
+#         scale = 1, width = 7, height = 4, units = c("in"), dpi = 300)
+
+```
+
+```{r dN_dS_short}
+
+dn_ds_short <- Fn_polymut %>%
+  filter(length == "short") %>%
+  ggplot(., aes(x = reads_subspecies, y = dN_dS, color = mapped_against, shape = deam)) +
+    ggstar::geom_star(aes(starshape = deam, fill = mapped_against), position = "jitter", size = 2.5, starstroke = 0., color = "black") +
+    ggstar::scale_starshape_manual(values = c(4,2,14)) +
+    scale_fill_manual(values = c("#7D3560","#EFB6D6", "#fbf0f6")) + # "#b34c89"  "#CC79A7"
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.major.y = element_line()) +
+    geom_hline(yintercept = 1, linetype = "dotted", color = "gray40") +
+    xlab("Genome") +
+    ylab("dN/dS") +
+    # ggtitle("Short reads") +
+    facet_grid(~reads_subspecies, scales = "free_x", space = 'free')
+
+dn_ds_short
+
+```
+
+```{r total_considered}
+
+sites_short <- Fn_polymut %>%
+  filter(length == "short") %>%
+  mutate(Total_sites = Total_sites / 1000000) %>%
+  ggplot(., aes(x = length, y = Total_sites, color = mapped_against, shape = deam)) +
+    ggstar::geom_star(aes(starshape = deam, fill = mapped_against), position = "jitter", size = 2.5, starstroke = 0.3, color = "black") +
+    ggstar::scale_starshape_manual(values = c(4,2,14)) +
+    scale_fill_manual(values = c("#7D3560","#EFB6D6", "#fbf0f6")) + # "#b34c89"  "#CC79A7"
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.major.y = element_line()) +
+    # geom_hline(yintercept = 5, linetype = "dotted") +
+    xlab("Length") +
+    ylab("Total sites compared (x10^6)") +
+    # ggtitle("Short reads") +
+    facet_grid(~reads_subspecies, scales = "free_x", space = 'free')
+
+sites_short
+
+```
+
+```{r Non_synonymous}
+
+dn_short <- Fn_polymut %>%
+  filter(length == "short") %>%
+  ggplot(., aes(x = length, y = Non_synonymous, color = mapped_against, shape = deam)) +
+    ggstar::geom_star(aes(starshape = deam, fill = mapped_against), position = "jitter", size = 2.5, starstroke = 0.3, color = "black") +
+    ggstar::scale_starshape_manual(values = c(4,2,14)) +
+    scale_fill_manual(values = c("#7D3560","#EFB6D6", "#fbf0f6")) + # "#b34c89"  "#CC79A7"
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.major.y = element_line()) +
+    # geom_hline(yintercept = 5, linetype = "dotted") +
+    xlab("Length") +
+    ylab("Non-synonymous sites") +
+    # ggtitle("Short reads") +
+    facet_grid(~reads_subspecies, scales = "free_x", space = 'free')
+
+dn_short
+
+```
+
+```{r Synonymous}
+
+ds_short <- Fn_polymut %>%
+  filter(length == "short") %>%
+  ggplot(., aes(x = length, y = Synonymous, color = mapped_against, shape = deam)) +
+    ggstar::geom_star(aes(starshape = deam, fill = mapped_against), position = "jitter", size = 2.5, starstroke = 0.3, color = "black") +
+    ggstar::scale_starshape_manual(values = c(4,2,14)) +
+    scale_fill_manual(values = c("#7D3560","#EFB6D6", "#fbf0f6")) + # "#b34c89"  "#CC79A7"
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.major.y = element_line()) +
+    # geom_hline(yintercept = 5, linetype = "dotted") +
+    xlab("Length") +
+    ylab("Synonymous sites") +
+    # ggtitle("Short reads") +
+    facet_grid(~reads_subspecies, scales = "free_x", space = 'free')
+
+ds_short
+
+```
+
+```{r total_snps}
+
+snps_short <- Fn_polymut %>%
+  filter(length == "short") %>%
+  ggplot(., aes(x = length, y = Total_snps, color = mapped_against)) +
+    # geom_jitter(size = 3, width = 0.3) +
+    ggstar::geom_star(aes(starshape = deam, fill = mapped_against), position = "jitter", size = 2.5, starstroke = 0.3, color = "black") +
+    ggstar::scale_starshape_manual(values = c(4,2,14)) +
+    scale_fill_manual(values = c("#7D3560","#EFB6D6", "#fbf0f6")) + # "#b34c89"  "#CC79A7"
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.major.y = element_line()) +
+    # geom_hline(yintercept = 5, linetype = "dotted") +
+    xlab("Length") +
+    ylab("Total SNPs") +
+    # ggtitle("Short reads") +
+    facet_grid(~reads_subspecies, scales = "free_x", space = 'free')
+
+snps_short
+
+
+```
+
+
+
+```{r}
+
+Fn_plots <- dn_ds_short + sites_short + dn_short + ds_short + snps_short + 
+  plot_layout(ncol = 2, guides = "collect")
+
+
+Fn_plots
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX11/Fn_dN_dS_short_test.pdf", plot = Fn_plots, device = "pdf",
+#         scale = 1, width = 10, height = 7, units = c("in"), dpi = 300)
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX11/Fn_dN_dS_short_test.svg", plot = Fn_plots, device = "svg",
+#         scale = 1, width = 9, height = 7, units = c("in"), dpi = 300)
+
+
+```
+
+
+```{r}
+# dRep MASH similarity (ANI)
+
+drep <- fread("04-Analysis/polymut/F_nucleatum_gargammel/dRep/dRep_out/data_tables/Mdb.csv") %>%
+  select(-dist)
+
+drep_mat <- drep %>%
+  mutate(genome1 = str_replace_all(genome1, ".fna",""),
+         genome1 = str_replace_all(genome1, "F_nucleatum_","F. n. "),
+         genome2 = str_replace_all(genome2, ".fna",""),
+         genome2 = str_replace_all(genome2, "F_nucleatum_","F. n. ")) %>%
+  arrange(genome1) %>%
+  pivot_wider(names_from = "genome1", values_from = "similarity") %>%
+  arrange(genome2) %>%
+  column_to_rownames("genome2") %>%
+  as.matrix()
+
+```
+
+```{r}
+
+colorset = circlize::colorRamp2(c(0.9, 1.0), c("#098BD9", "#7D3560"))
+
+drep_mat %>%
+  corrplot::corrplot.mixed(., 
+                     order = "alphabet", 
+                     upper = "shade",
+                     lower.col = corrplot::COL1('Blues'),
+                     upper.col = corrplot::COL1('Blues'),
+                     # col.lim = c(97.96557, 100.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     # 
+                     tl.col = 'black',
+                     tl.cex = 0.75)
+
+fake_p_vals <- drep %>%
+  mutate(genome1 = str_replace_all(genome1, ".fna",""),
+         genome1 = str_replace_all(genome1, "F_nucleatum_","F. n. "),
+         genome2 = str_replace_all(genome2, ".fna",""),
+         genome2 = str_replace_all(genome2, "F_nucleatum_","F. n. ")) %>%
+  arrange(genome1) %>%
+  mutate(similarity = as.character(similarity),
+         similarity = str_trunc(similarity, width = 5, side = "right", ellipsis = "")) %>%
+  mutate(similarity = as.numeric(similarity)) %>%
+  pivot_wider(names_from = "genome1", values_from = "similarity") %>%
+  arrange(genome2) %>%
+  column_to_rownames("genome2") %>%
+  as.matrix()
+
+
+drep_mat %>%
+  corrplot::corrplot(., 
+                     p.mat = fake_p_vals,
+                     order = "alphabet", 
+                     sig.level = -1,
+                     insig = 'p-value',
+                     type = "upper", 
+                     method = "color",
+                     col = corrplot::COL1('Blues'),
+                     col.lim = c(0.9, 1.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     # 
+                     tl.col = 'black')
+
+
+svg(file = "./06-publication/supplemental_figures/Sup_fig_XX11/Fn_corr_plot.svg") 
+
+drep_mat %>%
+  corrplot::corrplot(., 
+                     p.mat = fake_p_vals,
+                     order = "alphabet", 
+                     sig.level = -1,
+                     insig = 'p-value',
+                     type = "upper", 
+                     method = "color",
+                     col = corrplot::COL1('Blues'),
+                     col.lim = c(0.9, 1.0),
+                     is.corr = FALSE,
+                     cl.cex = 1.0, 
+                     diag = TRUE, 
+                     # 
+                     tl.col = 'black')
+
+dev.off()
+
+
+```
+
+
+```{r}
+
+# file chek
+
+fn_bams <- fread("04-Analysis/polymut/F_nucleatum_gargammel/bwa_mapping_prokka/s_bam_file_headers.tsv", sep = "\t", header = F, col.names = c("Name", "reads", "mapped_to")) %>%
+  separate(reads, into = c("reads"), sep = ":", extra = "drop") %>%
+  mutate(mapped_to = str_replace_all(mapped_to, "gnl\\|Prokka\\|",""))
+
+fn_bams %>%
+  mutate(bam = Name) %>%
+  select(bam, everything()) %>%
+  separate(Name, into = c("reads_subspecies","length", "dist", "deam"), sep = "-", extra = "merge") %>%
+  select(-dist) %>%
+  mutate(deam = str_replace_all(deam, "-deamination", ""),
+         reads_subspecies = str_replace_all(reads_subspecies, "F_nucleatum_",""),
+         reads = str_replace_all(reads, "M_","")) %>%
+  separate(deam, into = c("deam","mapped_against"), sep = "\\.", extra = "drop") %>%
+  mutate(Reads = ifelse(reads == "NC_003454.1", "nucleatum",
+                        ifelse(reads == "NZ_CP013121.1", "polymorphum", "vincentii"))) %>%
+  mutate(Mapped_to = ifelse(mapped_to == "AOMAGFDO_1", "nucleatum",
+                        ifelse(mapped_to == "LINNBOHE_1", "polymorphum", "vincentii"))) %>%
+  mutate(mapped_against = ifelse(mapped_against == "Fnn", "nucleatum",
+                        ifelse(mapped_against == "Fnp", "polymorphum", "vincentii"))) %>%
+  select(-reads, -mapped_to) %>%
+  mutate(Matched = ifelse(reads_subspecies == Reads & mapped_against == Mapped_to, "Correct", "No")) %>%
+  filter(Matched == "No")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
