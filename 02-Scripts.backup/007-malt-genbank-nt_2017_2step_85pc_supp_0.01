@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Run malt on 2step NCBI full NT
+
+export INSTALL4J_JAVA_HOME=/projects1/malt/java/
+
+if [ $# -le 1 ]
+then
+  echo "Usage: malt-genbank input-files output-directory"
+  exit 1
+fi
+
+input="-i"
+while [ $# != "1" ] ; do
+        input="$input $1"
+        shift
+done
+
+
+output="$1"
+
+index="-d /projects1/malt/databases/indexed/index040/full-nt_2017-10"
+options="-id 85.0 -v -t 112 -m BlastN -at SemiGlobal -top 1 -supp 0.01 -mq 100 --memoryMode load "
+vmoptions="-J-Xmx1900G"
+
+/projects1/malt/versions/malt040/malt-run $vmoptions $index $input -o $output $options |&tee $output/malt-genbank_rma_"$(date +"%Y%m%d")".log
