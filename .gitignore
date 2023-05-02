@@ -2,6 +2,7 @@
 02-Scripts.backup/._*
 03-Preprocessing
 04-Analysis
+05-Documentation.backup/*._
 conda
 snakemake_tmp
 tmp
