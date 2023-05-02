@@ -1,0 +1,160 @@
+pathway	detail_group	major_group	map
+map00010 Glycolysis / Gluconeogenesis	Carbohydrate metabolism	Metabolism	map00010
+map00020 Citrate cycle (TCA cycle)	Carbohydrate metabolism	Metabolism	map00020
+map00030 Pentose phosphate pathway	Carbohydrate metabolism	Metabolism	map00030
+map00040 Pentose and glucuronate interconversions	Carbohydrate metabolism	Metabolism	map00040
+map00051 Fructose and mannose metabolism	Carbohydrate metabolism	Metabolism	map00051
+map00052 Galactose metabolism	Carbohydrate metabolism	Metabolism	map00052
+map00053 Ascorbate and aldarate metabolism	Carbohydrate metabolism	Metabolism	map00053
+map00061 Fatty acid biosynthesis	Lipid metabolism	Metabolism	map00061
+map00071 Fatty acid degradation	Lipid metabolism	Metabolism	map00071
+map00130 Ubiquinone and other terpenoid-quinone biosynthesis	Metabolism of cofactors and vitamins	Metabolism	map00130
+map00190 Oxidative phosphorylation	Energy metabolism	Metabolism	map00190
+map00220 Arginine biosynthesis	Amino acid metabolism	Metabolism	map00220
+map00230 Purine metabolism	Nucleotide metabolism	Metabolism	map00230
+map00240 Pyrimidine metabolism	Nucleotide metabolism	Metabolism	map00240
+map00250 Alanine, aspartate and glutamate metabolism	Amino acid metabolism	Metabolism	map00250
+map00260 Glycine, serine and threonine metabolism	Amino acid metabolism	Metabolism	map00260
+map00261 Monobactam biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00261
+map00270 Cysteine and methionine metabolism	Amino acid metabolism	Metabolism	map00270
+map00280 Valine, leucine and isoleucine degradation	Amino acid metabolism	Metabolism	map00280
+map00281 Geraniol degradation	Metabolism of terpenoids and polyketides	Metabolism	map00281
+map00290 Valine, leucine and isoleucine biosynthesis	Amino acid metabolism	Metabolism	map00290
+map00300 Lysine biosynthesis	Amino acid metabolism	Metabolism	map00300
+map00310 Lysine degradation	Amino acid metabolism	Metabolism	map00310
+map00311 Penicillin and cephalosporin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00311
+map00330 Arginine and proline metabolism	Amino acid metabolism	Metabolism	map00330
+map00333 Prodigiosin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00333
+map00340 Histidine metabolism	Amino acid metabolism	Metabolism	map00340
+map00350 Tyrosine metabolism	Amino acid metabolism	Metabolism	map00350
+map00360 Phenylalanine metabolism	Amino acid metabolism	Metabolism	map00360
+map00362 Benzoate degradation	Xenobiotics biodegradation and metabolism	Metabolism	map00362
+map00380 Tryptophan metabolism	Amino acid metabolism	Metabolism	map00380
+map00400 Phenylalanine, tyrosine and tryptophan biosynthesis	Amino acid metabolism	Metabolism	map00400
+map00401 Novobiocin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00401
+map00410 beta-Alanine metabolism	Metabolism of other amino acids	Metabolism	map00410
+map00450 Selenocompound metabolism	Metabolism of other amino acids	Metabolism	map00450
+map00460 Cyanoamino acid metabolism	Metabolism of other amino acids	Metabolism	map00460
+map00470 D-Amino acid metabolism	Metabolism of other amino acids	Metabolism	map00470
+map00480 Glutathione metabolism	Metabolism of other amino acids	Metabolism	map00480
+map00500 Starch and sucrose metabolism	Carbohydrate metabolism	Metabolism	map00500
+map00510 N-Glycan biosynthesis	Glycan biosynthesis and metabolism	Metabolism	map00510
+map00511 Other glycan degradation	Glycan biosynthesis and metabolism	Metabolism	map00511
+map00520 Amino sugar and nucleotide sugar metabolism	Carbohydrate metabolism	Metabolism	map00520
+map00521 Streptomycin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00521
+map00523 Polyketide sugar unit biosynthesis	Metabolism of terpenoids and polyketides	Metabolism	map00523
+map00524 Neomycin, kanamycin and gentamicin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00524
+map00525 Acarbose and validamycin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00525
+map00540 Lipopolysaccharide biosynthesis	Glycan biosynthesis and metabolism	Metabolism	map00540
+map00541 O-Antigen nucleotide sugar biosynthesis	Glycan biosynthesis and metabolism	Metabolism	map00541
+map00542 O-Antigen repeat unit biosynthesis	Glycan biosynthesis and metabolism	Metabolism	map00542
+map00543 Exopolysaccharide biosynthesis	Glycan biosynthesis and metabolism	Metabolism	map00543
+map00550 Peptidoglycan biosynthesis	Glycan biosynthesis and metabolism	Metabolism	map00550
+map00552 Teichoic acid biosynthesis	Glycan biosynthesis and metabolism	Metabolism	map00552
+map00561 Glycerolipid metabolism	Lipid metabolism	Metabolism	map00561
+map00562 Inositol phosphate metabolism	Carbohydrate metabolism	Metabolism	map00562
+map00564 Glycerophospholipid metabolism	Lipid metabolism	Metabolism	map00564
+map00565 Ether lipid metabolism	Lipid metabolism	Metabolism	map00565
+map00572 Arabinogalactan biosynthesis - Mycobacterium	Glycan biosynthesis and metabolism	Metabolism	map00572
+map00590 Arachidonic acid metabolism	Lipid metabolism	Metabolism	map00590
+map00591 Linoleic acid metabolism	Lipid metabolism	Metabolism	map00591
+map00592 alpha-Linolenic acid metabolism	Lipid metabolism	Metabolism	map00592
+map00600 Sphingolipid metabolism	Lipid metabolism	Metabolism	map00600
+map00603 Glycosphingolipid biosynthesis - globo and isoglobo series	Glycan biosynthesis and metabolism	Metabolism	map00603
+map00620 Pyruvate metabolism	Carbohydrate metabolism	Metabolism	map00620
+map00621 Dioxin degradation	Xenobiotics biodegradation and metabolism	Metabolism	map00621
+map00622 Xylene degradation	Xenobiotics biodegradation and metabolism	Metabolism	map00622
+map00625 Chloroalkane and chloroalkene degradation	Xenobiotics biodegradation and metabolism	Metabolism	map00625
+map00626 Naphthalene degradation	Xenobiotics biodegradation and metabolism	Metabolism	map00626
+map00627 Aminobenzoate degradation	Xenobiotics biodegradation and metabolism	Metabolism	map00627
+map00630 Glyoxylate and dicarboxylate metabolism	Carbohydrate metabolism	Metabolism	map00630
+map00633 Nitrotoluene degradation	Xenobiotics biodegradation and metabolism	Metabolism	map00633
+map00640 Propanoate metabolism	Carbohydrate metabolism	Metabolism	map00640
+map00643 Styrene degradation	Xenobiotics biodegradation and metabolism	Metabolism	map00643
+map00650 Butanoate metabolism	Carbohydrate metabolism	Metabolism	map00650
+map00660 C5-Branched dibasic acid metabolism	Carbohydrate metabolism	Metabolism	map00660
+map00670 One carbon pool by folate	Metabolism of cofactors and vitamins	Metabolism	map00670
+map00680 Methane metabolism	Energy metabolism	Metabolism	map00680
+map00710 Carbon fixation in photosynthetic organisms	Energy metabolism	Metabolism	map00710
+map00720 Carbon fixation pathways in prokaryotes	Energy metabolism	Metabolism	map00720
+map00730 Thiamine metabolism	Metabolism of cofactors and vitamins	Metabolism	map00730
+map00740 Riboflavin metabolism	Metabolism of cofactors and vitamins	Metabolism	map00740
+map00750 Vitamin B6 metabolism	Metabolism of cofactors and vitamins	Metabolism	map00750
+map00760 Nicotinate and nicotinamide metabolism	Metabolism of cofactors and vitamins	Metabolism	map00760
+map00770 Pantothenate and CoA biosynthesis	Metabolism of cofactors and vitamins	Metabolism	map00770
+map00780 Biotin metabolism	Metabolism of cofactors and vitamins	Metabolism	map00780
+map00785 Lipoic acid metabolism	Metabolism of cofactors and vitamins	Metabolism	map00785
+map00790 Folate biosynthesis	Metabolism of cofactors and vitamins	Metabolism	map00790
+map00860 Porphyrin metabolism	Metabolism of cofactors and vitamins	Metabolism	map00860
+map00900 Terpenoid backbone biosynthesis	Metabolism of terpenoids and polyketides	Metabolism	map00900
+map00903 Limonene and pinene degradation	Metabolism of terpenoids and polyketides	Metabolism	map00903
+map00906 Carotenoid biosynthesis	Metabolism of terpenoids and polyketides	Metabolism	map00906
+map00910 Nitrogen metabolism	Energy metabolism	Metabolism	map00910
+map00920 Sulfur metabolism	Energy metabolism	Metabolism	map00920
+map00930 Caprolactam degradation	Xenobiotics biodegradation and metabolism	Metabolism	map00930
+map00950 Isoquinoline alkaloid biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00950
+map00960 Tropane, piperidine and pyridine alkaloid biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00960
+map00966 Glucosinolate biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00966
+map00970 Aminoacyl-tRNA biosynthesis	Translation	Genetic Information Processing	map00970
+map00980 Metabolism of xenobiotics by cytochrome P450	Xenobiotics biodegradation and metabolism	Metabolism	map00980
+map00982 Drug metabolism - cytochrome P450	Xenobiotics biodegradation and metabolism	Metabolism	map00982
+map00983 Drug metabolism - other enzymes	Xenobiotics biodegradation and metabolism	Metabolism	map00983
+map00999 Biosynthesis of various plant secondary metabolites; Including: Crocin biosynthesis, Cannabidiol biosynthesis, Mugineic acid biosynthesis, Pentagalloylglucose biosynthesis, Benzoxazinoid biosynthesis, Gramine biosynthesis, Coumarin biosynthesis, Furanocoumarin biosynthesis, Hordatine biosynthesis, Podophyllotoxin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism	map00999
+map01040 Biosynthesis of unsaturated fatty acids	Lipid metabolism	Metabolism	map01040
+map01051 Biosynthesis of ansamycins	Metabolism of terpenoids and polyketides	Metabolism	map01051
+map01053 Biosynthesis of siderophore group nonribosomal peptides	Metabolism of terpenoids and polyketides	Metabolism	map01053
+map01054 Nonribosomal peptide structures	Metabolism of terpenoids and polyketides	Metabolism	map01054
+map01100 Metabolic pathways	Global and overview maps	Metabolism	map01100
+map01110 Biosynthesis of secondary metabolites	Global and overview maps	Metabolism	map01110
+map01120 Microbial metabolism in diverse environments	Global and overview maps	Metabolism	map01120
+map01200 Carbon metabolism	Global and overview maps	Metabolism	map01200
+map01210 2-Oxocarboxylic acid metabolism	Global and overview maps	Metabolism	map01210
+map01212 Fatty acid metabolism	Global and overview maps	Metabolism	map01212
+map01220 Degradation of aromatic compounds	Global and overview maps	Metabolism	map01220
+map01230 Biosynthesis of amino acids	Global and overview maps	Metabolism	map01230
+map01232 Nucleotide metabolism	Global and overview maps	Metabolism	map01232
+map01240 Biosynthesis of cofactors	Global and overview maps	Metabolism	map01240
+map01250 Biosynthesis of nucleotide sugars	Global and overview maps	Metabolism	map01250
+map02010 ABC transporters	Membrane transport	Environmental Information Processing	map02010
+map02020 Two-component system	Signal transduction	Environmental Information Processing	map02020
+map02024 Quorum sensing	Cellular community - prokaryotes	Cellular Processes	map02024
+map02025 Biofilm formation - Pseudomonas aeruginosa	Cellular community - prokaryotes	Cellular Processes	map02025
+map02026 Biofilm formation - Escherichia coli	Cellular community - prokaryotes	Cellular Processes	map02026
+map02030 Bacterial chemotaxis	Cell motility	Cellular Processes	map02030
+map02040 Flagellar assembly	Cell motility	Cellular Processes	map02040
+map02060 Phosphotransferase system (PTS)	Membrane transport	Environmental Information Processing	map02060
+map03008 Ribosome biogenesis in eukaryotes	Translation	Genetic Information Processing	map03008
+map03010 Ribosome	Translation	Genetic Information Processing	map03010
+map03013 Nucleocytoplasmic transport	Translation	Genetic Information Processing	map03013
+map03018 RNA degradation	Folding, sorting and degradation	Genetic Information Processing	map03018
+map03020 RNA polymerase	Transcription	Genetic Information Processing	map03020
+map03022 Basal transcription factors	Transcription	Genetic Information Processing	map03022
+map03030 DNA replication	Replication and repair	Genetic Information Processing	map03030
+map03060 Protein export	Folding, sorting and degradation	Genetic Information Processing	map03060
+map03070 Bacterial secretion system	Membrane transport	Environmental Information Processing	map03070
+map03410 Base excision repair	Replication and repair	Genetic Information Processing	map03410
+map03420 Nucleotide excision repair	Replication and repair	Genetic Information Processing	map03420
+map03430 Mismatch repair	Replication and repair	Genetic Information Processing	map03430
+map03440 Homologous recombination	Replication and repair	Genetic Information Processing	map03440
+map04011 MAPK signaling pathway - yeast	Signal transduction	Environmental Information Processing	map04011
+map04016 MAPK signaling pathway - plant	Signal transduction	Environmental Information Processing	map04016
+map04066 HIF-1 signaling pathway	Signal transduction	Environmental Information Processing	map04066
+map04068 FoxO signaling pathway	Signal transduction	Environmental Information Processing	map04068
+map04110 Cell cycle	Cell growth and death	Cellular Processes	map04110
+map04115 p53 signaling pathway	Cell growth and death	Cellular Processes	map04115
+map04120 Ubiquitin mediated proteolysis	Folding, sorting and degradation	Genetic Information Processing	map04120
+map04122 Sulfur relay system	Folding, sorting and degradation	Genetic Information Processing	map04122
+map04137 Mitophagy - animal	Transport and catabolism	Cellular Processes	map04137
+map04138 Autophagy - yeast	Transport and catabolism	Cellular Processes	map04138
+map04140 Autophagy - animal	Transport and catabolism	Cellular Processes	map04140
+map04141 Protein processing in endoplasmic reticulum	Folding, sorting and degradation	Genetic Information Processing	map04141
+map04142 Lysosome	Transport and catabolism	Cellular Processes	map04142
+map04146 Peroxisome	Transport and catabolism	Cellular Processes	map04146
+map04152 AMPK signaling pathway	Signal transduction	Environmental Information Processing	map04152
+map04210 Apoptosis	Cell growth and death	Cellular Processes	map04210
+map04214 Apoptosis - fly	Cell growth and death	Cellular Processes	map04214
+map04215 Apoptosis - multiple species	Cell growth and death	Cellular Processes	map04215
+map04216 Ferroptosis	Cell growth and death	Cellular Processes	map04216
+map04217 Necroptosis	Cell growth and death	Cellular Processes	map04217
+map04530 Tight junction	Cellular community - eukaryotes	Cellular Processes	map04530
+map05111 Biofilm formation - Vibrio cholerae	Cellular community - prokaryotes	Cellular Processes	map05111

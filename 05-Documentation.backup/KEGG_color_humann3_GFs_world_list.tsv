@@ -1,0 +1,245 @@
+Pathway	Counts	Cluster
+map00010 Glycolysis / Gluconeogenesis	4	Cluster3
+map00020 Citrate cycle (TCA cycle)	10	Cluster3
+map00030 Pentose phosphate pathway	2	Cluster3
+map00040 Pentose and glucuronate interconversions	1	Cluster3
+map00052 Galactose metabolism	5	Cluster3
+map00053 Ascorbate and aldarate metabolism	2	Cluster3
+map00061 Fatty acid biosynthesis	6	Cluster3
+map00071 Fatty acid degradation	1	Cluster3
+map00130 Ubiquinone and other terpenoid-quinone biosynthesis	5	Cluster3
+map00190 Oxidative phosphorylation	14	Cluster3
+map00220 Arginine biosynthesis	2	Cluster3
+map00230 Purine metabolism	9	Cluster3
+map00240 Pyrimidine metabolism	6	Cluster3
+map00250 Alanine, aspartate and glutamate metabolism	2	Cluster3
+map00260 Glycine, serine and threonine metabolism	6	Cluster3
+map00261 Monobactam biosynthesis	3	Cluster3
+map00270 Cysteine and methionine metabolism	10	Cluster3
+map00280 Valine, leucine and isoleucine degradation	3	Cluster3
+map00281 Geraniol degradation	1	Cluster3
+map00290 Valine, leucine and isoleucine biosynthesis	1	Cluster3
+map00300 Lysine biosynthesis	3	Cluster3
+map00310 Lysine degradation	2	Cluster3
+map00330 Arginine and proline metabolism	5	Cluster3
+map00333 Prodigiosin biosynthesis	1	Cluster3
+map00340 Histidine metabolism	4	Cluster3
+map00350 Tyrosine metabolism	2	Cluster3
+map00360 Phenylalanine metabolism	4	Cluster3
+map00362 Benzoate degradation	2	Cluster3
+map00380 Tryptophan metabolism	5	Cluster3
+map00400 Phenylalanine, tyrosine and tryptophan biosynthesis	1	Cluster3
+map00401 Novobiocin biosynthesis	1	Cluster3
+map00410 beta-Alanine metabolism	2	Cluster3
+map00450 Selenocompound metabolism	4	Cluster3
+map00470 D-Amino acid metabolism	4	Cluster3
+map00480 Glutathione metabolism	5	Cluster3
+map00500 Starch and sucrose metabolism	7	Cluster3
+map00520 Amino sugar and nucleotide sugar metabolism	1	Cluster3
+map00540 Lipopolysaccharide biosynthesis	4	Cluster3
+map00541 O-Antigen nucleotide sugar biosynthesis	1	Cluster3
+map00550 Peptidoglycan biosynthesis	1	Cluster3
+map00552 Teichoic acid biosynthesis	1	Cluster3
+map00561 Glycerolipid metabolism	1	Cluster3
+map00564 Glycerophospholipid metabolism	3	Cluster3
+map00565 Ether lipid metabolism	2	Cluster3
+map00590 Arachidonic acid metabolism	1	Cluster3
+map00591 Linoleic acid metabolism	1	Cluster3
+map00592 alpha-Linolenic acid metabolism	1	Cluster3
+map00600 Sphingolipid metabolism	1	Cluster3
+map00620 Pyruvate metabolism	14	Cluster3
+map00621 Dioxin degradation	1	Cluster3
+map00622 Xylene degradation	1	Cluster3
+map00627 Aminobenzoate degradation	1	Cluster3
+map00630 Glyoxylate and dicarboxylate metabolism	4	Cluster3
+map00640 Propanoate metabolism	14	Cluster3
+map00650 Butanoate metabolism	9	Cluster3
+map00660 C5-Branched dibasic acid metabolism	1	Cluster3
+map00670 One carbon pool by folate	1	Cluster3
+map00680 Methane metabolism	3	Cluster3
+map00710 Carbon fixation in photosynthetic organisms	2	Cluster3
+map00720 Carbon fixation pathways in prokaryotes	10	Cluster3
+map00730 Thiamine metabolism	3	Cluster3
+map00740 Riboflavin metabolism	1	Cluster3
+map00760 Nicotinate and nicotinamide metabolism	3	Cluster3
+map00770 Pantothenate and CoA biosynthesis	1	Cluster3
+map00780 Biotin metabolism	1	Cluster3
+map00785 Lipoic acid metabolism	1	Cluster3
+map00790 Folate biosynthesis	6	Cluster3
+map00860 Porphyrin metabolism	10	Cluster3
+map00900 Terpenoid backbone biosynthesis	4	Cluster3
+map00903 Limonene and pinene degradation	1	Cluster3
+map00906 Carotenoid biosynthesis	1	Cluster3
+map00910 Nitrogen metabolism	5	Cluster3
+map00920 Sulfur metabolism	13	Cluster3
+map00930 Caprolactam degradation	1	Cluster3
+map00950 Isoquinoline alkaloid biosynthesis	2	Cluster3
+map00960 Tropane, piperidine and pyridine alkaloid biosynthesis	1	Cluster3
+map00970 Aminoacyl-tRNA biosynthesis	3	Cluster3
+map00980 Metabolism of xenobiotics by cytochrome P450	1	Cluster3
+map00982 Drug metabolism - cytochrome P450	2	Cluster3
+map00983 Drug metabolism - other enzymes	1	Cluster3
+map01040 Biosynthesis of unsaturated fatty acids	1	Cluster3
+map01053 Biosynthesis of siderophore group nonribosomal peptides	2	Cluster3
+map01100 Metabolic pathways	150	Cluster3
+map01110 Biosynthesis of secondary metabolites	65	Cluster3
+map01120 Microbial metabolism in diverse environments	40	Cluster3
+map01200 Carbon metabolism	22	Cluster3
+map01210 2-Oxocarboxylic acid metabolism	3	Cluster3
+map01212 Fatty acid metabolism	7	Cluster3
+map01220 Degradation of aromatic compounds	2	Cluster3
+map01230 Biosynthesis of amino acids	15	Cluster3
+map01232 Nucleotide metabolism	4	Cluster3
+map01240 Biosynthesis of cofactors	32	Cluster3
+map01250 Biosynthesis of nucleotide sugars	1	Cluster3
+map02010 ABC transporters	31	Cluster3
+map02020 Two-component system	31	Cluster3
+map02024 Quorum sensing	8	Cluster3
+map02025 Biofilm formation - Pseudomonas aeruginosa	1	Cluster3
+map02026 Biofilm formation - Escherichia coli	4	Cluster3
+map02040 Flagellar assembly	1	Cluster3
+map02060 Phosphotransferase system (PTS)	5	Cluster3
+map03018 RNA degradation	2	Cluster3
+map03030 DNA replication	4	Cluster3
+map03060 Protein export	1	Cluster3
+map03070 Bacterial secretion system	4	Cluster3
+map03410 Base excision repair	2	Cluster3
+map03420 Nucleotide excision repair	1	Cluster3
+map03430 Mismatch repair	3	Cluster3
+map03440 Homologous recombination	3	Cluster3
+map04011 MAPK signaling pathway - yeast	1	Cluster3
+map04016 MAPK signaling pathway - plant	1	Cluster3
+map04066 HIF-1 signaling pathway	2	Cluster3
+map04068 FoxO signaling pathway	1	Cluster3
+map04115 p53 signaling pathway	1	Cluster3
+map04122 Sulfur relay system	4	Cluster3
+map04146 Peroxisome	3	Cluster3
+map04152 AMPK signaling pathway	1	Cluster3
+map04210 Apoptosis	1	Cluster3
+map04214 Apoptosis - fly	1	Cluster3
+map04215 Apoptosis - multiple species	1	Cluster3
+map05111 Biofilm formation - Vibrio cholerae	4	Cluster3
+map00010 Glycolysis / Gluconeogenesis	25	Cluster1
+map00020 Citrate cycle (TCA cycle)	10	Cluster1
+map00030 Pentose phosphate pathway	15	Cluster1
+map00040 Pentose and glucuronate interconversions	14	Cluster1
+map00051 Fructose and mannose metabolism	16	Cluster1
+map00052 Galactose metabolism	9	Cluster1
+map00053 Ascorbate and aldarate metabolism	2	Cluster1
+map00071 Fatty acid degradation	2	Cluster1
+map00190 Oxidative phosphorylation	1	Cluster1
+map00220 Arginine biosynthesis	5	Cluster1
+map00230 Purine metabolism	15	Cluster1
+map00240 Pyrimidine metabolism	9	Cluster1
+map00250 Alanine, aspartate and glutamate metabolism	6	Cluster1
+map00260 Glycine, serine and threonine metabolism	11	Cluster1
+map00270 Cysteine and methionine metabolism	7	Cluster1
+map00280 Valine, leucine and isoleucine degradation	3	Cluster1
+map00290 Valine, leucine and isoleucine biosynthesis	1	Cluster1
+map00300 Lysine biosynthesis	2	Cluster1
+map00310 Lysine degradation	2	Cluster1
+map00311 Penicillin and cephalosporin biosynthesis	1	Cluster1
+map00330 Arginine and proline metabolism	5	Cluster1
+map00340 Histidine metabolism	3	Cluster1
+map00350 Tyrosine metabolism	2	Cluster1
+map00360 Phenylalanine metabolism	3	Cluster1
+map00362 Benzoate degradation	2	Cluster1
+map00380 Tryptophan metabolism	1	Cluster1
+map00400 Phenylalanine, tyrosine and tryptophan biosynthesis	5	Cluster1
+map00401 Novobiocin biosynthesis	2	Cluster1
+map00410 beta-Alanine metabolism	1	Cluster1
+map00450 Selenocompound metabolism	4	Cluster1
+map00460 Cyanoamino acid metabolism	2	Cluster1
+map00470 D-Amino acid metabolism	2	Cluster1
+map00480 Glutathione metabolism	2	Cluster1
+map00500 Starch and sucrose metabolism	13	Cluster1
+map00510 N-Glycan biosynthesis	1	Cluster1
+map00511 Other glycan degradation	1	Cluster1
+map00520 Amino sugar and nucleotide sugar metabolism	18	Cluster1
+map00521 Streptomycin biosynthesis	5	Cluster1
+map00523 Polyketide sugar unit biosynthesis	3	Cluster1
+map00524 Neomycin, kanamycin and gentamicin biosynthesis	1	Cluster1
+map00525 Acarbose and validamycin biosynthesis	1	Cluster1
+map00541 O-Antigen nucleotide sugar biosynthesis	12	Cluster1
+map00542 O-Antigen repeat unit biosynthesis	1	Cluster1
+map00543 Exopolysaccharide biosynthesis	1	Cluster1
+map00550 Peptidoglycan biosynthesis	3	Cluster1
+map00552 Teichoic acid biosynthesis	4	Cluster1
+map00561 Glycerolipid metabolism	7	Cluster1
+map00562 Inositol phosphate metabolism	4	Cluster1
+map00564 Glycerophospholipid metabolism	1	Cluster1
+map00572 Arabinogalactan biosynthesis - Mycobacterium	1	Cluster1
+map00600 Sphingolipid metabolism	1	Cluster1
+map00603 Glycosphingolipid biosynthesis - globo and isoglobo series	1	Cluster1
+map00620 Pyruvate metabolism	16	Cluster1
+map00625 Chloroalkane and chloroalkene degradation	2	Cluster1
+map00626 Naphthalene degradation	1	Cluster1
+map00627 Aminobenzoate degradation	1	Cluster1
+map00630 Glyoxylate and dicarboxylate metabolism	12	Cluster1
+map00633 Nitrotoluene degradation	3	Cluster1
+map00640 Propanoate metabolism	6	Cluster1
+map00643 Styrene degradation	1	Cluster1
+map00650 Butanoate metabolism	9	Cluster1
+map00660 C5-Branched dibasic acid metabolism	3	Cluster1
+map00670 One carbon pool by folate	1	Cluster1
+map00680 Methane metabolism	23	Cluster1
+map00710 Carbon fixation in photosynthetic organisms	7	Cluster1
+map00720 Carbon fixation pathways in prokaryotes	12	Cluster1
+map00730 Thiamine metabolism	2	Cluster1
+map00750 Vitamin B6 metabolism	1	Cluster1
+map00760 Nicotinate and nicotinamide metabolism	3	Cluster1
+map00770 Pantothenate and CoA biosynthesis	3	Cluster1
+map00780 Biotin metabolism	1	Cluster1
+map00790 Folate biosynthesis	2	Cluster1
+map00860 Porphyrin metabolism	5	Cluster1
+map00900 Terpenoid backbone biosynthesis	5	Cluster1
+map00906 Carotenoid biosynthesis	2	Cluster1
+map00910 Nitrogen metabolism	4	Cluster1
+map00920 Sulfur metabolism	6	Cluster1
+map00950 Isoquinoline alkaloid biosynthesis	1	Cluster1
+map00960 Tropane, piperidine and pyridine alkaloid biosynthesis	1	Cluster1
+map00966 Glucosinolate biosynthesis	1	Cluster1
+map00970 Aminoacyl-tRNA biosynthesis	1	Cluster1
+map00983 Drug metabolism - other enzymes	4	Cluster1
+map00999 Biosynthesis of various plant secondary metabolites; Including: Crocin biosynthesis, Cannabidiol biosynthesis, Mugineic acid biosynthesis, Pentagalloylglucose biosynthesis, Benzoxazinoid biosynthesis, Gramine biosynthesis, Coumarin biosynthesis, Furanocoumarin biosynthesis, Hordatine biosynthesis, Podophyllotoxin biosynthesis	2	Cluster1
+map01051 Biosynthesis of ansamycins	1	Cluster1
+map01054 Nonribosomal peptide structures	1	Cluster1
+map01100 Metabolic pathways	191	Cluster1
+map01110 Biosynthesis of secondary metabolites	76	Cluster1
+map01120 Microbial metabolism in diverse environments	77	Cluster1
+map01200 Carbon metabolism	47	Cluster1
+map01210 2-Oxocarboxylic acid metabolism	4	Cluster1
+map01212 Fatty acid metabolism	1	Cluster1
+map01220 Degradation of aromatic compounds	1	Cluster1
+map01230 Biosynthesis of amino acids	29	Cluster1
+map01232 Nucleotide metabolism	14	Cluster1
+map01240 Biosynthesis of cofactors	12	Cluster1
+map01250 Biosynthesis of nucleotide sugars	14	Cluster1
+map02010 ABC transporters	70	Cluster1
+map02020 Two-component system	15	Cluster1
+map02024 Quorum sensing	20	Cluster1
+map02030 Bacterial chemotaxis	2	Cluster1
+map02060 Phosphotransferase system (PTS)	6	Cluster1
+map03008 Ribosome biogenesis in eukaryotes	1	Cluster1
+map03010 Ribosome	11	Cluster1
+map03013 Nucleocytoplasmic transport	1	Cluster1
+map03018 RNA degradation	1	Cluster1
+map03020 RNA polymerase	1	Cluster1
+map03022 Basal transcription factors	2	Cluster1
+map03030 DNA replication	1	Cluster1
+map03410 Base excision repair	5	Cluster1
+map03420 Nucleotide excision repair	1	Cluster1
+map03430 Mismatch repair	1	Cluster1
+map03440 Homologous recombination	1	Cluster1
+map04110 Cell cycle	1	Cluster1
+map04120 Ubiquitin mediated proteolysis	2	Cluster1
+map04137 Mitophagy - animal	2	Cluster1
+map04138 Autophagy - yeast	2	Cluster1
+map04140 Autophagy - animal	1	Cluster1
+map04141 Protein processing in endoplasmic reticulum	2	Cluster1
+map04142 Lysosome	1	Cluster1
+map04210 Apoptosis	1	Cluster1
+map04216 Ferroptosis	1	Cluster1
+map04217 Necroptosis	1	Cluster1
+map04530 Tight junction	1	Cluster1
+map05111 Biofilm formation - Vibrio cholerae	2	Cluster1

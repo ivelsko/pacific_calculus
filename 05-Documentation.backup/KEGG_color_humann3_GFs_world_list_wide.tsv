@@ -1,0 +1,158 @@
+Pathway	Cluster2	Cluster3	greater	map	pathway	detail_group	major_group
+map01100 Metabolic pathways	18.5074626865672	20.1474201474202	Cluster3	map1100	Metabolic pathways	Global and overview maps	Metabolism
+map01110 Biosynthesis of secondary metabolites	7.16417910447761	7.61670761670762	Cluster3	map1110	Biosynthesis of secondary metabolites	Global and overview maps	Metabolism
+map01120 Microbial metabolism in diverse environments	7.36318407960199	5.77395577395577	Cluster2	map1120	Microbial metabolism in diverse environments	Global and overview maps	Metabolism
+map01200 Carbon metabolism	4.37810945273632	3.07125307125307	Cluster2	map1200	Carbon metabolism	Global and overview maps	Metabolism
+map01210 2-Oxocarboxylic acid metabolism	0.398009950248756	0.368550368550369	Cluster2	map1210	2-Oxocarboxylic acid metabolism	Global and overview maps	Metabolism
+map01212 Fatty acid metabolism	0.099502487562189	0.614250614250614	Cluster3	map1212	Fatty acid metabolism	Global and overview maps	Metabolism
+map01230 Biosynthesis of amino acids	2.78606965174129	1.84275184275184	Cluster2	map1230	Biosynthesis of amino acids	Global and overview maps	Metabolism
+map01232 Nucleotide metabolism	1.39303482587065	0.737100737100737	Cluster2	map1232	Nucleotide metabolism	Global and overview maps	Metabolism
+map01250 Biosynthesis of nucleotide sugars	1.39303482587065	0.122850122850123	Cluster2	map1250	Biosynthesis of nucleotide sugars	Global and overview maps	Metabolism
+map01240 Biosynthesis of cofactors	1.19402985074627	3.68550368550369	Cluster3	map1240	Biosynthesis of cofactors	Global and overview maps	Metabolism
+map01220 Degradation of aromatic compounds	0.099502487562189	0.245700245700246	Cluster3	map1220	Degradation of aromatic compounds	Global and overview maps	Metabolism
+map00010 Glycolysis / Gluconeogenesis	2.48756218905473	0.614250614250614	Cluster2	map0010	Glycolysis / Gluconeogenesis	Carbohydrate metabolism	Metabolism
+map00020 Citrate cycle  (TCA cycle)	0.995024875621891	0	Cluster2	map0020	Citrate cycle (TCA cycle)	Carbohydrate metabolism	Metabolism
+map00030 Pentose phosphate pathway	1.29353233830846	0.368550368550369	Cluster2	map0030	Pentose phosphate pathway	Carbohydrate metabolism	Metabolism
+map00040 Pentose and glucuronate interconversions	1.39303482587065	0.368550368550369	Cluster2	map0040	Pentose and glucuronate interconversions	Carbohydrate metabolism	Metabolism
+map00051 Fructose and mannose metabolism	1.59203980099502	0.245700245700246	Cluster2	map0051	Fructose and mannose metabolism	Carbohydrate metabolism	Metabolism
+map00052 Galactose metabolism	0.696517412935323	0.614250614250614	Cluster2	map0052	Galactose metabolism	Carbohydrate metabolism	Metabolism
+map00053 Ascorbate and aldarate metabolism	0.199004975124378	0.245700245700246	Cluster3	map0053	Ascorbate and aldarate metabolism	Carbohydrate metabolism	Metabolism
+map00500 Starch and sucrose metabolism	1.09452736318408	0.85995085995086	Cluster2	map0500	Starch and sucrose metabolism	Carbohydrate metabolism	Metabolism
+map00520 Amino sugar and nucleotide sugar metabolism	1.7910447761194	0.245700245700246	Cluster2	map0520	Amino sugar and nucleotide sugar metabolism	Carbohydrate metabolism	Metabolism
+map00620 Pyruvate metabolism	1.59203980099502	1.47420147420147	Cluster2	map0620	Pyruvate metabolism	Carbohydrate metabolism	Metabolism
+map00630 Glyoxylate and dicarboxylate metabolism	1.19402985074627	0.614250614250614	Cluster2	map0630	Glyoxylate and dicarboxylate metabolism	Carbohydrate metabolism	Metabolism
+map00640 Propanoate metabolism	0.597014925373134	1.71990171990172	Cluster3	map0640	Propanoate metabolism	Carbohydrate metabolism	Metabolism
+map00650 Butanoate metabolism	0.895522388059702	1.10565110565111	Cluster3	map0650	Butanoate metabolism	Carbohydrate metabolism	Metabolism
+map00660 C5-Branched dibasic acid metabolism	0.298507462686567	0.122850122850123	Cluster2	map0660	C5-Branched dibasic acid metabolism	Carbohydrate metabolism	Metabolism
+map00562 Inositol phosphate metabolism	0.398009950248756	0.122850122850123	Cluster2	map0562	Inositol phosphate metabolism	Carbohydrate metabolism	Metabolism
+map00190 Oxidative phosphorylation	0.099502487562189	1.71990171990172	Cluster3	map0190	Oxidative phosphorylation	Energy metabolism	Metabolism
+map00710 Carbon fixation in photosynthetic organisms	0.597014925373134	0.245700245700246	Cluster2	map0710	Carbon fixation in photosynthetic organisms	Energy metabolism	Metabolism
+map00720 Carbon fixation pathways in prokaryotes	1.19402985074627	1.22850122850123	Cluster3	map0720	Carbon fixation pathways in prokaryotes	Energy metabolism	Metabolism
+map00680 Methane metabolism	2.18905472636816	1.47420147420147	Cluster2	map0680	Methane metabolism	Energy metabolism	Metabolism
+map00910 Nitrogen metabolism	0.398009950248756	0.614250614250614	Cluster3	map0910	Nitrogen metabolism	Energy metabolism	Metabolism
+map00920 Sulfur metabolism	0.597014925373134	1.47420147420147	Cluster3	map0920	Sulfur metabolism	Lipid metabolism	Metabolism
+map00071 Fatty acid degradation	0.199004975124378	0.122850122850123	Cluster2	map0071	Fatty acid degradation	Lipid metabolism	Metabolism
+map00561 Glycerolipid metabolism	0.696517412935323	0.122850122850123	Cluster2	map0561	Glycerolipid metabolism	Lipid metabolism	Metabolism
+map00564 Glycerophospholipid metabolism	0.099502487562189	0.491400491400491	Cluster3	map0564	Glycerophospholipid metabolism	Lipid metabolism	Metabolism
+map00600 Sphingolipid metabolism	0.099502487562189	0.122850122850123	Cluster3	map0600	Sphingolipid metabolism	Lipid metabolism	Metabolism
+map00230 Purine metabolism	1.49253731343284	1.10565110565111	Cluster2	map0230	Purine metabolism	Nucleotide metabolism	Metabolism
+map00240 Pyrimidine metabolism	0.895522388059702	0.85995085995086	Cluster2	map0240	Pyrimidine metabolism	Nucleotide metabolism	Metabolism
+map00250 Alanine, aspartate and glutamate metabolism	0.597014925373134	0.245700245700246	Cluster2	map0250	Alanine, aspartate and glutamate metabolism	Amino acid metabolism	Metabolism
+map00260 Glycine, serine and threonine metabolism	1.09452736318408	0.85995085995086	Cluster2	map0260	Glycine, serine and threonine metabolism	Amino acid metabolism	Metabolism
+map00270 Cysteine and methionine metabolism	0.696517412935323	1.10565110565111	Cluster3	map0270	Cysteine and methionine metabolism	Amino acid metabolism	Metabolism
+map00280 Valine, leucine and isoleucine degradation	0.298507462686567	0.245700245700246	Cluster2	map0280	Valine, leucine and isoleucine degradation	Amino acid metabolism	Metabolism
+map00290 Valine, leucine and isoleucine biosynthesis	0.099502487562189	0.122850122850123	Cluster3	map0290	Valine, leucine and isoleucine biosynthesis	Amino acid metabolism	Metabolism
+map00300 Lysine biosynthesis	0.199004975124378	0.368550368550369	Cluster3	map0300	Lysine biosynthesis	Amino acid metabolism	Metabolism
+map00310 Lysine degradation	0.199004975124378	0.122850122850123	Cluster2	map0310	Lysine degradation	Amino acid metabolism	Metabolism
+map00220 Arginine biosynthesis	0.497512437810945	0.368550368550369	Cluster2	map0220	Arginine biosynthesis	Amino acid metabolism	Metabolism
+map00330 Arginine and proline metabolism	0.497512437810945	0.614250614250614	Cluster3	map0330	Arginine and proline metabolism	Amino acid metabolism	Metabolism
+map00340 Histidine metabolism	0.298507462686567	0.491400491400491	Cluster3	map0340	Histidine metabolism	Amino acid metabolism	Metabolism
+map00350 Tyrosine metabolism	0.199004975124378	0.368550368550369	Cluster3	map0350	Tyrosine metabolism	Amino acid metabolism	Metabolism
+map00360 Phenylalanine metabolism	0.298507462686567	0.491400491400491	Cluster3	map0360	Phenylalanine metabolism	Amino acid metabolism	Metabolism
+map00380 Tryptophan metabolism	0.099502487562189	0.491400491400491	Cluster3	map0380	Tryptophan metabolism	Amino acid metabolism	Metabolism
+map00400 Phenylalanine, tyrosine and tryptophan biosynthesis	0.497512437810945	0.245700245700246	Cluster2	map0400	Phenylalanine, tyrosine and tryptophan biosynthesis	Metabolism of other amino acids	Metabolism
+map00410 beta-Alanine metabolism	0.099502487562189	0.368550368550369	Cluster3	map0410	beta-Alanine metabolism	Metabolism of other amino acids	Metabolism
+map00450 Selenocompound metabolism	0.398009950248756	0.614250614250614	Cluster3	map0450	Selenocompound metabolism	Metabolism of other amino acids	Metabolism
+map00460 Cyanoamino acid metabolism	0.199004975124378	0	Cluster2	map0460	Cyanoamino acid metabolism	Metabolism of other amino acids	Metabolism
+map00470 D-Amino acid metabolism	0.199004975124378	0.614250614250614	Cluster3	map0470	D-Amino acid metabolism	Metabolism of other amino acids	Metabolism
+map00480 Glutathione metabolism	0.099502487562189	0.614250614250614	Cluster3	map0480	Glutathione metabolism	Metabolism of other amino acids	Metabolism
+map00510 N-Glycan biosynthesis	0.099502487562189	0	Cluster2	map0510	N-Glycan biosynthesis	Glycan biosynthesis and metabolism	Metabolism
+map00603 Glycosphingolipid biosynthesis - globo and isoglobo series	0.099502487562189	0	Cluster2	map0603	Glycosphingolipid biosynthesis - globo and isoglobo series	Glycan biosynthesis and metabolism	Metabolism
+map00511 Other glycan degradation	0.099502487562189	0	Cluster2	map0511	Other glycan degradation	Glycan biosynthesis and metabolism	Metabolism
+map00542 O-Antigen repeat unit biosynthesis	0.099502487562189	0	Cluster2	map0542	O-Antigen repeat unit biosynthesis	Glycan biosynthesis and metabolism	Metabolism
+map00541 O-Antigen nucleotide sugar biosynthesis	1.19402985074627	0.122850122850123	Cluster2	map0541	O-Antigen nucleotide sugar biosynthesis	Glycan biosynthesis and metabolism	Metabolism
+map00550 Peptidoglycan biosynthesis	0.298507462686567	0.245700245700246	Cluster2	map0550	Peptidoglycan biosynthesis	Glycan biosynthesis and metabolism	Metabolism
+map00552 Teichoic acid biosynthesis	0.398009950248756	0.122850122850123	Cluster2	map0552	Teichoic acid biosynthesis	Glycan biosynthesis and metabolism	Metabolism
+map00572 Arabinogalactan biosynthesis - Mycobacterium	0.099502487562189	0	Cluster2	map0572	Arabinogalactan biosynthesis - Mycobacterium	Glycan biosynthesis and metabolism	Metabolism
+map00543 Exopolysaccharide biosynthesis	0.099502487562189	0	Cluster2	map0543	Exopolysaccharide biosynthesis	Glycan biosynthesis and metabolism	Metabolism
+map00730 Thiamine metabolism	0.199004975124378	0.491400491400491	Cluster3	map0730	Thiamine metabolism	Metabolism of cofactors and vitamins	Metabolism
+map00750 Vitamin B6 metabolism	0.099502487562189	0	Cluster2	map0750	Vitamin B6 metabolism	Metabolism of cofactors and vitamins	Metabolism
+map00760 Nicotinate and nicotinamide metabolism	0.298507462686567	0.368550368550369	Cluster3	map0760	000 Nicotinate and nicotinamide metabolis	Metabolism of cofactors and vitamins	Metabolism
+map00770 Pantothenate and CoA biosynthesis	0.298507462686567	0.245700245700246	Cluster2	map0770	Pantothenate and CoA biosynthesis	Metabolism of cofactors and vitamins	Metabolism
+map00780 Biotin metabolism	0.099502487562189	0.122850122850123	Cluster3	map0780	Biotin metabolism	Metabolism of cofactors and vitamins	Metabolism
+map00790 Folate biosynthesis	0.199004975124378	0.85995085995086	Cluster3	map0790	Folate biosynthesis	Metabolism of cofactors and vitamins	Metabolism
+map00670 One carbon pool by folate	0.099502487562189	0.122850122850123	Cluster3	map0670	One carbon pool by folate	Metabolism of cofactors and vitamins	Metabolism
+map00860 Porphyrin metabolism	0.497512437810945	1.10565110565111	Cluster3	map0860	Porphyrin metabolism	Metabolism of cofactors and vitamins	Metabolism
+map00900 Terpenoid backbone biosynthesis	0.497512437810945	0.614250614250614	Cluster3	map0900	Terpenoid backbone biosynthesis	Metabolism of terpenoids and polyketides	Metabolism
+map00900 Terpenoid backbone biosynthesis	0.497512437810945	0.614250614250614	Cluster3	map0900	Terpenoid backbone biosynthesis	Metabolism of terpenoids and polyketides	Metabolism
+map00906 Carotenoid biosynthesis	0.199004975124378	0.122850122850123	Cluster2	map0906	Carotenoid biosynthesis	Metabolism of terpenoids and polyketides	Metabolism
+map00906 Carotenoid biosynthesis	0.199004975124378	0.122850122850123	Cluster2	map0906	Carotenoid biosynthesis	Metabolism of terpenoids and polyketides	Metabolism
+map00523 Polyketide sugar unit biosynthesis	0.298507462686567	0	Cluster2	map0523	Polyketide sugar unit biosynthesis	Metabolism of terpenoids and polyketides	Metabolism
+map01054 Nonribosomal peptide structures	0.099502487562189	0	Cluster2	map1054	Nonribosomal peptide structures	Metabolism of terpenoids and polyketides	Metabolism
+map00950 Isoquinoline alkaloid biosynthesis	0.099502487562189	0.245700245700246	Cluster3	map0950	Isoquinoline alkaloid biosynthesis	Biosynthesis of other secondary metabolites	Metabolism
+map00960 Tropane, piperidine and pyridine alkaloid biosynthesis	0.099502487562189	0.122850122850123	Cluster3	map0960	Tropane, piperidine and pyridine alkaloid biosynthesis	Biosynthesis of other secondary metabolites	Metabolism
+map00966 Glucosinolate biosynthesis	0.099502487562189	0	Cluster2	map0966	Glucosinolate biosynthesis	Biosynthesis of other secondary metabolites	Metabolism
+map00311 Penicillin and cephalosporin biosynthesis	0.099502487562189	0	Cluster2	map0311	003 Penicillin and cephalosporin biosynthesi	Biosynthesis of other secondary metabolites	Metabolism
+map00521 Streptomycin biosynthesis	0.497512437810945	0	Cluster2	map0521	Streptomycin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism
+map00524 Neomycin, kanamycin and gentamicin biosynthesis	0.099502487562189	0	Cluster2	map0524	Neomycin, kanamycin and gentamicin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism
+map00525 Acarbose and validamycin biosynthesis	0.099502487562189	0	Cluster2	map0525	Acarbose and validamycin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism
+map00401 Novobiocin biosynthesis	0.199004975124378	0.122850122850123	Cluster2	map0401	Novobiocin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism
+map00999 Biosynthesis of various plant secondary metabolites; Including: Crocin biosynthesis, Cannabidiol biosynthesis, Mugineic acid biosynthesis, Pentagalloylglucose biosynthesis, Benzoxazinoid biosynthesis, Gramine biosynthesis, Coumarin biosynthesis, Furanocoumarin biosynthesis, Hordatine biosynthesis, Podophyllotoxin biosynthesis	0.199004975124378	0	Cluster2	map0999	Biosynthesis of various plant secondary metabolites; Including: Crocin biosynthesis, Cannabidiol biosynthesis, Mugineic acid biosynthesis, Pentagalloylglucose biosynthesis, Benzoxazinoid biosynthesis, Gramine biosynthesis, Coumarin biosynthesis, Furanocoumarin biosynthesis, Hordatine biosynthesis, Podophyllotoxin biosynthesis	Biosynthesis of other secondary metabolites	Metabolism
+map00362 Benzoate degradation	0.199004975124378	0.245700245700246	Cluster3	map0362	Benzoate degradation	Xenobiotics biodegradation and metabolism	Metabolism
+map00627 Aminobenzoate degradation	0.099502487562189	0.122850122850123	Cluster3	map0627	Aminobenzoate degradation	Xenobiotics biodegradation and metabolism	Metabolism
+map00625 Chloroalkane and chloroalkene degradation	0.199004975124378	0	Cluster2	map0625	Chloroalkane and chloroalkene degradation	Xenobiotics biodegradation and metabolism	Metabolism
+map00633 Nitrotoluene degradation	0.298507462686567	0.122850122850123	Cluster2	map0633	Nitrotoluene degradation	Xenobiotics biodegradation and metabolism	Metabolism
+map00643 Styrene degradation	0.099502487562189	0	Cluster2	map0643	Styrene degradation	Xenobiotics biodegradation and metabolism	Metabolism
+map00626 Naphthalene degradation	0.099502487562189	0	Cluster2	map0626	Naphthalene degradation	Xenobiotics biodegradation and metabolism	Metabolism
+map00983 Drug metabolism - other enzymes	0.398009950248756	0.491400491400491	Cluster3	map0983	Drug metabolism - other enzymes	Xenobiotics biodegradation and metabolism	Metabolism
+map03020 RNA polymerase	0.099502487562189	0.122850122850123	Cluster3	map3020	RNA polymerase	Transcription	Genetic Information Processing
+map03022 Basal transcription factors	0.199004975124378	0.245700245700246	Cluster3	map3022	Basal transcription factors	Transcription	Genetic Information Processing
+map03010 Ribosome	1.09452736318408	1.35135135135135	Cluster3	map3010	Ribosome	Translation	Genetic Information Processing
+map00970 Aminoacyl-tRNA biosynthesis	0.099502487562189	0.122850122850123	Cluster3	map0970	Aminoacyl-tRNA biosynthesis	Translation	Genetic Information Processing
+map03013 Nucleocytoplasmic transport	0.099502487562189	0.122850122850123	Cluster3	map3013	Nucleocytoplasmic transport	Translation	Genetic Information Processing
+map03008 Ribosome biogenesis in eukaryotes	0.099502487562189	0.122850122850123	Cluster3	map3008	Ribosome biogenesis in eukaryotes	Translation	Genetic Information Processing
+map04141 Protein processing in endoplasmic reticulum	0.199004975124378	0.122850122850123	Cluster2	map4141	Protein processing in endoplasmic reticulum	Folding, sorting and degradation	Genetic Information Processing
+map04120 Ubiquitin mediated proteolysis	0.199004975124378	0.245700245700246	Cluster3	map4120	Ubiquitin mediated proteolysis	Folding, sorting and degradation	Genetic Information Processing
+map03018 RNA degradation	0.099502487562189	0.245700245700246	Cluster3	map3018	RNA degradation	Folding, sorting and degradation	Genetic Information Processing
+map03030 DNA replication	0.099502487562189	0.491400491400491	Cluster3	map3030	DNA replication	Replication and repair	Genetic Information Processing
+map03410 Base excision repair	0.398009950248756	0.122850122850123	Cluster2	map3410	Base excision repair	Replication and repair	Genetic Information Processing
+map03420 Nucleotide excision repair	0.099502487562189	0.122850122850123	Cluster3	map3420	Nucleotide excision repair	Replication and repair	Genetic Information Processing
+map03430 Mismatch repair	0.099502487562189	0.368550368550369	Cluster3	map3430	Mismatch repair	Replication and repair	Genetic Information Processing
+map03440 Homologous recombination	0.099502487562189	0.368550368550369	Cluster3	map3440	Homologous recombination	Replication and repair	Genetic Information Processing
+map02010 ABC transporters	6.86567164179105	3.93120393120393	Cluster2	map2010	ABC transporters	Membrane transport	Environmental Information Processing
+map02060 Phosphotransferase system (PTS)	0.597014925373134	0.614250614250614	Cluster3	map2060	Phosphotransferase system (PTS)	Membrane transport	Environmental Information Processing
+map02020 Two-component system	1.49253731343284	3.93120393120393	Cluster3	map2020	Two-component system	Signal transduction	Environmental Information Processing
+map04142 Lysosome	0.099502487562189	0	Cluster2	map4142	Lysosome	Transport and catabolism	Cellular Processes
+map04140 Autophagy - animal	0.099502487562189	0.122850122850123	Cluster3	map4140	Autophagy - animal	Transport and catabolism	Cellular Processes
+map04138 Autophagy - yeast	0.199004975124378	0.122850122850123	Cluster2	map4138	Autophagy - yeast	Transport and catabolism	Cellular Processes
+map04137 Mitophagy - animal	0.199004975124378	0.245700245700246	Cluster3	map4137	Mitophagy - animal	Transport and catabolism	Cellular Processes
+map04110 Cell cycle	0.099502487562189	0.122850122850123	Cluster3	map4110	Cell cycle	Cell growth and death	Cellular Processes
+map04210 Apoptosis	0.099502487562189	0.245700245700246	Cluster3	map4210	Apoptosis	Cell growth and death	Cellular Processes
+map04216 Ferroptosis	0.099502487562189	0	Cluster2	map4216	Ferroptosis	Cell growth and death	Cellular Processes
+map04217 Necroptosis	0.099502487562189	0	Cluster2	map4217	Necroptosis	Cell growth and death	Cellular Processes
+map04530 Tight junction	0.099502487562189	0.122850122850123	Cluster3	map4530	Tight junction	Cellular community - eukaryotes	Cellular Processes
+map02024 Quorum sensing	1.89054726368159	1.47420147420147	Cluster2	map2024	Quorum sensing	Cellular community - prokaryotes	Cellular Processes
+map05111 Biofilm formation - Vibrio cholerae	0.199004975124378	0.491400491400491	Cluster3	map5111	Biofilm formation - Vibrio cholerae	Cellular community - prokaryotes	Cellular Processes
+map02030 Bacterial chemotaxis	0.199004975124378	0	Cluster2	map2030	Bacterial chemotaxis	Cell motility	Cellular Processes
+map00020 Citrate cycle (TCA cycle)	0	0.982800982800983	Cluster3	map0020	Citrate cycle (TCA cycle)	Carbohydrate metabolism	Metabolism
+map00061 Fatty acid biosynthesis	0	0.491400491400491	Cluster3	map0061	Fatty acid biosynthesis	Lipid metabolism	Metabolism
+map00565 Ether lipid metabolism	0	0.245700245700246	Cluster3	map0565	Ether lipid metabolism	Lipid metabolism	Metabolism
+map00590 Arachidonic acid metabolism	0	0.122850122850123	Cluster3	map0590	Arachidonic acid metabolism	Lipid metabolism	Metabolism
+map00591 Linoleic acid metabolism	0	0.122850122850123	Cluster3	map0591	Linoleic acid metabolism	Lipid metabolism	Metabolism
+map00592 alpha-Linolenic acid metabolism	0	0.122850122850123	Cluster3	map0592	alpha-Linolenic acid metabolism	Lipid metabolism	Metabolism
+map01040 Biosynthesis of unsaturated fatty acids	0	0.122850122850123	Cluster3	map1040	Biosynthesis of unsaturated fatty acids	Lipid metabolism	Metabolism
+map00540 Lipopolysaccharide biosynthesis	0	0.368550368550369	Cluster3	map0540	Lipopolysaccharide biosynthesis	Glycan biosynthesis and metabolism	Metabolism
+map00740 Riboflavin metabolism	0	0.122850122850123	Cluster3	map0740	Riboflavin metabolism	Metabolism of cofactors and vitamins	Metabolism
+map00785 Lipoic acid metabolism	0	0.122850122850123	Cluster3	map0785	Lipoic acid metabolism	Metabolism of cofactors and vitamins	Metabolism
+map00130 Ubiquinone and other terpenoid-quinone biosynthesis	0	0.491400491400491	Cluster3	map0130	Ubiquinone and other terpenoid-quinone biosynthesis	Metabolism of cofactors and vitamins	Metabolism
+map00903 Limonene and pinene degradation	0	0.122850122850123	Cluster3	map0903	Limonene and pinene degradation	Metabolism of terpenoids and polyketides	Metabolism
+map00281 Geraniol degradation	0	0.122850122850123	Cluster3	map0281	Geraniol degradation	Metabolism of terpenoids and polyketides	Metabolism
+map01053 Biosynthesis of siderophore group nonribosomal peptides	0	0.245700245700246	Cluster3	map1053	Biosynthesis of siderophore group nonribosomal peptides	Metabolism of terpenoids and polyketides	Metabolism
+map01053 Biosynthesis of siderophore group nonribosomal peptides	0	0.245700245700246	Cluster3	map1053	Biosynthesis of siderophore group nonribosomal peptides	Metabolism of terpenoids and polyketides	Metabolism
+map00261 Monobactam biosynthesis	0	0.368550368550369	Cluster3	map0261	Monobactam biosynthesis	Biosynthesis of other secondary metabolites	Metabolism
+map00622 Xylene degradation	0	0.122850122850123	Cluster3	map0622	Xylene degradation	Xenobiotics biodegradation and metabolism	Metabolism
+map00930 Caprolactam degradation	0	0.122850122850123	Cluster3	map0930	Caprolactam degradation	Xenobiotics biodegradation and metabolism	Metabolism
+map00621 Dioxin degradation	0	0.122850122850123	Cluster3	map0621	Dioxin degradation	Xenobiotics biodegradation and metabolism	Metabolism
+map00980 Metabolism of xenobiotics by cytochrome P450	0	0.122850122850123	Cluster3	map0980	Metabolism of xenobiotics by cytochrome P450	Xenobiotics biodegradation and metabolism	Metabolism
+map00982 Drug metabolism - cytochrome P450	0	0.245700245700246	Cluster3	map0982	Drug metabolism - cytochrome P450	Xenobiotics biodegradation and metabolism	Metabolism
+map03060 Protein export	0	0.122850122850123	Cluster3	map3060	Protein export	Folding, sorting and degradation	Genetic Information Processing
+map04122 Sulfur relay system	0	0.491400491400491	Cluster3	map4122	Sulfur relay system	Folding, sorting and degradation	Genetic Information Processing
+map03070 Bacterial secretion system	0	0.614250614250614	Cluster3	map3070	Bacterial secretion system	Membrane transport	Environmental Information Processing
+map04016 MAPK signaling pathway - plant	0	0.122850122850123	Cluster3	map4016	MAPK signaling pathway - plant	Signal transduction	Environmental Information Processing
+map04011 MAPK signaling pathway - yeast	0	0.122850122850123	Cluster3	map4011	MAPK signaling pathway - yeast	Signal transduction	Environmental Information Processing
+map04066 HIF-1 signaling pathway	0	0.245700245700246	Cluster3	map4066	HIF-1 signaling pathway	Signal transduction	Environmental Information Processing
+map04068 FoxO signaling pathway	0	0.122850122850123	Cluster3	map4068	FoxO signaling pathway	Signal transduction	Environmental Information Processing
+map04152 AMPK signaling pathway	0	0.122850122850123	Cluster3	map4152	AMPK signaling pathway	Signal transduction	Environmental Information Processing
+map02025 Biofilm formation - Pseudomonas aeruginosa	0	0.122850122850123	Cluster3	map2025	Biofilm formation - Pseudomonas aeruginosa	Cellular community - prokaryotes	Cellular Processes
+map02026 Biofilm formation - Escherichia coli	0	0.368550368550369	Cluster3	map2026	Biofilm formation - Escherichia coli	Cellular community - prokaryotes	Cellular Processes
+map02040 Flagellar assembly	0	0.122850122850123	Cluster3	map2040	Flagellar assembly	Cell motility	Cellular Processes
