@@ -364,8 +364,33 @@ nextflow run nf-core/eager -r 2.4.4 \
 -with-tower
 
 
+#  run blanks with hostremoval_input_fastq for upload to ENA
+nextflow run nf-core/eager -r 2.4.4 \
+-profile eva,archgen,big_hostrm \
+-c /mnt/archgen/users/velsko/nextflow/eva_hostremoval.config \
+--input "/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/oceania_blanks_list.tsv" \
+--fasta '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa' \
+--fasta_index '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa.fai' \
+--bwa_index '/mnt/archgen/Reference_Genomes/Human/hs37d5' \
+--seq_dict '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.dict' \
+--skip_deduplication \
+--skip_damage_calculation \
+--skip_preseq \
+--skip_qualimap \
+--complexity_filter_poly_g \
+--bwaalnl 32 \
+--bwaalnn 0.01  \
+--run_bam_filtering \
+--bam_unmapped_type fastq \
+--hostremoval_input_fastq \
+--hostremoval_mode  replace \
+--outdir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/blnk_no_collapse/eager2_out \
+-work-dir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/blnk_no_collapse/eager2_work \
+-name blnkNoColps \
+--email irina_marie_velsko@eva.mpg.de \
+-with-tower
 
-
+#  resumed as infallible_kowalevski
 
 
 
@@ -1000,6 +1025,42 @@ modeltest-ng -i /mnt/archgen/microbiome_calculus/pacific_calculus/05-Documentati
 /mnt/archgen/projects1/users/sabin/kilteasheen
 ###########################
 
+# prep bones for upload to ENA (remove human reads)
+nextflow run nf-core/eager -r 2.4.4 \
+-profile eva,archgen \
+--input "/mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eager_input_bones.tsv" \
+--fasta '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa' \
+--fasta_index '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.fa.fai' \
+--bwa_index '/mnt/archgen/Reference_Genomes/Human/hs37d5' \
+--seq_dict '/mnt/archgen/Reference_Genomes/Human/hs37d5/hs37d5.dict' \
+--skip_fastqc \
+--skip_deduplication \
+--skip_damage_calculation \
+--skip_preseq \
+--skip_collapse \
+--complexity_filter_poly_g \
+--bwaalnl 32 \
+--bwaalnn 0.01  \
+--run_bam_filtering \
+--bam_unmapped_type fastq \
+--hostremoval_input_fastq \
+--hostremoval_mode  replace \
+--outdir /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/bone_no_collapsed/eager \
+-work-dir /mnt/archgen/microbiome_calculus/pacific/03-Preprocessing/bone_no_collapsed/work \
+-name pac_bone_not_coll \
+--email irina_marie_velsko@eva.mpg.de \
+-with-tower
+
+
+
+
+
+
+
+
+
+
+
 # try StrainFacts for distinguishing different strains in the samples? 
 # Relies on GT_Pro, which requires at least 10 strains of each species in it's database
 # since we don't have that for most of the species we're interested in 
@@ -1023,10 +1084,14 @@ find . -name '*.rma6' -type f
 # fastq = "/mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/metaphlan3/ancient_parameters/input_bones_blanks/{sample}.unmapped.fastq.gz",
 
 
+# upload data to ENA with aspera
+~/.aspera/cli/bin/ascp -QT -l100M -L /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/blnk_no_collapse/eager2_out/hostremoved_fastq/ /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/blnk_no_collapse/eager2_out/hostremoved_fastq/*.gz Webin-42290@webin.ebi.ac.uk:/pacific_calculus
 
+~/.aspera/cli/bin/ascp -QT -l100M -L /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/bone_no_collapsed/eager/hostremoved_fastq/ /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/bone_no_collapsed/eager/hostremoved_fastq/*.gz Webin-42290@webin.ebi.ac.uk:/pacific_calculus
 
-
-
+~/.aspera/cli/bin/ascp -QT -l100M -L /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eager2_non_collapsed/fastqs/per_sample /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eager2_non_collapsed/fastqs/per_sample/HCLVMBCX2-3505-13*.gz Webin-42290@webin.ebi.ac.uk:/pacific_calculus_otago_blanks
+~/.aspera/cli/bin/ascp -QT -l100M -L /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eager2_non_collapsed/fastqs/per_sample /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eager2_non_collapsed/fastqs/per_sample/HCLVMBCX2-3505-19*.gz Webin-42290@webin.ebi.ac.uk:/pacific_calculus_otago_blanks
+~/.aspera/cli/bin/ascp -QT -l100M -L /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eager2_non_collapsed/fastqs/per_sample /mnt/archgen/microbiome_calculus/pacific_calculus/03-Preprocessing/eager2_non_collapsed/fastqs/per_sample/HCLVMBCX2-3505-32*.gz Webin-42290@webin.ebi.ac.uk:/pacific_calculus_otago_blanks
 
 
 

@@ -471,7 +471,7 @@ row_ha <- ComplexHeatmap::HeatmapAnnotation(df = selected_metadata, col = list(I
 
 ComplexHeatmap::Heatmap(gw_wide_em, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
 
-# svg(file = "./06-publication/supplemental_figures/Sup_fig_XX5/eminutum_strain_corr_plot.svg", width = 14, height = 12) 
+# svg(file = "./06-publication/supplemental_figures/Sup_fig_10/eminutum_strain_corr_plot.svg", width = 14, height = 12) 
 # 
 # ComplexHeatmap::Heatmap(gw_wide_em, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
 # 
@@ -544,7 +544,7 @@ ht_abot439 = ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, cl
 ht_abot439 = ComplexHeatmap::draw(ht_abot439)
 
 
-svg(file = "./06-publication/supplemental_figures/Sup_fig_XX5/abot439_strain_corr_plot.svg", width = 14, height = 12)
+svg(file = "./06-publication/supplemental_figures/Sup_fig_10/abot439_strain_corr_plot.svg", width = 14, height = 12)
 
 ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
 
@@ -618,7 +618,7 @@ ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, clust
 # try w/o clustering
 ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
 
-# svg(file = "./06-publication/supplemental_figures/Sup_fig_XX5/abot439_strain_pct_genome_compared_plot.svg", width = 14, height = 12)
+# svg(file = "./06-publication/supplemental_figures/Sup_fig_10/abot439_strain_pct_genome_compared_plot.svg", width = 14, height = 12)
 # 
 # ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
 # 
@@ -1189,7 +1189,7 @@ ht_tf = ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, cluster
 
 ht_tf = ComplexHeatmap::draw(ht_tf)
 
-# svg(file = "./06-publication/supplemental_figures/Sup_fig_XX10/Tf_strain_corr_plot.svg", width = 7, height = 5)
+# svg(file = "./06-publication/supplemental_figures/Sup_fig_11/Tf_strain_corr_plot.svg", width = 7, height = 5)
 # 
 # ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
 # 
@@ -1331,7 +1331,7 @@ ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, clust
 # try w/o clustering
 ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
 
-# svg(file = "./06-publication/supplemental_figures/Sup_fig_XX10/Tf_strain_pct_comp_plot.svg", width = 7, height = 5)
+# svg(file = "./06-publication/supplemental_figures/Sup_fig_11/Tf_strain_pct_comp_plot.svg", width = 7, height = 5)
 # 
 # ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
 # 

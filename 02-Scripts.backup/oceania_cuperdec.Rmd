@@ -161,10 +161,10 @@ cd_curve_plot <- plot_cuperdec(curves, metadata_map, adaptive_rank_burnin_result
 cd_curve_plot
 
 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX1/cuperdec_species_pacific.pdf", plot = cd_curve_plot, device = "pdf",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_1/cuperdec_species_pacific.pdf", plot = cd_curve_plot, device = "pdf",
 #        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX1/cuperdec_species_pacific.png", plot = cd_curve_plot, device = "png",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_1/cuperdec_species_pacific.png", plot = cd_curve_plot, device = "png",
 #        scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
 
 ```

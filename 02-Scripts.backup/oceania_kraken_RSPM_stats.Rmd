@@ -181,7 +181,7 @@ RSPM_kraken_compare <- kraken_readstats %>%
 
 RSPM_kraken_compare
 
-ggsave("./06-publication/supplemental_figures/Sup_fig_XX3/kraken_rspm_compare.pdf", plot = RSPM_kraken_compare, device = "pdf",
+ggsave("./06-publication/supplemental_figures/Sup_fig_3/kraken_rspm_compare.pdf", plot = RSPM_kraken_compare, device = "pdf",
        scale = 1, width = 4, height = 3, units = c("in"), dpi = 300)
 
 ```
@@ -250,7 +250,7 @@ percent_rl <- kraken_readstats %>%
     ylab("Mean read length (bp)")
 percent_rl
 
- ggsave("./06-publication/supplemental_figures/Sup_fig_XX3/percent_rl.pdf", plot = percent_rl, device = "pdf",
+ ggsave("./06-publication/supplemental_figures/Sup_fig_3/percent_rl.pdf", plot = percent_rl, device = "pdf",
        scale = 1, width = 7, height = 3, units = c("in"), dpi = 300)
 
 ```

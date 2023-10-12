@@ -164,7 +164,8 @@ pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %
   select(Library_ID, Lab, Type, Age_mean, seq_len_avg, gc_avg, No_reads_no_human) %>%
   mutate(Study = "Pacific",
          Continent = "Pacific",
-         Age_mean_log = log10(Age_mean))
+         Age_mean_log = log10(Age_mean)) %>%
+  rename(Sample_type = "Type")
 
 pre_metadata <- fread("../smoking_calculus/00-documentation.backup/full_combined_metadata.tsv") %>%
   select(Library_ID, Site_code, seq_len_avg, gc_avg, No_reads_no_human) %>%
@@ -188,7 +189,9 @@ pre_metadata <- fread("../smoking_calculus/00-documentation.backup/full_combined
               mutate(Run_accession = ifelse(Study == "FellowsYates2021",Sample_alias,Run_accession),
                      Study = ifelse(Study == "Mann2018" & str_detect(Run_accession, "SRR"),"Mann2018_world",Study)) %>%
               rename(Library_ID = Run_accession)) %>%
-  mutate(Age_mean_log = log10(Age_mean))
+  mutate(Age_mean_log = log10(Age_mean),
+         Sample_type = ifelse(str_detect(Library_ID, "MID|KT|CS|JAE|VLC|IVE|ELR|CMB"), "calculus", Sample_type)) %>%
+  mutate(Sample_type = ifelse(str_detect(Library_ID, "CSS|CSN|CSL|CSD"), "blank", Sample_type))
 
 world_metadata <-  pre_metadata %>%
   mutate(Sample_group = ifelse(is.na(Sample_group),"bone",Sample_group)) %>%
@@ -236,14 +239,9 @@ raincloud <- malt_stats_table %>%
   filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
   left_join(., metadata %>%
               select(Library_ID, Study, Continent), by = "Library_ID") %>%
-  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
-         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
-         Study = str_replace_all(Study, "Iberia","Velsko2022"),
-         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
-         Study = replace_na(Study, "Pacific")) %>%
-  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
   mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
          Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
   ggplot(., aes(x = Continent, y = Percent, fill = Continent)) + 
   ## add half-violin from {ggdist} package
   ggdist::stat_halfeye(
@@ -304,6 +302,20 @@ malt_stats_table %>%
   mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
          Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
   wilcox_test(., Percent ~ Continent, p.adjust.method = "fdr") %>%
+  full_join(., malt_stats_table %>%
+            filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+            left_join(., metadata %>%
+                      select(Library_ID, Study, Continent), by = "Library_ID") %>%
+            mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+                   Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+                   Study = str_replace_all(Study, "Iberia","Velsko2022"),
+                   Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+                   Study = replace_na(Study, "Pacific")) %>%
+            mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+            mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+                   Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+            select(Library_ID, Continent, Percent) %>%
+            wilcox_effsize(., Percent ~ Continent, p.adjust.method = "fdr")) %>%
   arrange(`p.adj`)
 
 ```
@@ -316,21 +328,16 @@ sp_counts <- fread("./05-Documentation.backup/pe_all_table_species_counts.tsv")
 
 ```
 
-```{r}
+```{r no_species_all}
 sp_counts_plot <- malt_stats_table %>%
   filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
   left_join(., metadata %>%
               select(Library_ID, Study, Continent), by = "Library_ID") %>%
-  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
-         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
-         Study = str_replace_all(Study, "Iberia","Velsko2022"),
-         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
-         Study = replace_na(Study, "Pacific")) %>%
-  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
   mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
          Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
   full_join(., sp_counts, by = "Library_ID") %>%
   drop_na(no_species) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
   ggplot(., aes(x = Continent, y = no_species, fill = Continent)) + 
   ## add half-violin from {ggdist} package
   ggdist::stat_halfeye(
@@ -373,6 +380,7 @@ sp_counts_plot <- malt_stats_table %>%
 
 ```
 
+
 ```{r stats_sp}
 
 malt_stats_table %>%
@@ -390,6 +398,338 @@ malt_stats_table %>%
   full_join(., sp_counts, by = "Library_ID") %>%
   drop_na(no_species) %>%
   wilcox_test(., no_species ~ Continent, p.adjust.method = "fdr") %>%
+  full_join(., malt_stats_table %>%
+            filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+            left_join(., metadata %>%
+                      select(Library_ID, Study, Continent), by = "Library_ID") %>%
+            mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+                   Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+                   Study = str_replace_all(Study, "Iberia","Velsko2022"),
+                   Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+                   Study = replace_na(Study, "Pacific")) %>%
+            mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+            mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+            full_join(., sp_counts, by = "Library_ID") %>%
+            select(Library_ID, Continent, no_species) %>%
+            wilcox_effsize(., no_species ~ Continent, p.adjust.method = "fdr")) %>%
+  arrange(`p.adj`)
+
+```
+
+```{r gc_all}
+gc_plot <- metadata %>%
+  filter(Sample_type == "calculus") %>%
+  mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  select(Study, Library_ID, Continent, gc_avg, seq_len_avg) %>%
+  # filter for only the samples with a read length below 80bp, b/c the pacific samples have no reads longer than that
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  ggplot(., aes(x = Continent, y = gc_avg, fill = Continent)) + 
+  ## add half-violin from {ggdist} package
+  ggdist::stat_halfeye(
+    ## custom bandwidth
+    adjust = .5, 
+    ## adjust height
+    width = .6, 
+    ## move geom to the right
+    justification = -.2, 
+    ## remove slab interval
+    .width = 0, 
+    point_colour = NA
+  ) + 
+  geom_boxplot(
+    width = .12, 
+    ## remove outliers
+    outlier.color = NA, ## `outlier.shape = NA` works as well
+    color = "grey30"
+  ) +
+  ## add dot plots from {ggdist} package
+  ggdist::stat_dots(
+    ## orientation to the left
+    side = "left", 
+    ## move geom to the left
+    justification = 1.1, 
+    ## adjust grouping (binning) of observations 
+    binwidth = 1.0
+  ) + 
+  ## remove white space on the left
+  coord_cartesian(xlim = c(1.2, NA)) +
+  theme_minimal(base_size = 12) +
+  scale_fill_manual(values = Continent_colors) +
+  theme(axis.text.y = element_text(size = 12)) +
+  theme(legend.position = "none") +
+  scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +  
+  xlab("Continent") +
+  ylab("%GC") +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5)) 
+
+  gc_plot
+
+  # ggsave("./06-publication/supplemental_figures/Sup_fig_5/gc_stats.pdf", plot = gc_plot, device = "pdf",
+  #      scale = 1, width = 49, height = 7, units = c("in"), dpi = 300)
+
+  
+```
+
+```{r gc_under80}
+gc_plot <- metadata %>%
+  filter(Sample_type == "calculus") %>%
+  mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  select(Study, Library_ID, Continent, gc_avg, seq_len_avg) %>%
+  # filter for only the samples with a read length below 80bp, b/c the pacific samples have no reads longer than that
+  filter(seq_len_avg <= 80) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  ggplot(., aes(x = Continent, y = gc_avg, fill = Continent)) + 
+  ## add half-violin from {ggdist} package
+  ggdist::stat_halfeye(
+    ## custom bandwidth
+    adjust = .5, 
+    ## adjust height
+    width = .6, 
+    ## move geom to the right
+    justification = -.2, 
+    ## remove slab interval
+    .width = 0, 
+    point_colour = NA
+  ) + 
+  geom_boxplot(
+    width = .12, 
+    ## remove outliers
+    outlier.color = NA, ## `outlier.shape = NA` works as well
+    color = "grey30"
+  ) +
+  ## add dot plots from {ggdist} package
+  ggdist::stat_dots(
+    ## orientation to the left
+    side = "left", 
+    ## move geom to the left
+    justification = 1.1, 
+    ## adjust grouping (binning) of observations 
+    binwidth = 1.0
+  ) + 
+  ## remove white space on the left
+  coord_cartesian(xlim = c(1.2, NA)) +
+  theme_minimal(base_size = 12) +
+  scale_fill_manual(values = Continent_colors) +
+  theme(axis.text.y = element_text(size = 12)) +
+  theme(legend.position = "none") +
+  scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +  
+  xlab("Continent") +
+  ylab("%GC") +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5)) 
+
+  gc_plot
+
+```
+
+```{r stats_gc}
+# All data
+metadata %>%
+  filter(Sample_type == "calculus") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  # filter(seq_len_avg <= 80) %>%
+  select(Library_ID, Continent, gc_avg) %>%
+  wilcox_test(., gc_avg ~ Continent, p.adjust.method = "fdr") %>%
+  full_join(., metadata %>%
+            filter(Sample_type == "calculus") %>%
+            mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+                   Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+                   Study = str_replace_all(Study, "Iberia","Velsko2022"),
+                   Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+                   Study = replace_na(Study, "Pacific")) %>%
+            mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+            mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+            select(Library_ID, Continent, gc_avg) %>%
+            wilcox_effsize(., gc_avg ~ Continent, p.adjust.method = "fdr")) %>%
+  arrange(`p.adj`)
+
+# Reads <= 80bp
+metadata %>%
+  filter(Sample_type == "calculus") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  filter(seq_len_avg <= 80) %>%
+  select(Library_ID, Continent, gc_avg) %>%
+  wilcox_test(., gc_avg ~ Continent, p.adjust.method = "fdr") %>%
+  full_join(., metadata %>%
+            filter(Sample_type == "calculus") %>%
+            mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+                   Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+                   Study = str_replace_all(Study, "Iberia","Velsko2022"),
+                   Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+                   Study = replace_na(Study, "Pacific")) %>%
+            mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+            mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+            filter(seq_len_avg <= 80) %>%
+            select(Library_ID, Continent, gc_avg) %>%
+            wilcox_effsize(., gc_avg ~ Continent, p.adjust.method = "fdr")) %>%
+  arrange(`p.adj`)
+
+
+```
+
+```{r rl_all}
+rl_plot <- metadata %>%
+  filter(Sample_type == "calculus") %>%
+  mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  select(Study, Library_ID, Continent, gc_avg, seq_len_avg) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  ggplot(., aes(x = Continent, y = seq_len_avg, fill = Continent)) + 
+  ## add half-violin from {ggdist} package
+  ggdist::stat_halfeye(
+    ## custom bandwidth
+    adjust = .5, 
+    ## adjust height
+    width = .6, 
+    ## move geom to the right
+    justification = -.2, 
+    ## remove slab interval
+    .width = 0, 
+    point_colour = NA
+  ) + 
+  geom_boxplot(
+    width = .12, 
+    ## remove outliers
+    outlier.color = NA, ## `outlier.shape = NA` works as well
+    color = "grey30"
+  ) +
+  ## add dot plots from {ggdist} package
+  ggdist::stat_dots(
+    ## orientation to the left
+    side = "left", 
+    ## move geom to the left
+    justification = 1.1, 
+    ## adjust grouping (binning) of observations 
+    binwidth = 1.0
+  ) + 
+  ## remove white space on the left
+  coord_cartesian(xlim = c(1.2, NA)) +
+  theme_minimal(base_size = 12) +
+  scale_fill_manual(values = Continent_colors) +
+  theme(axis.text.y = element_text(size = 12)) +
+  theme(legend.position = "none") +
+  xlab("") +
+  ylab("Read length (bp)") +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5)) 
+
+  rl_plot
+
+  # ggsave("./06-publication/supplemental_figures/Sup_fig_5/rl_stats.pdf", plot = rl_plot, device = "pdf",
+  #      scale = 1, width = 15, height = 7, units = c("in"), dpi = 300)
+
+```
+
+```{r rl_under80}
+rl_plot <- metadata %>%
+  filter(Sample_type == "calculus") %>%
+  mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  select(Study, Library_ID, Continent, gc_avg, seq_len_avg) %>%
+  filter(seq_len_avg <= 80) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  ggplot(., aes(x = Continent, y = seq_len_avg, fill = Continent)) + 
+  ## add half-violin from {ggdist} package
+  ggdist::stat_halfeye(
+    ## custom bandwidth
+    adjust = .5, 
+    ## adjust height
+    width = .6, 
+    ## move geom to the right
+    justification = -.2, 
+    ## remove slab interval
+    .width = 0, 
+    point_colour = NA
+  ) + 
+  geom_boxplot(
+    width = .12, 
+    ## remove outliers
+    outlier.color = NA, ## `outlier.shape = NA` works as well
+    color = "grey30"
+  ) +
+  ## add dot plots from {ggdist} package
+  ggdist::stat_dots(
+    ## orientation to the left
+    side = "left", 
+    ## move geom to the left
+    justification = 1.1, 
+    ## adjust grouping (binning) of observations 
+    binwidth = 1.0
+  ) + 
+  ## remove white space on the left
+  coord_cartesian(xlim = c(1.2, NA)) +
+  theme_minimal(base_size = 12) +
+  scale_fill_manual(values = Continent_colors) +
+  theme(axis.text.y = element_text(size = 12)) +
+  theme(legend.position = "none") +
+  xlab("") +
+  ylab("Read length (bp)") +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5)) 
+
+  rl_plot
+
+```
+
+
+```{r stats_rl}
+# All data
+metadata %>%
+  filter(Sample_type == "calculus") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  select(Library_ID, Continent, seq_len_avg) %>%
+  wilcox_test(., seq_len_avg ~ Continent, p.adjust.method = "fdr") %>%
+  full_join(., metadata %>%
+            filter(Sample_type == "calculus") %>%
+            mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+                   Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+                   Study = str_replace_all(Study, "Iberia","Velsko2022"),
+                   Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+                   Study = replace_na(Study, "Pacific")) %>%
+            mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+            mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+            select(Library_ID, Continent, seq_len_avg) %>%
+            wilcox_effsize(., seq_len_avg ~ Continent, p.adjust.method = "fdr")) %>%
+  arrange(`p.adj`)
+
+# Read length under 80bp
+metadata %>%
+  filter(Sample_type == "calculus") %>%
+  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+         Study = str_replace_all(Study, "Iberia","Velsko2022"),
+         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+         Study = replace_na(Study, "Pacific")) %>%
+  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+  mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  select(Library_ID, Continent, seq_len_avg) %>%
+  filter(seq_len_avg <= 80) %>%
+  wilcox_test(., seq_len_avg ~ Continent, p.adjust.method = "fdr") %>%
+  full_join(., metadata %>%
+            filter(Sample_type == "calculus") %>%
+            mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
+                   Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
+                   Study = str_replace_all(Study, "Iberia","Velsko2022"),
+                   Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
+                   Study = replace_na(Study, "Pacific")) %>%
+            mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
+            mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+            filter(seq_len_avg <= 80) %>%
+            select(Library_ID, Continent, seq_len_avg) %>%
+            wilcox_effsize(., seq_len_avg ~ Continent, p.adjust.method = "fdr")) %>%
   arrange(`p.adj`)
 
 ```
@@ -399,16 +739,11 @@ counts_wrap <- malt_stats_table %>%
   filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
   left_join(., metadata %>%
               select(Library_ID, Study, Continent), by = "Library_ID") %>%
-  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
-         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
-         Study = str_replace_all(Study, "Iberia","Velsko2022"),
-         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
-         Study = replace_na(Study, "Pacific")) %>%
-  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
   mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
          Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
   full_join(., sp_counts, by = "Library_ID") %>%
   drop_na(no_species) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
   ggplot(., aes(x = Percent, y = no_species)) + # Species
          geom_point(aes(fill = Continent), size = 1.5, stroke = 0.2, shape = 21) +
          geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
@@ -427,16 +762,11 @@ no_wrap <- malt_stats_table %>%
   filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
   left_join(., metadata %>%
               select(Library_ID, Study, Continent), by = "Library_ID") %>%
-  mutate(Study = str_replace_all(Study, "Kilteasheen","Mann2018"),
-         Study = str_replace_all(Study, "Middenbeemster","Velsko2022"),
-         Study = str_replace_all(Study, "Iberia","Velsko2022"),
-         Study = str_replace_all(Study, "Radcliffe","Velsko2019"),
-         Study = replace_na(Study, "Pacific")) %>%
-  mutate(Study = fct_relevel(Study, "Pacific","Eisenhoffer2020","FellowsYates2021","Mann2018","Mann2018_world","Ottoni2021","Velsko2019","Velsko2022")) %>%
   mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
          Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
   full_join(., sp_counts, by = "Library_ID") %>%
   drop_na(no_species) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
   ggplot(., aes(x = Percent, y = no_species)) + # Species
          geom_point(aes(fill = Continent), size = 2.0, stroke = 0.2, shape = 21) +
          geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
@@ -454,6 +784,171 @@ no_wrap
 ```
 
 ```{r}
+malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              filter(Sample_type == "calculus") %>%
+              select(Library_ID, Study, Continent, gc_avg, seq_len_avg), by = "Library_ID") %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  drop_na(no_species) %>%
+  # filter(seq_len_avg <= 80) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  ggplot(., aes(x = seq_len_avg, y = no_species)) + # Species
+         geom_point(aes(fill = gc_avg), size = 1.5, stroke = 0.2, shape = 21) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_viridis_c(option = "C") +
+         # scale_fill_manual(values = Continent_colors) +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 40, aes(label = ..rr.label..)) +
+         # ylab("Read length (bp") +
+         # xlab("% assigned reads") + 
+         facet_wrap(~Continent)
+# gc_rl_counts_wrap
+
+malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              filter(Sample_type == "calculus") %>%
+              select(Library_ID, Study, Continent, gc_avg, seq_len_avg), by = "Library_ID") %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  drop_na(no_species) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  # filter(seq_len_avg <= 80) %>%
+  ggplot(., aes(x = seq_len_avg, y = Percent)) + # Species
+         geom_point(aes(fill = gc_avg), size = 1.5, stroke = 0.2, shape = 21) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_viridis_c(option = "C") +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 10, aes(label = ..rr.label..)) +
+         # ylab("No. species") +
+         # xlab("% assigned reads") + 
+         facet_wrap(~Continent)
+
+```
+
+```{r}
+malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              filter(Sample_type == "calculus") %>%
+              select(Library_ID, Study, Continent, gc_avg, seq_len_avg), by = "Library_ID") %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  # filter(seq_len_avg <= 80) %>%
+  drop_na(no_species) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  ggplot(., aes(x = seq_len_avg, y = Percent)) + # Species
+         # geom_point(aes(fill = gc_avg), size = 1.5, stroke = 0.2, shape = 21) +
+         ggstar::geom_star(aes(fill = no_species), starstroke = 0.4, color = "black", starshape = 15) + # starshape = Continent, 
+         ggstar::scale_starshape_manual(values = c(2, 23, 12, 21, 15, 18)) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_viridis_c(option = "C") +
+         # scale_fill_manual(values = Continent_colors) +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 10, aes(label = ..rr.label..)) 
+
+
+malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              filter(Sample_type == "calculus") %>%
+              select(Library_ID, Study, Continent, gc_avg, seq_len_avg), by = "Library_ID") %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  # filter(seq_len_avg <= 80) %>%
+  drop_na(no_species) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  ggplot(., aes(x = seq_len_avg, y = no_species)) + # Species
+         # geom_point(aes(fill = gc_avg), size = 1.5, stroke = 0.2, shape = 21) +
+         ggstar::geom_star(aes(fill = Percent), starstroke = 0.4, color = "black", starshape = 15) + # starshape = Continent, 
+         ggstar::scale_starshape_manual(values = c(2, 23, 12, 21, 15, 18)) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_viridis_c(option = "C") +
+         # scale_fill_manual(values = Continent_colors) +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 10, aes(label = ..rr.label..)) 
+# gc_rl_no_wrap
+
+  malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              filter(Sample_type == "calculus") %>%
+              select(Library_ID, Study, Continent, gc_avg, seq_len_avg), by = "Library_ID") %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  drop_na(no_species) %>%
+    # filter(seq_len_avg <= 80) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  ggplot(., aes(x = seq_len_avg, y = gc_avg)) + # Species
+         geom_point(aes(fill = Percent), size = 2, stroke = 0.2, shape = 21) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_viridis_c(option = "C") +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 40, aes(label = ..rr.label..)) 
+
+ gc_rl_no_sp <- malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              filter(Sample_type == "calculus") %>%
+              select(Library_ID, Study, Continent, gc_avg, seq_len_avg), by = "Library_ID") %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  drop_na(no_species) %>%
+    # filter(seq_len_avg <= 80) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  ggplot(., aes(x = seq_len_avg, y = gc_avg)) + # Species
+         geom_point(aes(fill = no_species), size = 2, stroke = 0.2, shape = 21) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         scale_fill_viridis_c(option = "C") +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 40, aes(label = ..rr.label..)) 
+gc_rl_no_sp
+  
+gc_rl_continent <-  malt_stats_table %>%
+  filter(!str_detect(Library_ID, nhp %>% str_c(collapse = "|"))) %>%
+  left_join(., metadata %>%
+              filter(Sample_type == "calculus") %>%
+              select(Library_ID, Study, Continent, gc_avg, seq_len_avg), by = "Library_ID") %>%
+  mutate(Percent = Assigned / (Non_mapped + Mapped) * 100,
+         Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
+  full_join(., sp_counts, by = "Library_ID") %>%
+  drop_na(no_species) %>%
+    # filter(seq_len_avg <= 80) %>%
+  mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
+  ggplot(., aes(x = seq_len_avg, y = gc_avg)) + # Species
+         geom_point(aes(fill = Continent), size = 2, stroke = 0.2, shape = 21) +
+         geom_smooth(method = glm, se = F, col = "black", linewidth = 0.7) +
+         # scale_fill_viridis_c(option = "C") +
+         scale_fill_manual(values = Continent_colors) +
+         theme_classic(base_size = 12) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ggpubr::stat_regline_equation(label.y = 40, aes(label = ..rr.label..)) 
+gc_rl_continent
+
+```
+
+```{r}
 
 # reads_sp <- raincloud + no_wrap + counts_wrap +
 #   plot_layout(widths = c(1.6, 1, 1), guides = "collect") # 
@@ -464,16 +959,24 @@ reads_sp <- (raincloud + sp_counts_plot) / (no_wrap + counts_wrap) +
 
 reads_sp
 
+gc_rl_stats <- gc_rl_no_sp / gc_rl_continent
+
+gc_rl_stats
+
 ```
 
 
-```{r}
+```{r, eval = F}
 
-ggsave("./06-publication/supplemental_figures/Sup_fig_XX2/no_species_malt_assignment_stats.svg", plot = reads_sp, device = "svg",
+ggsave("./06-publication/supplemental_figures/Sup_fig_5/no_species_malt_assignment_stats.svg", plot = reads_sp, device = "svg",
        scale = 1, width = 11, height = 7, units = c("in"), dpi = 300)
 
-ggsave("./06-publication/supplemental_figures/Sup_fig_XX2/no_species_malt_assignment_stats.pdf", plot = reads_sp, device = "pdf",
-       scale = 1, width = 11, height = 7, units = c("in"), dpi = 300)
+ggsave("./06-publication/supplemental_figures/Sup_fig_5/no_species_malt_assignment_stats.pdf", plot = reads_sp, device = "pdf",
+scale = 1, width = 11, height = 7, units = c("in"), dpi = 300)
+
+
+ggsave("./06-publication/supplemental_figures/Sup_fig_5/gc_rl_continent_stats.pdf", plot = gc_rl_stats, device = "pdf",
+scale = 1, width = 7, height = 5, units = c("in"), dpi = 300)
 
 ```
 

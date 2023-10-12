@@ -446,10 +446,10 @@ gap_plot <- sp_gap_plot / gn_gap_plot +
 
 gap_plot
 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX13/SXX13_pacific_gap_statistic.pdf", plot = gap_plot, device = "pdf",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_2/S2_pacific_gap_statistic.pdf", plot = gap_plot, device = "pdf",
 #        scale = 1, width = 8, height = 7, units = c("in"), dpi = 300)
 # 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX13/SXX13_pacific_gap_statistic.png", plot = gap_plot, device = "png",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_2/S2_pacific_gap_statistic.png", plot = gap_plot, device = "png",
 #        scale = 1, width = 8, height = 7, units = c("in"), dpi = 300)
 
 ```

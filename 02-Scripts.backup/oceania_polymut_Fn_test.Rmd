@@ -81,7 +81,7 @@ fn_polymut_all <- Fn_polymut %>%
 
 fn_polymut_all
 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX11/Fn_dN_dS_test.svg", plot = fn_polymut_all, device = "svg",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_12/Fn_dN_dS_test.svg", plot = fn_polymut_all, device = "svg",
 #         scale = 1, width = 7, height = 4, units = c("in"), dpi = 300)
 
 ```
@@ -204,10 +204,10 @@ Fn_plots <- dn_ds_short + sites_short + dn_short + ds_short + snps_short +
 
 Fn_plots
 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX11/Fn_dN_dS_short_test.pdf", plot = Fn_plots, device = "pdf",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_12/Fn_dN_dS_short_test.pdf", plot = Fn_plots, device = "pdf",
 #         scale = 1, width = 10, height = 7, units = c("in"), dpi = 300)
 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX11/Fn_dN_dS_short_test.svg", plot = Fn_plots, device = "svg",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_12/Fn_dN_dS_short_test.svg", plot = Fn_plots, device = "svg",
 #         scale = 1, width = 9, height = 7, units = c("in"), dpi = 300)
 
 
@@ -282,7 +282,7 @@ drep_mat %>%
                      tl.col = 'black')
 
 
-svg(file = "./06-publication/supplemental_figures/Sup_fig_XX11/Fn_corr_plot.svg") 
+svg(file = "./06-publication/supplemental_figures/Sup_fig_12/Fn_corr_plot.svg") 
 
 drep_mat %>%
   corrplot::corrplot(., 

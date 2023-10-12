@@ -670,7 +670,7 @@ colorder <- ComplexHeatmap::column_order(ht1)
 
 
 # and save the heatmap as an svg
-# svg(file = "./06-publication/supplemental_figures/Sup_fig_XX7/KEGG_KO_heatmap.svg", width = 14, height = 12)
+# svg(file = "./06-publication/supplemental_figures/Sup_fig_6/KEGG_KO_heatmap.svg", width = 14, height = 12)
 # 
 # set.seed(1)
 # ht1 = ComplexHeatmap::Heatmap(humann3_gf_l1_noblanks_filt.clr.mat, col = col_fun, name = "CPM", clustering_method_rows = "complete", clustering_method_columns = "complete",column_km = 2, row_km = 3, top_annotation = row_ha, border = TRUE, show_row_names = F, show_column_names = F)
@@ -1452,7 +1452,7 @@ ott_abund <- ottowia_sp %>%
     theme(title = element_text(size=10))
 ott_abund
 
-# ggsave("./06-publication/main_figures/Figure_XX6/ottowia_abund.pdf", plot = ott_abund, device = "pdf",
+# ggsave("./06-publication/main_figures/Figure_7/ottowia_abund.pdf", plot = ott_abund, device = "pdf",
 #        scale = 1, width = 17, height = 2, units = c("in"), dpi = 300)
 
 
@@ -1690,7 +1690,7 @@ pca_kegg <- df_X %>%
     theme(legend.title = element_blank())
  pca_kegg
 
-ggsave("./06-publication/supplemental_figures/Sup_fig_XX7/KOs_pca_clusters.pdf", plot = pca_kegg, device = "pdf",
+ggsave("./06-publication/supplemental_figures/Sup_fig_6/KOs_pca_clusters.pdf", plot = pca_kegg, device = "pdf",
        scale = 1, width = 8.5, height = 5, units = c("in"), dpi = 300)
    
 ```
@@ -1919,13 +1919,13 @@ sp_v_KO
 KO_sp_dots <- pca_kegg / sp_v_KO + plot_layout(heights = c(1.5,1))
 KO_sp_dots
 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX6/clusters_sp_KOs.pdf", plot = KO_sp_dots, device = "pdf",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_7/clusters_sp_KOs.pdf", plot = KO_sp_dots, device = "pdf",
 #        scale = 1, width = 7, height = 6, units = c("in"), dpi = 300)
 
 KO_sp_rain <- raincloud_kegg | sp_rain
 KO_sp_rain
 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX6/clusters_sp_KOs_rain.pdf", plot = KO_sp_rain, device = "pdf",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_7/clusters_sp_KOs_rain.pdf", plot = KO_sp_rain, device = "pdf",
 #        scale = 1, width = 12, height = 6, units = c("in"), dpi = 300)
 
 
@@ -2045,7 +2045,7 @@ filetable <- humann3_GFs_full %>%
   left_join(., full_metadata %>%
               select(Library_ID, Study, Continent)) 
 
-sxx7 <- filetable %>%
+s6 <- filetable %>%
   mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
    ggplot(., aes(x = Species, fill = Continent)) +
          geom_bar(color = "black", size = 0.25) +
@@ -2060,9 +2060,9 @@ sxx7 <- filetable %>%
          ggtitle("") +
          facet_wrap(~Continent)
 
-sxx7
+s6
 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX7/no_sp_cont_KOs.pdf", plot = sxx7, device = "pdf",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_6/no_sp_cont_KOs.pdf", plot = s6, device = "pdf",
 #        scale = 1, width = 12, height = 6, units = c("in"), dpi = 300)
 
 humann3_GFs_full %>%

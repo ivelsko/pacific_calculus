@@ -379,14 +379,14 @@ abot_439_Tf_plot <- abot_439_Tf %>%
 
 abot_439_Tf_plot
 
-ggsave("./06-publication/supplemental_figures/Sup_fig_XX12/abot_439_Tf_dNdS_plot.pdf", plot = abot_439_Tf_plot, device = "pdf",
-        scale = 1, width = 3, height = 3, units = c("in"), dpi = 300)
-
-ggsave("./06-publication/supplemental_figures/Sup_fig_XX12/abot_439_Tf_dNdS_plot.svg", plot = abot_439_Tf_plot, device = "svg",
-        scale = 1, width = 3, height = 3, units = c("in"), dpi = 300)
-
-ggsave("./06-publication/supplemental_figures/Sup_fig_XX12/abot_439_Tf_dNdS_plot.png", plot = abot_439_Tf_plot, device = "png",
-        scale = 1, width = 3, height = 3, units = c("in"), dpi = 300)
+# ggsave("./06-publication/supplemental_figures/Sup_fig_13/abot_439_Tf_dNdS_plot.pdf", plot = abot_439_Tf_plot, device = "pdf",
+#         scale = 1, width = 3, height = 3, units = c("in"), dpi = 300)
+# 
+# ggsave("./06-publication/supplemental_figures/Sup_fig_13/abot_439_Tf_dNdS_plot.svg", plot = abot_439_Tf_plot, device = "svg",
+#         scale = 1, width = 3, height = 3, units = c("in"), dpi = 300)
+# 
+# ggsave("./06-publication/supplemental_figures/Sup_fig_13/abot_439_Tf_dNdS_plot.png", plot = abot_439_Tf_plot, device = "png",
+#         scale = 1, width = 3, height = 3, units = c("in"), dpi = 300)
 
 ```
 

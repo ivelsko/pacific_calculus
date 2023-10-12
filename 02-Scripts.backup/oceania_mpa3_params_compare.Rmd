@@ -146,7 +146,7 @@ mpa3_params_plot <-  sp_counts %>%
 
 mpa3_params_plot
 
-# ggsave("./06-publication/supplemental_figures/Sup_fig_XX8/mpa3_parameters.pdf", plot = mpa3_params_plot, device = "pdf",
+# ggsave("./06-publication/supplemental_figures/Sup_fig_4/mpa3_parameters.pdf", plot = mpa3_params_plot, device = "pdf",
 #        scale = 1, width = 9, height = 6, units = c("in"), dpi = 300)
 
 ```
