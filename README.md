@@ -1,6 +1,6 @@
 # Ancient dental calculus from Oceania
 
-This repository is for keeping the data processing and analysis of dental plaque samples
+This repository is for keeping the data processing and analysis of ancient dental calculus samples
 from populations in Oceania. This includes sequencing statistics, taxonomic, and 
 functional analyses. These samples are compared within each other using the various 
 metadata categories collected (island, age, others), and are compared to published 
