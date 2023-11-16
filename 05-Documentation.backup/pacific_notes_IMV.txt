@@ -1095,7 +1095,7 @@ find . -name '*.rma6' -type f
 
 
 
-
+seqkit grep -r -p PVD -v tf_snpAlignment.fasta > tf_snpAlignment_filt.fasta
 
 
 
