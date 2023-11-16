@@ -122,7 +122,6 @@ poor_samples <- fread("./05-Documentation.backup/cfdp_fail_samples_20210413.txt"
 
 ```{r colors}
 Island_colors = c("Tongatapu" = "#616161", 
-                  "Rurutu" = "#9d654c", 
                   "Flores" = "#f6865e", 
                   "Rapa Nui" = "#cc79a7", 
                   "Futuna" = "#7D3560", 
@@ -148,7 +147,6 @@ Type_colors <- c("Arch. Bone" = "#148F77", "blank" = "#8B8B8B", "Arch. calculus"
 
 ```{r}
 Island_shapes = c("Tongatapu" = 21, 
-                  "Rurutu" = 21, 
                   "Flores" = 21, 
                   "Rapa Nui" = 21, 
                   "Futuna" = 21, 

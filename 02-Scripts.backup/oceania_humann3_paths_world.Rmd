@@ -182,7 +182,6 @@ world_fail <- fread("./05-Documentation.backup/cuperdec_malt_ei_ot_de_poor_sampl
 
 ```{r colors}
 Island_colors = c("Tongatapu" = "#616161", 
-                  "Rurutu" = "#9d654c", 
                   "Flores" = "#f6865e", 
                   "Rapa Nui" = "#cc79a7", 
                   "Futuna" = "#7D3560", 
@@ -222,7 +221,6 @@ Study_colors <- c("Pacific" = "#098BD9",
 
 ```{r}
 Island_shapes = c("Tongatapu" = 21, 
-                  "Rurutu" = 21, 
                   "Flores" = 21, 
                   "Rapa Nui" = 21, 
                   "Futuna" = 21, 

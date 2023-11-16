@@ -1,5 +1,5 @@
 ---
-title: "Middenbeemster, CMB calculus sample cumulative decay curves from nt MALT database"
+title: "calculus sample cumulative decay curvese"
 author: "Irina Velsko"
 date: "`r format(Sys.time(), '%b %d, %Y')`"
 output: github_document

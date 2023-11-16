@@ -23,7 +23,6 @@ knitr::opts_knit$set(root.dir = normalizePath(".."))
 ```
 ```{r}
 Island_colors = c("Tongatapu" = "#616161", 
-                  "Rurutu" = "#9d654c", 
                   "Flores" = "#f6865e", 
                   "Rapa Nui" = "#cc79a7", 
                   "Futuna" = "#7D3560", 

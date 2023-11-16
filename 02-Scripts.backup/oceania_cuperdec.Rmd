@@ -1,5 +1,5 @@
 ---
-title: "Pacific calculus sample cumulative decay curves from nt MALT database"
+title: "Pacific calculus sample cumulative decay curves from MALT database"
 author: "Irina Velsko"
 date: "`r format(Sys.time(), '%b %d, %Y')`"
 output: github_document
@@ -83,7 +83,7 @@ mapfile <- mapfile %>%
          Island = ifelse(is.na(Island),Env,Island)) %>%
   mutate(Island = ifelse(str_detect(Library_ID, "NMU|SIG") & Env == "archBone","archBone",Island)) %>%
 # make Island a factor for plotting
-  mutate(Island = fct_relevel(Island, "Efate","Efate_3000","Flores","Futuna","Raiatea","Rapa_Nui","Rurutu","Taumako_Duff_Islands","Tongatapu","Uripiv","Vao","Viti_Levu","Watom","modernCalculus", "subPlaque", "supPlaque", "urbanGut",  "ruralGut", "skin", "sediment", "archBone"))
+  mutate(Island = fct_relevel(Island, "Efate","Efate_3000","Flores","Futuna","Raiatea","Rapa_Nui","Taumako_Duff_Islands","Tongatapu","Uripiv","Vao","Viti_Levu","Watom","modernCalculus", "subPlaque", "supPlaque", "urbanGut",  "ruralGut", "skin", "sediment", "archBone"))
 
 ```
 

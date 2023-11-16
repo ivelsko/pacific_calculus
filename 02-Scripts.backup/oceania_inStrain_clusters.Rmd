@@ -42,7 +42,6 @@ metadata <- fread("./05-Documentation.backup/oceania_metadata_full.tsv") %>%
 
 ```{r}
 Island_colors = c("Tongatapu" = "#616161", 
-                  "Rurutu" = "#9d654c", 
                   "Flores" = "#f6865e", 
                   "Rapa Nui" = "#cc79a7", 
                   "Futuna" = "#7D3560", 
@@ -183,7 +182,6 @@ col_fun = circlize::colorRamp2(c(99, 99.5, 100), c("#ffffff", "#77c8f9", "#098BD
 
 ```{r}
 Island_colors = c("Tongatapu" = "#616161", 
-                  "Rurutu" = "#9d654c", 
                   "Flores" = "#f6865e", 
                   "Rapa Nui" = "#cc79a7", 
                   "Futuna" = "#7D3560", 
@@ -987,7 +985,6 @@ ann_colors= list('Island' = Island_colors)
 col_age = circlize::colorRamp2(c(0, 3000), c("#098BD9", "#7D3560"))
  
 ha = ComplexHeatmap::rowAnnotation(df = ann, name = "Island", col = list(Island = c("Tongatapu" = "#616161", 
-                  "Rurutu" = "#9d654c", 
                   "Flores" = "#f6865e", 
                   "Rapa_Nui" = "#cc79a7", 
                   "Futuna" = "#7D3560", 
