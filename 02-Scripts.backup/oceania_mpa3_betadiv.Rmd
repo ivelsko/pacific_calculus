@@ -424,7 +424,7 @@ island_counts <- mvm_species %>%
          ylab("MALT species counts")
 island_counts
 
-ggsave("./06-publication/supplemental_figures/Sup_fig_XX8/island_counts.pdf", plot = island_counts, device = "pdf",
+ggsave("./06-publication/supplemental_figures/Sup_fig_4/island_counts.pdf", plot = island_counts, device = "pdf",
        scale = 1, width = 5.5, height = 4.2, units = c("in"), dpi = 300)
 
 mvm_species %>%

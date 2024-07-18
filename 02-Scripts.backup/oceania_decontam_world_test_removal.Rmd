@@ -49,7 +49,7 @@ Island_colors = c("Tongatapu" = "#616161",
                   "Watom" = "#86c73a")
 
 
-type_cols <- c("Saliva - Industrial" = "#AFDFEF", , "Buccal mucosa - Industrial" = , "Plaque - Industrial" = "#FC6882", "Plaque - Non-industrial" = "#C70E7B", "Saliva - Non-industrial" = "#54BCD1", "Buccal mucosa - Non-industrial" = "#8FDA04", "Calculus - Industrial" = "#F4E3C7")
+type_cols <- c("Saliva - Industrial" = "#AFDFEF", "Buccal mucosa - Industrial" = "#4e7705", "Plaque - Industrial" = "#FC6882", "Plaque - Non-industrial" = "#C70E7B", "Saliva - Non-industrial" = "#54BCD1", "Buccal mucosa - Non-industrial" = "#8FDA04", "Calculus - Industrial" = "#F4E3C7")
 
 
 # Set microshades colors
@@ -1526,6 +1526,39 @@ de_raw %>%
   filter(str_detect(`#Datasets`, "Ottowia")) %>%
   select(matches("Datasets|FUM003|GOY006|ZAF001|LIS002"))
 
+pe_all_table_1.pca$X %>% 
+  as.data.frame.matrix() %>%
+  rownames_to_column("Library_ID") %>%
+  as_tibble() %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "CLR") %>%
+  filter(str_detect(Species, "Streptococcus")) %>%
+  select(-Species) %>%
+  full_join(., pe_all_table %>%
+            filter(str_detect(Species, "Streptococcus")) %>%
+            pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+            mutate(Counts = Counts + 1,
+                   log_counts = log10(Counts)), by = "Library_ID") %>%
+  group_by(Library_ID) %>%
+  summarize(Strep_counts  = sum(Counts)) %>%
+  ungroup() %>%
+  rename(Counts = Strep_counts) %>%
+  fwrite(., "./05-Documentation.backup/streptococcus_sp_counts.tsv", quote = F, sep = "\t")
+
+pe_all_table_1.pca$X %>% 
+  as.data.frame.matrix() %>%
+  rownames_to_column("Library_ID") %>%
+  as_tibble() %>%
+  pivot_longer(!Library_ID, names_to = "Species", values_to = "CLR") %>%
+  filter(str_detect(Species, "Desulfobulbus")) %>%
+  select(-Species) %>%
+  full_join(., pe_all_table %>%
+            filter(str_detect(Species, "Desulfobulbus")) %>%
+            pivot_longer(!Species, names_to = "Library_ID", values_to = "Counts") %>%
+            mutate(Counts = Counts + 1,
+                   log_counts = log10(Counts)), by = "Library_ID") %>%
+  select(-Species) %>%
+  fwrite(., "./05-Documentation.backup/desulfobulbus_sp_counts.tsv", quote = F, sep = "\t")
+
 ```
 
 
@@ -1909,8 +1942,8 @@ raincloud <- counts_table %>%
 
   raincloud
 
-ggsave("./06-publication/supplemental_figures/Sup_fig_4/species_counts_raincloud.pdf", plot = pca_kegg, device = "pdf",
-       scale = 1, width = 8.5, height = 5, units = c("in"), dpi = 300)
+# ggsave("./06-publication/supplemental_figures/Sup_fig_4/species_counts_raincloud.pdf", plot = raincloud, device = "pdf",
+       # scale = 1, width = 8.5, height = 5, units = c("in"), dpi = 300)
 
 ```
 
@@ -2086,8 +2119,8 @@ pca_kegg <- df_X %>%
     theme(legend.title = element_blank())
  pca_kegg
 
-ggsave("./06-publication/supplemental_figures/Sup_fig_7/species_pca_kegg_clusters.pdf", plot = pca_kegg, device = "pdf",
-       scale = 1, width = 8.5, height = 4, units = c("in"), dpi = 300)
+# ggsave("./06-publication/supplemental_figures/Sup_fig_7/species_pca_kegg_clusters.pdf", plot = pca_kegg, device = "pdf",
+#        scale = 1, width = 8.5, height = 4, units = c("in"), dpi = 300)
 
 
 ```

@@ -67,7 +67,7 @@ humann3_GFs_top <- humann3_GFs %>%
 ```{r load_kegg_data}
 
 ## load the species and genus tables generated with humann3
-humann3_GFs_full <- fread("./04-Analysis/humann3/genefamilies_anc_params_joined_cpm_ko_names.tsv")
+humann3_GFs_full <- fread("./05-Documentation.backup/pacific_genefamilies_anc_params_joined_cpm_ko_names.tsv.gz")
 humann3_GFs_full <- as_tibble(humann3_GFs_full)
 
 # clean the file names
@@ -77,9 +77,7 @@ colnames(humann3_GFs_full) <- gsub(".SG1.1","", colnames(humann3_GFs_full))
 
 # remove unmapped and ungrouped reads
 humann3_GFs <- humann3_GFs_full %>% 
-  filter(!str_detect(GeneFamily, "UNMAPPED|UNGROUPED")) %>%
-  # remove Heping Dao calculus
-  select(-c("HPD005.B0101","HPD006.B0101","HPD007.B0101"))
+  filter(!str_detect(GeneFamily, "UNMAPPED|UNGROUPED"))
 
 # remove all species-level-assignments
 humann3_GFs_top <- humann3_GFs %>%
@@ -88,7 +86,7 @@ humann3_GFs_top <- humann3_GFs %>%
 
 # World data
 ## load the species and genus tables generated with humann3
-humann3_KO_worldo_full <- fread("04-Analysis/humann3/world_samples/genefamilies_anc_params_world_joined_cpm_ko_names.tsv")
+humann3_KO_worldo_full <- fread("05-Documentation.backup/genefamilies_anc_params_world_joined_cpm_ko_names.tsv.gz")
 humann3_KO_worldo_full <- as_tibble(humann3_KO_worldo_full)
 
 # clean the file names
@@ -108,8 +106,8 @@ humann3_KO_world <- humann3_KO_worldo %>%
   full_join(., humann3_GFs_top, by = "GeneFamily") %>%
   replace(is.na(.), 0)
 
-humann3_KO_world %>%
-  fwrite(., "./05-Documentation.backup/h3_world_GFs_no_species.tsv", quote = F, sep = "\t")
+# humann3_KO_world %>%
+#   fwrite(., "./05-Documentation.backup/h3_world_GFs_no_species.tsv", quote = F, sep = "\t")
 
 ```
 
@@ -658,7 +656,7 @@ row_ha <- ComplexHeatmap::HeatmapAnnotation(df = selected_metadata, col = list(S
                                                                                Continent = Continent_colors))
 
 
-set.seed(1)
+set.seed(377)
 ht1 = ComplexHeatmap::Heatmap(humann3_gf_l1_noblanks_filt.clr.mat, col = col_fun, name = "CPM", clustering_method_rows = "complete", clustering_method_columns = "complete",column_km = 2, row_km = 3, top_annotation = row_ha, border = TRUE, show_row_names = F, show_column_names = T, column_names_gp = grid::gpar(fontsize = 4))
 
 ht1 = ComplexHeatmap::draw(ht1)
@@ -670,7 +668,7 @@ colorder <- ComplexHeatmap::column_order(ht1)
 # and save the heatmap as an svg
 # svg(file = "./06-publication/supplemental_figures/Sup_fig_6/KEGG_KO_heatmap.svg", width = 14, height = 12)
 # 
-# set.seed(1)
+# set.seed(377)
 # ht1 = ComplexHeatmap::Heatmap(humann3_gf_l1_noblanks_filt.clr.mat, col = col_fun, name = "CPM", clustering_method_rows = "complete", clustering_method_columns = "complete",column_km = 2, row_km = 3, top_annotation = row_ha, border = TRUE, show_row_names = F, show_column_names = F)
 # 
 # ComplexHeatmap::draw(ht1)
@@ -680,6 +678,103 @@ colorder <- ComplexHeatmap::column_order(ht1)
 
 ```
 
+```{r cluster_samples}
+
+humann3_gf_l1_noblanks_filt.clr.mat.df <- humann3_gf_l1_noblanks_filt.clr.mat %>%
+  as.data.frame.matrix() %>%
+  rownames_to_column("KOs") %>%
+  pivot_longer(!KOs, names_to = "Samples", values_to = "cpm") %>%
+  pivot_wider(names_from = "KOs", values_from = "cpm") %>%
+  column_to_rownames("Samples") 
+
+res.km <- factoextra::eclust(humann3_gf_l1_noblanks_filt.clr.mat.df, "kmeans")
+
+gap_line_samples <- factoextra::fviz_gap_stat(res.km$gap_stat)
+gap_line_samples
+
+
+factoextra::fviz_cluster(res.km, humann3_gf_l1_noblanks_filt.clr.mat.df, geom = "point")
+
+checksamples <- res.km$clust_plot$data %>%
+  as.data.frame() %>%
+  rename(Library_ID = name) %>%
+  left_join(., metadata %>%
+              full_join(., pacific_metadata %>%
+                          mutate(Sample_type = "calculus",
+                                 Sample_group = "ancient_calculus")), by = "Library_ID") 
+
+checksamples %>%
+  ggplot(., aes(x = x, y = y, fill = cluster, shape = Sample_type)) +
+         geom_point(size =  2, stroke = 0.1) + #
+         scale_shape_manual(values = c(21,25)) +
+         scale_fill_manual(values = c("#098BD9", "#7472af", "#cc79a7", "#f6865e", "#1ec1a7", "#86c73a")) +
+         theme_minimal() +
+         # ylim(0,100) +
+         # scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ylab("Dim2 (12.8%)") +
+         xlab("Dim1 (24.9%)")
+
+gap_cluster_samples <- checksamples %>%
+  ggplot(., aes(x = x, y = y, color = cluster, shape = cluster)) +
+         geom_point(size = 1.5) + #
+         scale_color_manual(values = c("#098BD9", "#7472af", "#cc79a7", "#f6865e", "#1ec1a7", "#86c73a")) +
+         scale_shape_manual(values = c(3,19,17,15,7,8)) +
+         theme_minimal() +
+         # ylim(0,100) +
+         # scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ylab("Dim2 (12.8%)") +
+         xlab("Dim1 (24.9%)")
+gap_cluster_samples
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX17/gap_cluster_samples.pdf", plot = gap_samples, device = "pdf",
+#        scale = 1, width = 8.5, height = 5, units = c("in"), dpi = 300)
+
+
+gap_samples <- gap_line_samples / gap_cluster_samples +
+  plot_layout(heights = c(1,1.5))
+gap_samples
+
+ggsave("./06-publication/supplemental_figures/Sup_fig_XX17/gap_cluster_samples.pdf", plot = gap_samples, device = "pdf",
+       scale = 1, width = 4.5, height = 5, units = c("in"), dpi = 300)
+
+```
+
+```{r cluster_KOs}
+
+humann3_gf_l1_noblanks_filt.KO.clr.mat.df <- humann3_gf_l1_noblanks_filt.clr.mat %>%
+  as.data.frame.matrix()
+
+res_KO.km <- factoextra::eclust(humann3_gf_l1_noblanks_filt.KO.clr.mat.df, "kmeans")
+
+gap_line_KOs <- factoextra::fviz_gap_stat(res_KO.km$gap_stat)
+gap_line_KOs
+
+factoextra::fviz_cluster(res_KO.km, humann3_gf_l1_noblanks_filt.KO.clr.mat.df, geom = "point")
+
+checksamples_KO <- res_KO.km$clust_plot$data %>%
+  as.data.frame()  
+
+gap_cluster_KOs <- checksamples_KO %>%
+  ggplot(., aes(x = x, y = y, color = cluster)) +
+         geom_point(size =  1, stroke = 0.1) + #
+         scale_color_manual(values = c("#098BD9", "#7472af", "#cc79a7", "#f6865e", "#1ec1a7", "#86c73a", "#616161", "#e1f2fe", "#f5c710ff", "#7D3560")) +
+         scale_shape_manual(values = c(3,19,17,15,7,8)) +
+         theme_minimal() +
+         # ylim(0,100) +
+         # scale_y_continuous(breaks=scales::pretty_breaks(n=10)) +
+         ylab("Dim2 (11.3%)") +
+         xlab("Dim1 (27.5%)")
+gap_cluster_KOs
+
+gap_KOs <- gap_line_KOs / gap_cluster_KOs +
+  plot_layout(heights = c(1,1.5))
+gap_KOs
+
+ggsave("./06-publication/supplemental_figures/Sup_fig_XX17/gap_cluster_KOs.pdf", plot = gap_KOs, device = "pdf",
+       scale = 1, width = 4.5, height = 5, units = c("in"), dpi = 300)
+
+
+```
 
 ```{r row_order}
 # turn the row numbers into a data table to combine with the matrix to get the KEGG entries
@@ -775,7 +870,7 @@ keggtable <- fread("./05-Documentation.backup/KEGG_color_humann3_GFs_world_list.
 ```{r}
 # read in the json file with all KOs per pathway
 
-result <- jsonlite::fromJSON("~/Downloads/ko00001.json", flatten = T)
+result <- jsonlite::fromJSON("./05-Documentation.backup/ko00001.json", flatten = T)
 
 json_data_frame <- tibble(as.data.frame(result))
 
@@ -1688,8 +1783,8 @@ pca_kegg <- df_X %>%
     theme(legend.title = element_blank())
  pca_kegg
 
-ggsave("./06-publication/supplemental_figures/Sup_fig_6/KOs_pca_clusters.pdf", plot = pca_kegg, device = "pdf",
-       scale = 1, width = 8.5, height = 5, units = c("in"), dpi = 300)
+# ggsave("./06-publication/supplemental_figures/Sup_fig_6/KOs_pca_clusters.pdf", plot = pca_kegg, device = "pdf",
+#        scale = 1, width = 8.5, height = 5, units = c("in"), dpi = 300)
    
 ```
 
@@ -2512,7 +2607,7 @@ humann3_GFway_biplot_list <- humann3_GFway_biplot_list %>%
   bind_rows(h3_gf_cor_biplot_pc2$plot_env$neg_10 %>% select(-Function) %>% arrange(desc(PC2)) %>% select(GeneFamily) %>% mutate(Direction = "PC2-"))
 
 
-fwrite(humann3_GFway_biplot_list, file = "./04-Analysis/humann3/humann3_GFs_biplot_list.tsv", quote = F, sep = "\t")
+# fwrite(humann3_GFway_biplot_list, file = "./04-Analysis/humann3/humann3_GFs_biplot_list.tsv", quote = F, sep = "\t")
 
 ```
 
@@ -2552,6 +2647,8 @@ humann3_gf_l1_noblanks_filt <- humann3_KO_world %>%
   select(-matches(poor_samples %>% str_c(collapse = "|"))) %>%
   select(-matches(blanks %>% str_c(collapse = "|"))) %>%
   select(-matches(under750 %>% str_c(collapse = "|"))) %>%
+  # remove Ottoni with no ages
+  select(-ERR5729638, -ERR5729643) %>%
   adorn_totals(where = "col") %>%
   mutate(Percent = Total / sum(Total) * 100) %>%
   filter(Percent >= 0.005) %>%
@@ -2889,7 +2986,7 @@ humann3_gf_l1_all.pca$variates$X %>%
   filter(Type == "Arch. calculus") %>%
   select(Library_ID) %>%
   arrange(Library_ID) %>%
-  fwrite(., "../strep_clades/gf_poor_samples.tsv", quote = F, sep = "\t")
+  # fwrite(., "../strep_clades/gf_poor_samples.tsv", quote = F, sep = "\t")
   
 ```
 

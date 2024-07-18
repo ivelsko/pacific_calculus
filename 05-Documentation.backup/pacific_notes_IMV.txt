@@ -1022,6 +1022,63 @@ modeltest-ng -i /mnt/archgen/microbiome_calculus/pacific_calculus/05-Documentati
 
 
 ###########################
+Gubbins
+###########################
+# Use gubbins to look for recombination in the Abot439 and Tf alignments, and then 
+# make an alignment file for each that masks any recombination sites
+
+# work in /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/phylogenies/gubbins
+
+# Use the full alignment file from MALT/HOPS output, but remove the EMN and ECO samples with seqkit
+# and then remove the samples with <5X coverage with seqkit
+seqkit grep -v -f exclude_non_pacific_samples.tsv /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/phylogenies/anaerolineaceae_bacterium_ot_439/multivcfanalyzer_hom/fullAlignment.fasta -o abot439_fullAlignment_tmp.fasta
+seqkit grep -v -f exclude_abot439_less_5x_cov_samples.tsv abot439_fullAlignment_tmp.fasta -o abot439_fullAlignment.fasta
+seqkit grep -v -f exclude_non_pacific_samples.tsv /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/phylogenies/tannerella_forsythia/multivcfanalyzer_hom/fullAlignment.fasta -o tf_fullAlignment_tmp.fasta
+seqkit grep -v -f exclude_tf_less_5x_cov_samples.tsv tf_fullAlignment_tmp.fasta -o tf_fullAlignment.fasta
+
+# remove the 8 samples that fall on another branch b/c maybe they're why gubbins fails
+seqkit grep -v -f exclude_tf_other_branch.tsv tf_fullAlignment.fasta -o tf_fullAlignment_main_branch.fasta
+
+# create the conda environment first
+snakemake -s ../../../02-Scripts.backup/gubbins_abot439.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --profile /home/irina_marie_velsko/.config/snakemake/cluster --use-conda --conda-prefix conda --cluster "qsub -pe smp 8 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}"  -j  1 --conda-create-envs-only
+
+snakemake -s ../../../02-Scripts.backup/gubbins_abot439.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --profile /home/irina_marie_velsko/.config/snakemake/cluster --use-conda --conda-prefix conda --cluster "qsub -pe smp 8 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 40 -n
+snakemake -s ../../../02-Scripts.backup/gubbins_tf.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --profile /home/irina_marie_velsko/.config/snakemake/cluster --use-conda --conda-prefix conda --cluster "qsub -pe smp 8 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 40 -n
+
+
+
+###########################
+RaxML
+###########################
+# Use RaxML to build a more robust tree for Abot439 and Tf
+
+# For input alignments, use the same files as for Gubbins
+# Maybe also generate a tree with the masked alignment file produced by Gubbins
+
+snakemake -s ../../../02-Scripts.backup/raxml_abot439.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --profile /home/irina_marie_velsko/.config/snakemake/cluster --use-conda --conda-prefix conda --cluster "qsub -pe smp 8 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 40 -n
+snakemake -s ../../../02-Scripts.backup/raxml_tf.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --profile /home/irina_marie_velsko/.config/snakemake/cluster --use-conda --conda-prefix conda --cluster "qsub -pe smp 8 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 40 -n
+
+snakemake -s ../../../02-Scripts.backup/raxml_masked_abot439.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --profile /home/irina_marie_velsko/.config/snakemake/cluster --use-conda --conda-prefix conda --cluster "qsub -pe smp 8 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 40 -n
+snakemake -s ../../../02-Scripts.backup/raxml_masked_tf.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --profile /home/irina_marie_velsko/.config/snakemake/cluster --use-conda --conda-prefix conda --cluster "qsub -pe smp 8 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 40 -n
+
+
+###########################
+Split fastas
+###########################
+
+# for dRep
+# run in 04-Analysis/phylogenies/<species>/multivcfanalyzer_hom
+seqkit split -i fullAlignment_copy.fasta -O individual_fastas
+ls /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/phylogenies/anaerolineaceae_bacterium_ot_439/multivcfanalyzer_hom/individual_fastas/*.fasta > abot439_pacific_mapping_genome_list.tsv
+
+snakemake -s ../../../../../02-Scripts.backup/dRep_abot439_pacific_mapping.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 8 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 30 -n
+
+ls /mnt/archgen/microbiome_calculus/pacific_calculus/04-Analysis/phylogenies/tannerella_forsythia/multivcfanalyzer_hom/individual_fastas/*.fasta > tf_pacific_mapping_genome_list.tsv
+
+snakemake -s ../../../../../02-Scripts.backup/dRep_tf_pacific_mapping.Snakefile --cluster-config /mnt/archgen/microbiome_calculus/abpCapture/02-scripts.backup/snakemake_default.config --cluster "qsub -pe smp 8 -l virtual_free={cluster.mem},h_vmem={cluster.mem} -o {cluster.out} -e {cluster.err}" -j 1 --latency-wait 30 -n
+
+
+###########################
 /mnt/archgen/projects1/users/sabin/kilteasheen
 ###########################
 

@@ -151,7 +151,7 @@ world_malt_stats <- world_malt_stats %>%
 malt_stats_table <- malt_stats_pac %>%
   bind_rows(., world_malt_stats)
   
-fwrite(malt_stats_table, "./05-Documentation.backup/malt_stats_table_pac_world.tsv", quote = F, sep = "\t")
+# fwrite(malt_stats_table, "./05-Documentation.backup/malt_stats_table_pac_world.tsv", quote = F, sep = "\t")
 
 ```
 
@@ -421,7 +421,6 @@ gc_plot <- metadata %>%
   filter(Sample_type == "calculus") %>%
   mutate(Continent = ifelse(is.na(Continent),"Europe",Continent)) %>%
   select(Study, Library_ID, Continent, gc_avg, seq_len_avg) %>%
-  # filter for only the samples with a read length below 80bp, b/c the pacific samples have no reads longer than that
   mutate(Continent = fct_relevel(Continent, "Pacific","Asia","Africa","Europe","Caribbean","North America")) %>%
   ggplot(., aes(x = Continent, y = gc_avg, fill = Continent)) + 
   ## add half-violin from {ggdist} package
@@ -449,11 +448,11 @@ gc_plot <- metadata %>%
     ## move geom to the left
     justification = 1.1, 
     ## adjust grouping (binning) of observations 
-    binwidth = 1.0
+    binwidth = 0.5
   ) + 
   ## remove white space on the left
   coord_cartesian(xlim = c(1.2, NA)) +
-  theme_minimal(base_size = 12) +
+  theme_minimal(base_size = 24) +
   scale_fill_manual(values = Continent_colors) +
   theme(axis.text.y = element_text(size = 12)) +
   theme(legend.position = "none") +
@@ -465,7 +464,7 @@ gc_plot <- metadata %>%
   gc_plot
 
   # ggsave("./06-publication/supplemental_figures/Sup_fig_5/gc_stats.pdf", plot = gc_plot, device = "pdf",
-  #      scale = 1, width = 49, height = 7, units = c("in"), dpi = 300)
+  #      scale = 1, width = 25, height = 7, units = c("in"), dpi = 300)
 
   
 ```
@@ -614,9 +613,9 @@ rl_plot <- metadata %>%
   ) + 
   ## remove white space on the left
   coord_cartesian(xlim = c(1.2, NA)) +
-  theme_minimal(base_size = 12) +
+  theme_minimal(base_size = 24) +
   scale_fill_manual(values = Continent_colors) +
-  theme(axis.text.y = element_text(size = 12)) +
+  theme(axis.text.y = element_text(size = 24)) +
   theme(legend.position = "none") +
   xlab("") +
   ylab("Read length (bp)") +

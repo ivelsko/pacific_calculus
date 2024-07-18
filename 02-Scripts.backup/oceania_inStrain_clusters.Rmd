@@ -84,16 +84,16 @@ masked_cov <- map_dfr(masked_cov_list, function(fn) {
 ## popANI
 ```{r}
 genome_wide <- fread("./04-Analysis/inStrain/output/pac_reference_genomes.IS.COMPARE/output/pac_reference_genomes.IS.COMPARE_genomeWide_compare.tsv") %>%
-  filter(!str_detect(name1, "HCLVMBCX2-3505-13"),
-         !str_detect(name2,"HCLVMBCX2-3505-13"))
+  filter(!str_detect(name1, "HCLVMBCX2-3505-13|PVD"),
+         !str_detect(name2,"HCLVMBCX2-3505-13|PVD"))
 
 comparison_table <- fread("./04-Analysis/inStrain/output/pac_reference_genomes.IS.COMPARE/output/pac_reference_genomes.IS.COMPARE_comparisonsTable.tsv") %>%
-  filter(!str_detect(name1, "HCLVMBCX2-3505-13"),
-         !str_detect(name2,"HCLVMBCX2-3505-13"))
+  filter(!str_detect(name1, "HCLVMBCX2-3505-13|PVD"),
+         !str_detect(name2,"HCLVMBCX2-3505-13|PVD"))
 
 strain_clusters <- fread("./04-Analysis/inStrain/output/pac_reference_genomes.IS.COMPARE/output/pac_reference_genomes.IS.COMPARE_strain_clusters.tsv") %>%
-  filter(!str_detect(sample, "HCLVMBCX2-3505-13"),
-         !str_detect(genome,"HCLVMBCX2-3505-13"))
+  filter(!str_detect(sample, "HCLVMBCX2-3505-13|PVD"),
+         !str_detect(genome,"HCLVMBCX2-3505-13|PVD"))
 
 ```
 
@@ -616,11 +616,11 @@ ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, clust
 # try w/o clustering
 ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
 
-# svg(file = "./06-publication/supplemental_figures/Sup_fig_10/abot439_strain_pct_genome_compared_plot.svg", width = 14, height = 12)
-# 
-# ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
-# 
-# dev.off()
+svg(file = "./06-publication/supplemental_figures/Sup_fig_10/abot439_strain_pct_genome_compared_plot.svg", width = 14, height = 12)
+
+ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
+
+dev.off()
 
 ```
 
@@ -1186,11 +1186,11 @@ ht_tf = ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, cluster
 
 ht_tf = ComplexHeatmap::draw(ht_tf)
 
-# svg(file = "./06-publication/supplemental_figures/Sup_fig_11/Tf_strain_corr_plot.svg", width = 7, height = 5)
-# 
-# ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
-# 
-# dev.off()
+svg(file = "./06-publication/supplemental_figures/Sup_fig_11/Tf_strain_corr_plot.svg", width = 7, height = 5)
+
+ComplexHeatmap::Heatmap(gw_wide, name = "popANI", col = col_fun, clustering_method_rows = "complete", clustering_method_columns = "complete", show_column_dend = FALSE, row_dend_side = "left", top_annotation = row_ha)
+
+dev.off()
 
 
 ```
@@ -1328,11 +1328,11 @@ ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, clust
 # try w/o clustering
 ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
 
-# svg(file = "./06-publication/supplemental_figures/Sup_fig_11/Tf_strain_pct_comp_plot.svg", width = 7, height = 5)
-# 
-# ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
-# 
-# dev.off()
+svg(file = "./06-publication/supplemental_figures/Sup_fig_11/Tf_strain_pct_comp_plot.svg", width = 7, height = 5)
+
+ComplexHeatmap::Heatmap(gw_wide, name = "percent_compared", col = col_fun, cluster_rows = FALSE, cluster_columns = FALSE, show_column_dend = FALSE, row_dend_side = "left")
+
+dev.off()
 
 
 gw_dup %>%

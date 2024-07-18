@@ -50,7 +50,8 @@ Lab_colors = c("Jena" = microshades::microshades_palette("micro_cvd_purple", 1, 
 # Import stats table (from MultiQC)
 
 ## ** Find this file!! ** ##
-stats <- read.delim("~/Dropbox (MPI SHH)/2-Calculus_Oceania/4-Results/phylogenies/tannerella_forsythia/tannerella_forsythia_eager_stats.txt")
+# stats <- read.delim("~/Dropbox (MPI SHH)/2-Calculus_Oceania/4-Results/phylogenies/tannerella_forsythia/tannerella_forsythia_eager_stats.txt")
+stats <- read.delim("/mnt/archgen/microbiome_calculus/pacific_calculus/05-Documentation.backup/tannerella_forsythia_eager_stats.txt")
 
 # Filter for samples with 5x coverage
 stats$Mean.cov <- gsub('X', '', stats$Mean.cov)
@@ -81,6 +82,12 @@ samples <- stats_x %>%
 # Remove EMN and ECO002
 samples <- samples %>%
   filter(!str_detect(Sample.Name, "EMN001|ECO002"))
+
+
+stats %>%
+  filter(Mean.cov <= 2) %>%
+  select(Sample.Name) %>%
+  fwrite(., "./04-Analysis/phylogenies/gubbins/exclude_tf_less_5x_cov_samples.tsv", quote = F, sep = "\t", col.names = F)
 
 ```
 
@@ -155,6 +162,36 @@ alignment_stats <- count_nonN_nucleotides(subset_fasta)
 subset_fasta <- subset_fasta[alignment_stats >= min_snps,]
 
 # write.FASTA(subset_fasta, "./05-Documentation.backup/subset_Tf_snpAlignment.fasta")
+
+```
+
+```{r fullAlignment_filter}
+
+in_file_full_hom <- "./04-Analysis/phylogenies/tannerella_forsythia/multivcfanalyzer_hom/fullAlignment.fasta"
+
+## Load data
+raw_full_fasta <- fasta2DNAbin(file = in_file_full_hom, quiet = F)
+
+## Fix sample IDs
+rownames(raw_full_fasta) <- gsub('.unifiedgenotyper.vcf', '', rownames(raw_full_fasta))
+
+## Filter alignment to only include >2X samples
+if (exclude != "none") { 
+  subset_fasta <- raw_fasta[rownames(raw_fasta) %in% samples$Sample.Name,]
+  samplesexcluded <- "samplesexcludedT" 
+} else {
+  subset_fasta <- raw_fasta
+  samplesexcluded <- "samplesexcludedF" 
+  }
+
+## Calculate number of non-N nucleotides per sample
+# alignment_full_stats <- count_nonN_nucleotides(subset_fasta)
+
+## Filter alignments to remove samples with less than min_snps
+subset_full_fasta <- subset_fasta[alignment_stats >= min_snps,]
+
+# write.FASTA(subset_full_fasta, "./05-Documentation.backup/subset_tf_fullAlignment.fasta")
+
 
 ```
 
