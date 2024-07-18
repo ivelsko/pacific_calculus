@@ -1,0 +1,573 @@
+---
+title: "Tannerella forsythia Pacific RaxML trees"
+output: html_notebook
+---
+
+Script from James for making phylogenies from a SNP file.
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(ape)
+library(ade4)
+library(adegenet)
+library(tidyverse)
+library(ggtree)
+library(ggpubr)
+library(microshades)
+library(patchwork)
+```
+
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades::microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =  microshades::microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" = microshades::microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+```
+
+
+```{r}
+# Import stats table (from MultiQC)
+
+## ** Find this file!! ** ##
+# stats <- read.delim("~/Dropbox (MPI SHH)/2-Calculus_Oceania/4-Results/phylogenies/tannerella_forsythia/tannerella_forsythia_eager_stats.txt")
+stats <- read.delim("/mnt/archgen/microbiome_calculus/pacific_calculus/05-Documentation.backup/tannerella_forsythia_eager_stats.txt")
+
+# Filter for samples with 5x coverage
+stats$Mean.cov <- gsub('X', '', stats$Mean.cov)
+stats$Mean.cov <- as.numeric(as.character(stats$Mean.cov))
+stats_x <- stats %>%
+  filter(Mean.cov > 2)
+
+# Get list of IDs
+samples <- stats_x %>%
+  select(Sample.Name)
+
+```
+
+```{r}
+# read in metadata for adding later
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  select(Library_ID, Lab, Island, Type, Age_mean, Lat) %>%
+  mutate(Study = "Pacific",
+         Age_mean_log = log10(Age_mean),
+         Island = str_replace_all(Island, "Efate_3000", "Efate 3000 BP"),
+         Island = str_replace_all(Island, "Rapa_Nui", "Rapa Nui"),
+         Island = str_replace_all(Island, "Viti_Levu", "Viti Levu"),
+         Island = str_replace_all(Island, "Taumako_Duff_Islands", "Taumako")) %>%
+  # add the # of SNPs for visualizing in the tree
+  right_join(., stats_x %>%
+               rename(Library_ID = 1) %>%
+               select(Library_ID, SNPs) %>%
+               mutate(SNPs = str_replace_all(SNPs, ",", ""),
+                      SNPs = as.numeric(SNPs)), by = "Library_ID") %>%
+  mutate(SNPs = SNPs / 10000)
+
+```
+
+```{r tf}
+
+snp_stats <- fread("./04-Analysis/phylogenies/tannerella_forsythia/multivcfanalyzer/snpStatistics.tsv", skip = 4, sep = "\t", header = T)
+
+```
+
+```{r}
+## Set functions
+count_nonN_nucleotides <- function(dnabin_obj){
+  out_list <- list()
+  for (i in 1:nrow(dnabin_obj)) {
+    total <- sum(base.freq(dnabin_obj[i,], freq = T))
+    out_list[row.names(dnabin_obj[i,])] <- total
+  }
+  return(out_list)
+}
+
+```
+
+
+## RaxML SNP alignment
+
+```{r}
+# read in the tree
+tre_tf <- ape::read.tree("./04-Analysis/phylogenies/raxml/tf.raxml.support")
+
+```
+
+
+```{r}
+## Root tree by midpoint rooting with phangorn
+# tre_tf <- root(tre_tf, outgroup = "ECO002.B0102")
+tre_tf <- phangorn::midpoint(tre_tf)
+
+## Add bootstraps to tree
+# tre_tf$node.label <- boots
+
+# and check if tree loaded correctly
+plot(tre_tf)
+ggtree(tre_tf, ladderize = F) + geom_tiplab(size = 2)
+
+p2_tf <- ggtree(tre_tf, ladderize = T) %<+% pacific_metadata
+p2_tf_tree <- p2_tf + geom_tippoint(aes(fill = Age_mean, shape = Study, size = SNPs)) +
+  geom_tiplab(aes(color = Island), size = 3, offset = 0.005, align = T) + # , as_ylab=TRUE
+  geom_text2(aes(label=label, subset = !is.na(as.numeric(label)) & as.numeric(label) > 70), size = 3) +
+  geom_treescale() +
+  scale_fill_gradient(low = "#098BD9", high = "#7D3560") +
+  scale_color_manual(values = Island_colors, guide = "none") +
+  scale_size_continuous(limits = c(0,3)) +
+  scale_shape_manual(values = c(21,24),  guide = "none")
+
+p2_tf_tree
+
+# get the tree tip order
+tip_order_tf <- get_taxa_name(p2_tf_tree)
+
+# # save the tip order for inStrain plots
+# tip_order_tf %>%
+#   as.data.frame() %>%
+#   rename(tip_order = 1) %>%
+#   fwrite(., "./05-Documentation.backup/Tf_raxml_tip_order.tsv", sep = "\t", quote = F)
+
+```
+
+
+
+```{r}
+# start with the stats table thats filtered for only samples with coverage >5X
+tf_bars <- stats_x %>%
+  filter(!str_detect(`Sample.Name`, "EMN001|ECO002")) %>%
+  mutate(`Median.cov` = str_replace_all(`Median.cov`, "X","")) %>%
+  mutate(`Median.cov` = as.numeric(`Median.cov`)) %>%
+  mutate(`Sample.Name` = fct_relevel(`Sample.Name`, tip_order_tf)) %>%
+  arrange(`Sample.Name`) %>%
+  ggplot(., aes(x = `X..Hets`, y = `Sample.Name`, fill = `Median.cov`)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_gradient(low = "#D6D6D6", high = "#148F77") +
+    theme_minimal(base_size = 10) +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.minor.x = element_blank()) +
+    scale_y_discrete(limits = rev) +
+    xlim(0,50) +
+    theme(panel.grid.major.y = element_blank()) +
+    ylab("Library") +
+    xlab("% heterozygous SNPs") +
+    ggtitle("Tannerella forsythia")
+
+tf_bars
+
+```
+
+```{r}
+lat_plot <- stats_x %>%
+  filter(!str_detect(`Sample.Name`, "EMN001|ECO002")) %>%
+  rename(Library_ID = 1) %>%
+  left_join(., pacific_metadata %>%
+              select(Library_ID, Study, Lat), by = "Library_ID") %>%
+  mutate(Library_ID = fct_relevel(Library_ID, tip_order_tf)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(Study, Library_ID, fill = Lat)) +
+    geom_tile() +
+    scale_y_discrete(limits = rev) +
+    scale_fill_gradient(low = "#D6D6D6", high = "#A1527F") +
+    theme_minimal(base_size = 12) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 0.95),
+          plot.margin = margin(0, 0, 0, 0, "pt"),
+          axis.title.y = element_blank(),
+          legend.position = "left") +
+    theme(axis.text.y = element_blank())
+lat_plot
+
+```
+
+
+```{r}
+
+tf_tree_plots <- p2_tf_tree + tf_bars +
+  plot_layout(widths = c(5,1))
+
+tf_tree_plots
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX15/tf_tree_raxml.pdf", plot = tf_tree_plots, device = "pdf",
+#         scale = 1, width = 9, height = 5, units = c("in"), dpi = 300)
+
+```
+### Concordance NJ and ML trees
+```{r}
+
+# ML distance matrix
+dist_tf <- cophenetic(tre_tf)
+
+ml <- dist_tf %>%
+  as.data.frame.matrix() %>%
+  # now order alphabetically so the column and row names are in identical order between this and the other matrix
+  rownames_to_column("rowsnames") %>%
+  pivot_longer(!rowsnames, names_to = "colsnames", values_to = "dist") %>%
+  arrange(colsnames) %>%
+  pivot_wider(names_from = "colsnames", values_from = "dist") %>%
+  arrange(rowsnames) %>%
+  column_to_rownames("rowsnames") %>%
+  as.matrix()
+
+  
+# NJ tree and distance matrix
+tre_nj_tf <- read.tree("./05-Documentation.backup/snpAlignment.fasta_minSamplePositions1000_methodNJ_modelJC69_bootstraps100_samplesexcludedT_pairwiseDel_20240716.nwk")
+dist_nj_tf <- cophenetic(tre_nj_tf)
+
+nj <- dist_nj_tf %>%
+  as.data.frame.matrix() %>%
+  # now order alphabetically so the column and row names are in identical order between this and the other matrix
+  rownames_to_column("rowsnames") %>%
+  pivot_longer(!rowsnames, names_to = "colsnames", values_to = "dist") %>%
+  arrange(colsnames) %>%
+  pivot_wider(names_from = "colsnames", values_from = "dist") %>%
+  arrange(rowsnames) %>%
+  column_to_rownames("rowsnames") %>%
+  as.matrix()
+
+NJ_ML <- rbind(nj, ml)
+
+# test for concordance and check with mantel test
+nj_ml.global <- CADM.global(NJ_ML, 2, 26)
+nj_ml.post <- CADM.post(NJ_ML, 2, 26, mantel=TRUE)
+
+
+nj_ml.global
+nj_ml.post
+
+```
+
+
+## Gubbins whole alignment w/RaxML
+```{r}
+gubbins_stats <- fread("./04-Analysis/phylogenies/gubbins/tf.per_branch_statistics.csv", sep = "\t") %>%
+  mutate(Percent = `Bases in Clonal Frame` / `Genome Length` * 100)
+
+```
+
+
+```{r}
+# read in the tree
+tre_gubbins_tf <- ape::read.tree("./04-Analysis/phylogenies/gubbins/tf.final_bootstrapped_tree.tre")
+
+```
+
+```{r}
+## Root tree by midpoint rooting with phangorn
+tre_gubbins_tf <- phangorn::midpoint(tre_gubbins_tf)
+
+# and check if tree loaded correctly
+plot(tre_gubbins_tf)
+ggtree(tre_gubbins_tf, ladderize = F) + geom_tiplab(size = 2)
+
+p2_gubbins_tf <- ggtree(tre_gubbins_tf, ladderize = T) %<+% pacific_metadata
+p2_gubbins_tf_tree <- p2_gubbins_tf + geom_tippoint(aes(fill = Age_mean, shape = Study, size = SNPs)) +
+  geom_tiplab(aes(color = Island), size = 3, offset = 0.005, align = T) + # , as_ylab=TRUE
+  geom_text2(aes(label=label, subset = !is.na(as.numeric(label)) & as.numeric(label) > 70), size = 3) +
+  geom_treescale() +
+  scale_fill_gradient(low = "#098BD9", high = "#7D3560") +
+  scale_color_manual(values = Island_colors, guide = "none") +
+  scale_size_continuous(limits = c(0,4)) +
+  scale_shape_manual(values = c(21,24),  guide = "none")
+
+p2_gubbins_tf_tree
+
+# get the tree tip order
+tip_order_gubbins_tf <- get_taxa_name(p2_gubbins_tf_tree)
+
+# # save the tip order for inStrain plots
+# tip_order_gubbins_tf %>%
+#   as.data.frame() %>%
+#   rename(tip_order = 1) %>%
+#   fwrite(., "./05-Documentation.backup/tf_gubbins_tip_order.tsv", sep = "\t", quote = F)
+
+```
+
+
+
+```{r}
+# start with the stats table thats filtered for only samples with coverage >5X
+tf_gubbins_bars <- stats_x %>%
+  filter(!str_detect(`Sample.Name`, "EMN001|ECO002")) %>%
+  mutate(`Median.cov` = str_replace_all(`Median.cov`, "X","")) %>%
+  mutate(`Median.cov` = as.numeric(`Median.cov`)) %>%
+  filter(`Sample.Name` %in% tip_order_gubbins_tf) %>%
+  mutate(`Sample.Name` = fct_relevel(`Sample.Name`, tip_order_gubbins_tf)) %>%
+  arrange(`Sample.Name`) %>%
+  ggplot(., aes(x = `X..Hets`, y = `Sample.Name`, fill = `Median.cov`)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_gradient(low = "#D6D6D6", high = "#148F77") +
+    theme_minimal(base_size = 10) +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.minor.x = element_blank()) +
+    scale_y_discrete(limits = rev) +
+    xlim(0,50) +
+    theme(panel.grid.major.y = element_blank()) +
+    ylab("Library") +
+    xlab("% heterozygous SNPs") +
+    ggtitle("tf")
+
+tf_gubbins_bars
+
+```
+
+```{r}
+lat_gubbins_plot <- stats_x %>%
+  filter(!str_detect(`Sample.Name`, "EMN001|ECO002")) %>%
+  rename(Library_ID = 1) %>%
+  left_join(., pacific_metadata %>%
+              select(Library_ID, Study, Lat), by = "Library_ID") %>%
+  mutate(Library_ID = fct_relevel(Library_ID, tip_order_gubbins_tf)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(Study, Library_ID, fill = Lat)) +
+    geom_tile() +
+    scale_y_discrete(limits = rev) +
+    scale_fill_gradient(low = "#D6D6D6", high = "#A1527F") +
+    theme_minimal(base_size = 12) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 0.95),
+          plot.margin = margin(0, 0, 0, 0, "pt"),
+          axis.title.y = element_blank(),
+          legend.position = "left") +
+    theme(axis.text.y = element_blank())
+lat_gubbins_plot
+
+```
+
+
+```{r}
+
+tf_gubbins_tree_plots <- p2_gubbins_tf_tree + tf_gubbins_bars +
+  plot_layout(widths = c(5,1))
+
+tf_gubbins_tree_plots
+
+```
+
+```{r}
+
+# raxml tree with node labels
+tre_gubbins_nodes_tf <- ape::read.tree("./04-Analysis/phylogenies/gubbins/tf.node_labelled.final_tree.tre")
+
+## Root tree by midpoint rooting with phangorn
+tre_gubbins_nodes_tf <- phangorn::midpoint(tre_gubbins_nodes_tf)
+
+# and check if tree loaded correctly
+plot(tre_gubbins_nodes_tf)
+ggtree(tre_gubbins_nodes_tf, ladderize = F) + geom_tiplab(size = 2)
+
+p2_gubbins_nodes_tf <- ggtree(tre_gubbins_nodes_tf, ladderize = T) %<+% pacific_metadata
+p2_gubbins_nodes_tf_tree <- p2_gubbins_nodes_tf + geom_tippoint(aes(fill = Age_mean, shape = Study, size = SNPs)) +
+  geom_tiplab(aes(color = Island), size = 3, offset = 0.005, align = T) + # , as_ylab=TRUE
+  geom_text2(aes(label=label), size = 3) +
+  geom_treescale() +
+  scale_fill_gradient(low = "#098BD9", high = "#7D3560") +
+  scale_color_manual(values = Island_colors, guide = "none") +
+  scale_size_continuous(limits = c(0,4)) +
+  scale_shape_manual(values = c(21,24),  guide = "none")
+
+p2_gubbins_nodes_tf_tree
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX16/tf_tree_gubbins_nodes.pdf", plot = p2_gubbins_nodes_tf_tree, device = "pdf",
+#         scale = 1, width = 6, height = 5, units = c("in"), dpi = 300)
+
+```
+
+
+## Gubbins masked alignment w/RaxML
+```{r}
+# read in the tree
+tre_gubbins_masked_tf <- ape::read.tree("./04-Analysis/phylogenies/raxml/tf_masked.raxml.support")
+
+```
+
+```{r}
+## Root tree by midpoint rooting with phangorn
+tre_gubbins_masked_tf <- phangorn::midpoint(tre_gubbins_masked_tf)
+
+# and check if tree loaded correctly
+plot(tre_gubbins_masked_tf)
+ggtree(tre_gubbins_masked_tf, ladderize = F) + geom_tiplab(size = 2)
+
+p2_gubbins_masked_tf <- ggtree(tre_gubbins_masked_tf, ladderize = T) %<+% pacific_metadata
+p2_gubbins_masked_tf_tree <- p2_gubbins_masked_tf + 
+  geom_tippoint(aes(fill = Age_mean, shape = Study, size = SNPs)) +
+  geom_tiplab(aes(color = Island), size = 3, offset = 0.005, align = T) + # , as_ylab=TRUE
+  geom_text2(aes(label=label, subset = !is.na(as.numeric(label)) & as.numeric(label) > 70), size = 3) +
+  geom_treescale() +
+  scale_fill_gradient(low = "#098BD9", high = "#7D3560") +
+  scale_color_manual(values = Island_colors, guide = "none") +
+  scale_size_continuous(limits = c(0,4)) +
+  scale_shape_manual(values = c(21,24),  guide = "none")
+
+p2_gubbins_masked_tf_tree
+
+# get the tree tip order
+tip_order_gubbins_masked_tf <- get_taxa_name(p2_gubbins_masked_tf_tree)
+
+# # save the tip order for inStrain plots
+# tip_order_gubbins_masked_tf %>%
+#   as.data.frame() %>%
+#   rename(tip_order = 1) %>%
+#   fwrite(., "./05-Documentation.backup/tf_gubbins_masked_tip_order.tsv", sep = "\t", quote = F)
+
+```
+
+
+
+```{r}
+# start with the stats table thats filtered for only samples with coverage >5X
+tf_gubbins_masked_bars <- stats_x %>%
+  filter(!str_detect(`Sample.Name`, "EMN001|ECO002")) %>%
+  mutate(`Median.cov` = str_replace_all(`Median.cov`, "X","")) %>%
+  mutate(`Median.cov` = as.numeric(`Median.cov`)) %>%
+  filter(`Sample.Name` %in% tip_order_gubbins_masked_tf) %>%
+  mutate(`Sample.Name` = fct_relevel(`Sample.Name`, tip_order_gubbins_masked_tf)) %>%
+  arrange(`Sample.Name`) %>%
+  ggplot(., aes(x = `X..Hets`, y = `Sample.Name`, fill = `Median.cov`)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_gradient(low = "#D6D6D6", high = "#148F77") +
+    theme_minimal(base_size = 10) +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.minor.x = element_blank()) +
+    scale_y_discrete(limits = rev) +
+    xlim(0,50) +
+    theme(panel.grid.major.y = element_blank()) +
+    ylab("Library") +
+    xlab("% heterozygous SNPs") +
+    ggtitle("tf")
+
+tf_gubbins_masked_bars
+
+```
+
+```{r}
+lat_gubbins_masked_plot <- stats_x %>%
+  filter(!str_detect(`Sample.Name`, "EMN001|ECO002")) %>%
+  rename(Library_ID = 1) %>%
+  left_join(., pacific_metadata %>%
+              select(Library_ID, Study, Lat), by = "Library_ID") %>%
+  mutate(Library_ID = fct_relevel(Library_ID, tip_order_gubbins_masked_tf)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(Study, Library_ID, fill = Lat)) +
+    geom_tile() +
+    scale_y_discrete(limits = rev) +
+    scale_fill_gradient(low = "#D6D6D6", high = "#A1527F") +
+    theme_minimal(base_size = 12) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 0.95),
+          plot.margin = margin(0, 0, 0, 0, "pt"),
+          axis.title.y = element_blank(),
+          legend.position = "left") +
+    theme(axis.text.y = element_blank())
+lat_gubbins_masked_plot
+
+```
+
+
+```{r}
+
+tf_gubbins_masked_tree_plots <- p2_gubbins_masked_tf_tree + tf_gubbins_masked_bars +
+  plot_layout(widths = c(5,1))
+
+tf_gubbins_masked_tree_plots
+
+# ggsave("./06-publication/supplemental_figures/Sup_fig_XX15/tf_tree_gubbins_masked.pdf", plot = tf_gubbins_masked_tree_plots, device = "pdf",
+#         scale = 1, width = 9, height = 5, units = c("in"), dpi = 300)
+
+```
+
+### Concordance NJ and ML masked trees
+```{r}
+
+# ML distance matrix
+dist_masked_tf <- cophenetic(tre_gubbins_masked_tf)
+
+ml_masked <- dist_masked_tf %>%
+  as.data.frame.matrix() %>%
+  # now order alphabetically so the column and row names are in identical order between this and the other matrix
+  rownames_to_column("rowsnames") %>%
+  pivot_longer(!rowsnames, names_to = "colsnames", values_to = "dist") %>%
+  arrange(colsnames) %>%
+  pivot_wider(names_from = "colsnames", values_from = "dist") %>%
+  arrange(rowsnames) %>%
+  column_to_rownames("rowsnames") %>%
+  as.matrix()
+
+  
+# NJ tree and distance matrix
+tre_nj_tf <- read.tree("./05-Documentation.backup/snpAlignment.fasta_minSamplePositions1000_methodNJ_modelJC69_bootstraps100_samplesexcludedT_pairwiseDel_20240716.nwk")
+dist_nj_tf <- cophenetic(tre_nj_tf)
+
+nj <- dist_nj_tf %>%
+  as.data.frame.matrix() %>%
+  # now order alphabetically so the column and row names are in identical order between this and the other matrix
+  rownames_to_column("rowsnames") %>%
+  pivot_longer(!rowsnames, names_to = "colsnames", values_to = "dist") %>%
+  arrange(colsnames) %>%
+  pivot_wider(names_from = "colsnames", values_from = "dist") %>%
+  arrange(rowsnames) %>%
+  column_to_rownames("rowsnames") %>%
+  as.matrix()
+
+# bind the matrices into a single file for input
+NJ_ML_masked <- rbind(nj, ml_masked)
+
+# test for concordance and check with mantel test
+nj_ml_masked.global <- CADM.global(NJ_ML_masked, 2, 26)
+nj_ml_masked.post <- CADM.post(NJ_ML_masked, 2, 26, mantel=TRUE)
+
+
+nj_ml_masked.global
+nj_ml_masked.post
+
+```
+
+
+### Concordance ML and ML masked trees
+```{r}
+
+# Use values from the chunks above
+
+# bind the matrices into a single file for input
+ML_ML_masked <- rbind(ml, ml_masked)
+
+# test for concordance and check with mantel test
+ml_ml_masked.global <- CADM.global(ML_ML_masked, 2, 26)
+ml_ml_masked.post <- CADM.post(ML_ML_masked, 2, 26, mantel=TRUE)
+
+
+ml_ml_masked.global
+ml_ml_masked.post
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,8 @@
+name: gubbins
+channels:
+  - r
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - gubbins
