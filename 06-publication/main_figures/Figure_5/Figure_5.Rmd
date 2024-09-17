@@ -1,0 +1,681 @@
+---
+title: "Abot439 Pacific trees"
+output: html_notebook
+---
+
+Script from James for making phylogenies from a SNP file.
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(data.table)
+library(ape)
+library(ade4)
+library(adegenet)
+library(tidyverse)
+library(ggtree)
+library(ggpubr)
+library(microshades)
+library(patchwork)
+```
+
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath("../../.."))
+```
+
+```{r}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+Lab_colors = c("Jena" = microshades::microshades_palette("micro_cvd_purple", 1, lightest = FALSE),
+                "Oklahoma" =  microshades::microshades_palette("micro_cvd_blue", 1, lightest = FALSE),
+                "Otago" = microshades::microshades_palette("micro_cvd_green", 1, lightest = FALSE))
+
+Age_colors = circlize::colorRamp2(c(0, 3000), c("#098BD9", "#7D3560"))
+
+```
+
+```{r}
+# read in metadata for adding later
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  select(Library_ID, Lab, Island, Type, Age_mean, Lat, Long) %>%
+  mutate(Study = "Pacific",
+         Age_mean_log = log10(Age_mean),
+         Island = str_replace_all(Island, "Efate_3000", "Efate 3000 BP"),
+         Island = str_replace_all(Island, "Rapa_Nui", "Rapa Nui"),
+         Island = str_replace_all(Island, "Viti_Levu", "Viti Levu"),
+         Island = str_replace_all(Island, "Taumako_Duff_Islands", "Taumako")) 
+
+```
+
+
+## Anaerolineaceae bacterium oral taxon 439
+```{r}
+# Import stats table (from MultiQC)
+
+## ** Find this file!! ** ##
+stats <- read.delim("05-Documentation.backup/anaero_439_eager_stats.txt")
+
+# Filter for samples with 5x coverage
+stats$Mean.cov <- gsub('X', '', stats$Mean.cov)
+stats$Mean.cov <- as.numeric(as.character(stats$Mean.cov))
+stats_x <- stats %>%
+  filter(Mean.cov > 5)
+
+# Plot percentage hets
+an_hets <- ggplot(data=stats_x, aes(x=reorder(Sample.Name, X..Hets), y=X..Hets)) +
+  geom_bar(stat="identity", aes(fill=Mean.cov)) +
+  coord_flip() +
+  scale_fill_continuous(low = microshades_palette("micro_cvd_gray", 2, lightest = FALSE),
+                        high = microshades_palette("micro_cvd_turquoise", 2, lightest = FALSE))+
+  ylim(0,50) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Get list of IDs
+samples <- stats_x %>%
+  select(Sample.Name)
+
+# Remove EMN and ECO002
+samples <- samples %>%
+  filter(!str_detect(Sample.Name, "EMN001|ECO002"))
+
+```
+
+```{r abot439}
+## Set variables
+in_file_hom <- "./05-Documentation.backup/abot439_snpAlignment.fasta"
+min_snps <- 1000
+model <- "JC69"
+n_boots <- 100
+exclude <- "list"
+
+```
+
+```{r}
+## Set functions
+count_nonN_nucleotides <- function(dnabin_obj){
+  out_list <- list()
+  for (i in 1:nrow(dnabin_obj)) {
+    total <- sum(base.freq(dnabin_obj[i,], freq = T))
+    out_list[row.names(dnabin_obj[i,])] <- total
+  }
+  return(out_list)
+}
+
+```
+
+```{r}
+## Load data
+raw_fasta <- fasta2DNAbin(file = in_file_hom, quiet = F)
+
+## Fix sample IDs
+rownames(raw_fasta) <- gsub('.unifiedgenotyper.vcf', '', rownames(raw_fasta))
+
+### Run chunk below for sample list! 
+
+## Filter alignment to only include >5X samples
+if (exclude != "none") { 
+  subset_fasta <- raw_fasta[rownames(raw_fasta) %in% samples$Sample.Name,]
+  samplesexcluded <- "samplesexcludedT" 
+} else {
+  subset_fasta <- raw_fasta
+  samplesexcluded <- "samplesexcludedF" 
+  }
+
+## Calculate number of non-N nucleotides per sample
+alignment_stats <- count_nonN_nucleotides(subset_fasta)
+
+## Filter alignments to remove samples with less than min_snps
+subset_fasta <- subset_fasta[alignment_stats >= min_snps,]
+
+write.FASTA(subset_fasta, "./05-Documentation.backup/subset_abot439_snpAlignment.fasta")
+
+```
+
+```{r}
+## Report samples kept/lost
+sample_report <- data.frame(unlist(alignment_stats), 
+                            names(unlist(alignment_stats)))
+
+names(sample_report) <- c("Number_of_Positions", "Sample_Name")
+row.names(sample_report) <- NULL
+sample_report <- sample_report[order(-sample_report$Number_of_Positions),]
+sample_report$Passed_Filter <- ifelse(sample_report$Number_of_Positions >= min_snps, T, F)
+
+```
+
+```{r}
+## Report base frequencies for all (this allows removal of samples that violate model assumptions)
+basefreq_table <- list()
+
+for (i in 1:nrow(subset_fasta)) {
+  basefreq <- base.freq(subset_fasta[i,])
+  basefreq_table[[rownames(subset_fasta[i,])]] <- basefreq  
+}
+
+basefreq_report <- t(as.data.frame(basefreq_table))
+
+## Report number of pairwise overlapping bases (i.e. how many nucleotides shared between two samples, of these which are identical and different bases)
+comb_pairs <- combn(row.names(subset_fasta), 2, function(x) paste(x))
+overlap_table <- data.frame()
+
+
+## For each combination, run Ftab for non-N mutation count matrix, convert to long, summarise to total of shared and different bases, total all.  
+for (i in 1:ncol(comb_pairs)) {
+  overlap <- as.data.frame(Ftab(subset_fasta[comb_pairs[,i],]))
+  sample_x <- rownames(subset_fasta[comb_pairs[,i],])[1]
+  sample_y <- rownames(subset_fasta[comb_pairs[,i],])[2]
+  overlap$sample_2 <- rownames(overlap)
+  rownames(overlap) <- NULL
+  overlap <- reshape(overlap, 
+                     direction = "long", 
+                     varying = list(names(overlap)[1:4]), 
+                     v.names = "count", 
+                     idvar = "sample_2", 
+                     timevar = "sample_1", 
+                     times = c("a", "c", "g", "t"))
+  rownames(overlap) <- NULL
+  overlap$snp <- overlap$sample_2 == overlap$sample_1
+  result <- aggregate(overlap$count, by = list(snp = overlap$snp), FUN = sum)
+  result$combination <- paste0(sample_x, "_", sample_y)
+  overlap_table <- rbind(overlap_table, as.data.frame(result))
+}
+
+overlap_table <- reshape(overlap_table, 
+                         idvar = "combination", 
+                         timevar = "snp", 
+                         direction = "wide")
+
+colnames(overlap_table) <- c("Combination", 
+                             "total_different_bases", 
+                             "total_identical_bases")
+
+overlap_table$total_overlapping_bases <- overlap_table$total_different_bases + overlap_table$total_identical_bases
+
+overlap_table <- overlap_table[order(-overlap_table$total_overlapping_bases),]
+
+```
+
+```{r, eval = F}
+library(DECIPHER)
+
+# build a distance matrix with the JC69 model
+D_jc69 <- dist.dna(subset_fasta, model = "JC69", pairwise.deletion = T)
+
+# get the subsetted fasta into the format for DECIPHER
+fas <- "./05-Documentation.backup/subset_abot439_snpAlignment.fasta"
+sub_fas_stringSet <- readDNAStringSet(fas)
+
+# test models with DECIPHER
+abot439_clustersML <- IdClusters(D_jc69, method = "ML", myXStringSet = sub_fas_stringSet, type="both", cutoff = 0.8, showPlot = T)
+
+# this chooses TN93+G4 as the best model
+
+```
+
+
+```{r}
+# model testing with modeltest_ng decided TVM+G4 is the best model, but that's not available in ape
+
+# build a distance matrix with the TN93+G4 model b/c it's available
+D <- dist.dna(subset_fasta, model = "TN93", gamma = 4,  pairwise.deletion = T)
+
+## Build NJ distance tree based on TN93+G4 and boostrap
+tre_abot439 <- nj(D)
+
+boots <- boot.phylo(tre_abot439, 
+                    subset_fasta, 
+                    function(e) nj(dist.dna(e, 
+                                            model = "TN93",
+                                            gamma = 4,
+                                            pairwise.deletion = T)),
+                    B = n_boots)
+
+```
+
+```{r}
+## Root tree by midpoint rooting with phangorn
+# tre_abot439 <- root(tre_abot439, outgroup = "ECO002.B0102")
+tre_abot439 <- phangorn::midpoint(tre_abot439)
+
+## Add bootstraps to tree
+tre_abot439$node.label <- boots
+
+## Fix negative branch lengths
+## Reason why negative: https://www.sequentix.de/gelquest/help/neighbor_joining_method.htm
+## Fix: http://boopsboops.blogspot.com/2010/10/negative-branch-lengths-in-neighbour.html
+tre_abot439$edge.length[tre_abot439$edge.length < 0] <- 0
+
+# and check if tree loaded correctly
+plot(tre_abot439)
+ggtree(tre_abot439, ladderize = F) + geom_tiplab(size = 2)
+
+
+# prep metadata
+pacific_metadata_a <- pacific_metadata %>% # add the # of SNPs for visualizing in the tree
+  right_join(., stats_x %>%
+               rename(Library_ID = 1) %>%
+               select(Library_ID, SNPs) %>%
+               mutate(SNPs = str_replace_all(SNPs, ",", ""),
+                      SNPs = as.numeric(SNPs)), by = "Library_ID") %>%
+  mutate(SNPs = SNPs / 10000) %>%
+  mutate(Age_mean = ifelse(Library_ID == "ECO002.B0102", 7400, Age_mean),
+         Study = ifelse(Library_ID == "ECO002.B0102", "DeepEvo", Study))
+
+
+p2_abot439 <- ggtree(tre_abot439, ladderize = T) %<+% pacific_metadata_a
+
+ # ladderize the tree to make it more aesthetically pleasing
+p2_abot439_tree <- p2_abot439 + 
+  geom_tippoint(aes(fill = Age_mean, shape = Study, size = SNPs)) +
+  geom_tiplab(aes(color = Island), size = 3, offset = 0.005 , align = T) + # , align = T
+  # geom_text(aes(label=node)) +
+  # geom_label(aes(x=node, label=`node.label`), fill='lightgreen') +
+  geom_text2(aes(label=label, subset = !is.na(as.numeric(label)) & as.numeric(label) > 70), size = 3) +
+  geom_treescale() +
+  scale_fill_gradient(low = "#098BD9", high = "#7D3560") +
+  scale_color_manual(values = Island_colors) +
+  # scale_size_continuous(limits = c(0.5,3)) +
+  scale_shape_manual(values = c(21,24))
+
+p2_abot439_tree
+
+# get the tree tip order
+tip_order <- get_taxa_name(p2_abot439_tree)
+
+# save the tip order for inStrain plots
+tip_order %>%
+  as.data.frame() %>%
+  rename(tip_order = 1) %>%
+  fwrite(., "./05-Documentation.backup/abot439_tip_order.tsv", sep = "\t", quote = F)
+
+
+```
+
+```{r, eval = F}
+# Save tree in newick format
+write.tree(tre_abot439,
+           file = "05-Documentation.backup/Anaerolineaceae_tree.nwk")
+
+```
+
+```{r}
+# start with the stats table thats filtered for only samples with coverage >5X
+abot439_bars <- stats_x %>%
+  filter(!str_detect(`Sample.Name`, "EMN001|ECO002")) %>%
+  mutate(`Median.cov` = str_replace_all(`Median.cov`, "X","")) %>%
+  mutate(`Median.cov` = as.numeric(`Median.cov`)) %>%
+  mutate(`Sample.Name` = fct_relevel(`Sample.Name`, tip_order)) %>%
+  arrange(`Sample.Name`) %>%
+  ggplot(., aes(x = `X..Hets`, y = `Sample.Name`, fill = `Median.cov`)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_gradient(low = "#D6D6D6", high = "#148F77") +
+    theme_minimal(base_size = 10) +
+    # coord_flip() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.minor.x = element_blank()) +
+    scale_y_discrete(limits = rev) +
+    theme(panel.grid.major.y = element_blank()) +
+    ylab("Library") +
+    xlab("% heterozygous SNPs") +
+    ggtitle("Abbot439")
+
+abot439_bars
+
+```
+
+
+```{r}
+
+abot_tree_plots <- p2_abot439_tree + abot439_bars +
+  plot_layout(widths = c(5,1))
+
+abot_tree_plots
+
+# ggsave("./06-publication/main_figures/Figure_5/abot439_tree.pdf", plot = abot_tree_plots, device = "pdf",
+#         scale = 1, width = 11, height = 9, units = c("in"), dpi = 300)
+
+```
+
+
+## Tannerella forsythia
+```{r}
+# Import stats table (from MultiQC)
+
+## ** Find this file!! ** ##
+stats <- read.delim("05-Documentation.backup/tannerella_forsythia_eager_stats.txt")
+
+# Filter for samples with 5x coverage
+stats$Mean.cov <- gsub('X', '', stats$Mean.cov)
+stats$Mean.cov <- as.numeric(as.character(stats$Mean.cov))
+stats_x <- stats %>%
+  filter(Mean.cov > 2)
+
+# Plot percentage hets
+an_hets <- ggplot(data=stats_x, aes(x=reorder(Sample.Name, X..Hets), y=X..Hets)) +
+  geom_bar(stat="identity", aes(fill=Mean.cov)) +
+  coord_flip() +
+  scale_fill_continuous(low = microshades_palette("micro_cvd_gray", 2, lightest = FALSE),
+                        high = microshades_palette("micro_cvd_turquoise", 2, lightest = FALSE))+
+  ylim(0,50) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Get list of IDs
+samples <- stats_x %>%
+  select(Sample.Name)
+
+# Remove EMN and ECO002
+samples <- samples %>%
+  filter(!str_detect(Sample.Name, "EMN001|ECO002"))
+
+```
+
+```{r tf}
+## Set variables
+in_file_tf <- "./05-Documentation.backup/tf_snpAlignment.fasta"
+min_snps <- 1000
+model <- "JC69"
+n_boots <- 100
+exclude <- "list"
+
+```
+
+```{r}
+## Set functions
+count_nonN_nucleotides <- function(dnabin_obj){
+  out_list <- list()
+  for (i in 1:nrow(dnabin_obj)) {
+    total <- sum(base.freq(dnabin_obj[i,], freq = T))
+    out_list[row.names(dnabin_obj[i,])] <- total
+  }
+  return(out_list)
+}
+
+```
+
+```{r}
+## Load data
+raw_fasta <- fasta2DNAbin(file = in_file_tf, quiet = F)
+
+## Fix sample IDs
+rownames(raw_fasta) <- gsub('.unifiedgenotyper.vcf', '', rownames(raw_fasta))
+
+### Run chunk below for sample list! 
+
+## Filter alignment to only include >2X samples
+if (exclude != "none") { 
+  subset_fasta <- raw_fasta[rownames(raw_fasta) %in% samples$Sample.Name,]
+  samplesexcluded <- "samplesexcludedT" 
+} else {
+  subset_fasta <- raw_fasta
+  samplesexcluded <- "samplesexcludedF" 
+  }
+
+## Calculate number of non-N nucleotides per sample
+alignment_stats <- count_nonN_nucleotides(subset_fasta)
+
+## Filter alignments to remove samples with less than min_snps
+subset_fasta <- subset_fasta[alignment_stats >= min_snps,]
+
+write.FASTA(subset_fasta, "./05-Documentation.backup/subset_Tf_snpAlignment.fasta")
+
+```
+
+```{r}
+## Report samples kept/lost
+sample_report <- data.frame(unlist(alignment_stats), 
+                            names(unlist(alignment_stats)))
+
+names(sample_report) <- c("Number_of_Positions", "Sample_Name")
+row.names(sample_report) <- NULL
+sample_report <- sample_report[order(-sample_report$Number_of_Positions),]
+sample_report$Passed_Filter <- ifelse(sample_report$Number_of_Positions >= min_snps, T, F)
+
+```
+
+```{r}
+## Report base frequencies for all (this allows removal of samples that violate model assumptions)
+basefreq_table <- list()
+
+for (i in 1:nrow(subset_fasta)) {
+  basefreq <- base.freq(subset_fasta[i,])
+  basefreq_table[[rownames(subset_fasta[i,])]] <- basefreq  
+}
+
+basefreq_report <- t(as.data.frame(basefreq_table))
+
+## Report number of pairwise overlapping bases (i.e. how many nucleotides shared between two samples, of these which are identical and different bases)
+comb_pairs <- combn(row.names(subset_fasta), 2, function(x) paste(x))
+overlap_table <- data.frame()
+
+## For each combination, run Ftab for non-N mutation count matrix, convert to long, summarise to total of shared and different bases, total all.  
+for (i in 1:ncol(comb_pairs)) {
+  overlap <- as.data.frame(Ftab(subset_fasta[comb_pairs[,i],]))
+  sample_x <- rownames(subset_fasta[comb_pairs[,i],])[1]
+  sample_y <- rownames(subset_fasta[comb_pairs[,i],])[2]
+  overlap$sample_2 <- rownames(overlap)
+  rownames(overlap) <- NULL
+  overlap <- reshape(overlap, 
+                     direction = "long", 
+                     varying = list(names(overlap)[1:4]), 
+                     v.names = "count", 
+                     idvar = "sample_2", 
+                     timevar = "sample_1", 
+                     times = c("a", "c", "g", "t"))
+  rownames(overlap) <- NULL
+  overlap$snp <- overlap$sample_2 == overlap$sample_1
+  result <- aggregate(overlap$count, by = list(snp = overlap$snp), FUN = sum)
+  result$combination <- paste0(sample_x, "_", sample_y)
+  overlap_table <- rbind(overlap_table, as.data.frame(result))
+}
+
+overlap_table <- reshape(overlap_table, 
+                         idvar = "combination", 
+                         timevar = "snp", 
+                         direction = "wide")
+
+colnames(overlap_table) <- c("Combination", 
+                             "total_different_bases", 
+                             "total_identical_bases")
+
+overlap_table$total_overlapping_bases <- overlap_table$total_different_bases + overlap_table$total_identical_bases
+
+overlap_table <- overlap_table[order(-overlap_table$total_overlapping_bases),]
+
+```
+
+```{r, eval = F}
+library(DECIPHER)
+
+# build a distance matrix with the JC69 model
+D_jc69 <- dist.dna(subset_fasta, model = "JC69", pairwise.deletion = T)
+
+# get the subsetted fasta into the format for DECIPHER
+fas <- "./05-Documentation.backup/subset_Tf_snpAlignment.fasta"
+sub_fas_stringSet <- readDNAStringSet(fas)
+
+# test models with DECIPHER
+Tf_clustersML <- IdClusters(D_jc69, method = "ML", myXStringSet = sub_fas_stringSet, type="both", cutoff = 0.8, showPlot = T)
+
+# this chooses TN93+G4 as the best model
+
+```
+
+```{r}
+# model testing with modeltest_ng decided GTR+G4 is the best model, but that's not available in ape
+
+## Build NJ distance tree based on Jukes-Cantor and boostrap
+D <- dist.dna(subset_fasta, model = "TN93", gamma = 4, pairwise.deletion = T)
+tre_tf <- nj(D)
+
+boots <- boot.phylo(tre_tf, 
+                    subset_fasta, 
+                    function(e) nj(dist.dna(e, 
+                                            model = "TN93", 
+                                            gamma = 4,
+                                            pairwise.deletion = T)),
+                    B = n_boots)
+
+```
+
+```{r tf_prachet_tree}
+# read in the prachet tree
+tf_prachet <- "./04-Analysis/phylogenies/tannerella_forsythia/parsimony_analysis/parsomony_Tf_output.tree"
+tf_prachet_tree <- ape::read.tree(tf_prachet)
+
+## Root tree by midpoint rooting with phangorn
+tf_prachet_tree <- phangorn::midpoint(tf_prachet_tree)
+
+## Add bootstraps to tree
+tf_prachet_tree$node.label <- boots
+
+## Fix negative branch lengths
+## Reason why negative: https://www.sequentix.de/gelquest/help/neighbor_joining_method.htm
+## Fix: http://boopsboops.blogspot.com/2010/10/negative-branch-lengths-in-neighbour.html
+tf_prachet_tree$edge.length[tf_prachet_tree$edge.length < 0] <- 0
+
+# and check if tree loaded correctly
+plot(tf_prachet_tree)
+ggtree(tf_prachet_tree, ladderize = F) + geom_tiplab(size = 2)
+
+# prep metadata
+pacific_metadata_t <- pacific_metadata %>% # add the # of SNPs for visualizing in the tree
+  right_join(., stats_x %>%
+               rename(Library_ID = 1) %>%
+               select(Library_ID, SNPs) %>%
+               mutate(SNPs = str_replace_all(SNPs, ",", ""),
+                      SNPs = as.numeric(SNPs)), by = "Library_ID") %>%
+  mutate(SNPs = SNPs / 10000) %>%
+  mutate(Age_mean = ifelse(Library_ID == "ECO002.B0102", 7400, Age_mean),
+         Study = ifelse(Library_ID == "ECO002.B0102", "DeepEvo", Study))
+
+p2_tf <- ggtree(tf_prachet_tree, ladderize = T) %<+% pacific_metadata_t
+p2_tf_tree <- p2_tf + geom_tippoint(aes(fill = Age_mean, shape = Study, size = SNPs)) +
+  geom_tiplab(aes(color = Island), size = 3, offset = 0.005, align = T) + # , as_ylab=TRUE
+  geom_text2(aes(label=label, subset = !is.na(as.numeric(label)) & as.numeric(label) > 70), size = 3) +
+  geom_treescale() +
+  scale_fill_gradient(low = "#098BD9", high = "#7D3560") +
+  scale_color_manual(values = Island_colors, guide = "none") +
+  scale_size_continuous(limits = c(0,3)) +
+  scale_shape_manual(values = c(21,24),  guide = "none")
+
+p2_tf_tree
+
+# get the tree tip order
+tip_order_tf <- get_taxa_name(p2_tf_tree)
+
+
+```
+
+
+```{r}
+## Root tree by midpoint rooting with phangorn
+# tre_tf <- root(tre_tf, outgroup = "ECO002.B0102")
+tre_tf <- phangorn::midpoint(tre_tf)
+
+## Add bootstraps to tree
+tre_tf$node.label <- boots
+
+## Fix negative branch lengths
+## Reason why negative: https://www.sequentix.de/gelquest/help/neighbor_joining_method.htm
+## Fix: http://boopsboops.blogspot.com/2010/10/negative-branch-lengths-in-neighbour.html
+tre_tf$edge.length[tre_tf$edge.length < 0] <- 0
+
+# and check if tree loaded correctly
+plot(tre_tf)
+ggtree(tre_tf, ladderize = F) + geom_tiplab(size = 2)
+
+# prep metadata
+pacific_metadata_t <- pacific_metadata %>% # add the # of SNPs for visualizing in the tree
+  right_join(., stats_x %>%
+               rename(Library_ID = 1) %>%
+               select(Library_ID, SNPs) %>%
+               mutate(SNPs = str_replace_all(SNPs, ",", ""),
+                      SNPs = as.numeric(SNPs)), by = "Library_ID") %>%
+  mutate(SNPs = SNPs / 10000) %>%
+  mutate(Age_mean = ifelse(Library_ID == "ECO002.B0102", 7400, Age_mean),
+         Study = ifelse(Library_ID == "ECO002.B0102", "DeepEvo", Study))
+
+p2_tf <- ggtree(tre_tf, ladderize = T) %<+% pacific_metadata_t
+p2_tf_tree <- p2_tf + geom_tippoint(aes(fill = Age_mean, shape = Study, size = SNPs)) +
+  geom_tiplab(aes(color = Island), size = 3, offset = 0.005, align = T) + # , as_ylab=TRUE
+  geom_text2(aes(label=label, subset = !is.na(as.numeric(label)) & as.numeric(label) > 70), size = 3) +
+  geom_treescale() +
+  scale_fill_gradient(low = "#098BD9", high = "#7D3560") +
+  scale_color_manual(values = Island_colors, guide = "none") +
+  scale_size_continuous(limits = c(0,3)) +
+  scale_shape_manual(values = c(21,24),  guide = "none")
+
+p2_tf_tree
+
+# get the tree tip order
+tip_order_tf <- get_taxa_name(p2_tf_tree)
+
+# save the tip order for inStrain plots
+tip_order_tf %>%
+  as.data.frame() %>%
+  rename(tip_order = 1) %>%
+  fwrite(., "./05-Documentation.backup/Tf_tip_order.tsv", sep = "\t", quote = F)
+
+```
+
+```{r, eval = F}
+# Save tree in newick format
+write.tree(tre_tf,
+           file = "05-Documentation.backup/Tannerella_forsythia_tree.nwk")
+
+```
+
+```{r}
+# start with the stats table thats filtered for only samples with coverage >5X
+tf_bars <- stats_x %>%
+  filter(!str_detect(`Sample.Name`, "EMN001|ECO002")) %>%
+  mutate(`Median.cov` = str_replace_all(`Median.cov`, "X","")) %>%
+  mutate(`Median.cov` = as.numeric(`Median.cov`)) %>%
+  mutate(`Sample.Name` = fct_relevel(`Sample.Name`, tip_order_tf)) %>%
+  arrange(`Sample.Name`) %>%
+  ggplot(., aes(x = `X..Hets`, y = `Sample.Name`, fill = `Median.cov`)) +
+    geom_bar(stat = "identity", color = "grey30", size = 0.2) +
+    scale_fill_gradient(low = "#D6D6D6", high = "#148F77") +
+    theme_minimal(base_size = 10) +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(panel.grid.minor.x = element_blank()) +
+    scale_y_discrete(limits = rev) +
+    xlim(0,50) +
+    theme(panel.grid.major.y = element_blank()) +
+    ylab("Library") +
+    xlab("% heterozygous SNPs") +
+    ggtitle("Tannerella forsythia")
+
+tf_bars
+
+```
+
+
+```{r}
+
+tf_tree_plots <- p2_tf_tree + tf_bars +
+  plot_layout(widths = c(5,1))
+
+tf_tree_plots
+
+# ggsave("./06-publication/main_figures/Figure_5/tf_tree.pdf", plot = tf_tree_plots, device = "pdf",
+#         scale = 1, width = 9, height = 5, units = c("in"), dpi = 300)
+
+```
+
+

@@ -1,0 +1,1141 @@
+---
+title: "Pacific and world calculus humann3 gene family analysis"
+author: "Irina Velsko"
+date: "`r format(Sys.time(), '%b %d, %Y')`"
+output:
+    github_document:
+        fig_width: 8
+        fig_height: 6
+        toc: true
+---
+
+
+```{r load_libraries, echo = F, message = F}
+library(knitr)
+library(decontam)
+library(data.table)
+library(mixOmics)
+library(janitor)
+library(rstatix)
+library(pander)
+library(variancePartition)
+library(vegan)
+library(tidyverse)
+library(gplots)
+library(ggrepel)
+library(pals)
+library(viridis)
+library(patchwork)
+library(RColorBrewer)
+library(microshades)
+opts_chunk$set(echo=F, warning=F, message=F, dpi=150)
+```
+
+Set the working directory of the notebook to the parent directory of the 
+notebook itself.  
+
+```{r setup}
+knitr::opts_knit$set(root.dir = normalizePath("../../.."))
+```
+
+
+# humann3 tables 
+```{r load_kegg_data}
+
+## load the species and genus tables generated with humann3
+humann3_GFs_full <- fread("./05-Documentation.backup/pacific_genefamilies_anc_params_joined_cpm_ko_names.tsv.gz")
+humann3_GFs_full <- as_tibble(humann3_GFs_full)
+
+# clean the file names
+humann3_GFs_full <- rename(humann3_GFs_full, GeneFamily = `# Gene Family`)
+colnames(humann3_GFs_full) <- gsub("_Abundance-RPKs","", colnames(humann3_GFs_full))
+colnames(humann3_GFs_full) <- gsub(".SG1.1","", colnames(humann3_GFs_full))
+
+# remove unmapped and ungrouped reads
+humann3_GFs <- humann3_GFs_full %>% 
+  filter(!str_detect(GeneFamily, "UNMAPPED|UNGROUPED"))
+
+# remove all species-level-assignments
+humann3_GFs_top <- humann3_GFs %>%
+  filter(!str_detect(GeneFamily, "\\|"))
+
+
+# World data
+## load the species and genus tables generated with humann3
+humann3_KO_worldo_full <- fread("05-Documentation.backup/genefamilies_anc_params_world_joined_cpm_ko_names.tsv.gz")
+humann3_KO_worldo_full <- as_tibble(humann3_KO_worldo_full)
+
+# clean the file names
+humann3_KO_worldo_full <- rename(humann3_KO_worldo_full, GeneFamily = `# Gene Family`)
+colnames(humann3_KO_worldo_full) <- gsub("_Abundance-RPKs","", colnames(humann3_KO_worldo_full))
+colnames(humann3_KO_worldo_full) <- gsub(".SG1.1","", colnames(humann3_KO_worldo_full))
+colnames(humann3_KO_worldo_full) <- gsub(".SG1","", colnames(humann3_KO_worldo_full))
+
+# remove unmapped and ungrouped reads
+humann3_KO_worldo <- humann3_KO_worldo_full %>% 
+  filter(!str_detect(GeneFamily, "UNMAPPED|UNGROUPED"))
+
+
+# And combine the tables
+humann3_KO_world <- humann3_KO_worldo %>%
+  filter(!str_detect(GeneFamily, "\\|")) %>%
+  full_join(., humann3_GFs_top, by = "GeneFamily") %>%
+  replace(is.na(.), 0)
+
+# humann3_KO_world %>%
+#   fwrite(., "./05-Documentation.backup/h3_world_GFs_no_species.tsv", quote = F, sep = "\t")
+
+```
+
+```{r}
+
+humann3_KO_world <- fread("./05-Documentation.backup/h3_world_GFs_no_species.tsv")
+
+```
+
+
+```{r metadata}
+# load the metadata file
+pacific_metadata <- fread("05-Documentation.backup/oceania_metadata_full.tsv") %>%
+  select(Library_ID, Lab, Type, Age_mean, seq_len_avg, gc_avg, No_reads_no_human) %>%
+  mutate(Study = "Pacific",
+          Continent = "Pacific",
+         Age_mean_log = log10(Age_mean))
+
+pc_end_samples <- fread("./05-Documentation.backup/pc_end_samples.tsv") %>%
+  pull(Species)
+
+```
+
+```{r}
+metadata <- fread("https://raw.githubusercontent.com/ivelsko/smoking_calculus/main/00-documentation.backup/full_combined_metadata.tsv") %>%
+  select(Library_ID, Site_code, seq_len_avg, gc_avg, No_reads_no_human) %>%
+  mutate(Study = str_replace_all(Site_code, "MID","Middenbeemster"),
+         Study = str_replace_all(Study, "CMB","Middenbeemster"),
+         Study = str_replace_all(Study, "KIL","Kilteasheen"),
+         Study = str_replace_all(Study, "RAD","Radcliffe"),
+         Study = str_replace_all(Study, "ELR","Iberia"),
+         Study = str_replace_all(Study, "IVE","Iberia"),
+         Lab = str_replace_all(Site_code, "MID","Jena"),
+         Lab = str_replace_all(Lab, "CMB","Jena"),
+         Lab = str_replace_all(Lab, "ELR","Jena"),
+         Lab = str_replace_all(Lab, "IVE","Jena"),
+         Lab = str_replace_all(Lab, "RAD","Oxford"),
+         Lab = str_replace_all(Lab, "KIL","Tuebingen")) %>%
+  mutate(Age_mean = ifelse(str_detect(Site_code, "MID|CMB|RAD"), 250,
+                           ifelse(Site_code == "KIL", 700,
+                                  ifelse(str_detect(Site_code, "ELR|IVE"), 620, 7)))) %>%
+  mutate(Continent = "Europe") %>%
+  full_join(., fread("./05-Documentation.backup/eisenhoffer2020_ottoni2021_deepevo_mann2018w_metadata.tsv") %>%
+              mutate(Run_accession = ifelse(Study == "FellowsYates2021",Sample_alias,Run_accession)) %>%
+              rename(Library_ID = Run_accession)) %>%
+  mutate(Sample_type = ifelse(str_detect(Study, "EXB|LIB|DEN|SOL"),"blank",Sample_type)) %>%
+  mutate(Sample_type = ifelse(is.na(Sample_type),"calculus",Sample_type)) %>%
+  mutate(Sample_group = ifelse(Sample_type == "blank","blank",
+                               ifelse(str_detect(Library_ID, "VLC|JAE"),"modern_calculus",Sample_group))) %>%
+  mutate(Sample_group = ifelse(is.na(Sample_group),"ancient_calculus",Sample_group)) %>%
+  mutate(Sample_alias = ifelse(is.na(Sample_alias),Library_ID,Sample_alias)) %>%
+  mutate(Age_mean_log = log10(Age_mean))
+
+world_metadata <- metadata %>%
+  # mutate(Sample_group = ifelse(is.na(Sample_group),"bone",Sample_group)) %>%
+  filter(!str_detect(Sample_group, "primate|modern"))
+
+# list the non-human primates and modern calculus to remove from the species table
+nhp <- metadata %>%
+  filter(str_detect(Sample_group, "primate|modern")) %>%
+  select(Sample_alias) %>%
+  unique() %>%
+  pull()
+
+# and combine pacific and world
+full_metadata <- pacific_metadata %>%
+  bind_rows(., world_metadata)
+
+
+```
+
+
+```{r}
+# make a list of blanks b/c they don't all have the same prefixes
+blanks <- full_metadata %>%
+  mutate(Type = ifelse(is.na(Type),Sample_type,Type)) %>%
+  filter(str_detect(Type, "blank|bone")) %>%
+  filter(!str_detect(Library_ID, "ARS")) %>%
+  select(Library_ID) %>%
+  pull()
+
+```
+
+
+```{r cuperdec_poor_samples}
+poor_samples <- fread("./05-Documentation.backup/cfdp_fail_samples_20210413.txt") %>%
+  pull(Sample)
+
+world_fail <- fread("./05-Documentation.backup/cuperdec_malt_ei_ot_de_poor_samples.tsv") %>%
+  bind_rows(., fread("05-Documentation.backup/oceania_cuperdec_mpa3_anc_params_poor_samples.tsv"))
+
+```
+
+```{r colors}
+Island_colors = c("Tongatapu" = "#616161", 
+                  "Flores" = "#f6865e", 
+                  "Rapa Nui" = "#cc79a7", 
+                  "Futuna" = "#7D3560", 
+                  "Efate" = "#7472af", 
+                  "Vao" = "#098BD9",
+                  "Efate 3000 BP" = "#7DCCFF", 
+                  "Uripiv" = "#e1f2fe", 
+                  "Viti Levu" = "#1ec1a7", 
+                  "Raiatea" = "#148f77", 
+                  "Taumako" = "#4e7705", 
+                  "Watom" = "#86c73a")
+
+
+# Set microshades colors
+# Set microshades colors
+Lab_colors = c("Jena" = microshades_palette("micro_cvd_purple", 3, lightest = FALSE)[3],
+                "Oklahoma" =  microshades_palette("micro_cvd_blue", 3, lightest = FALSE)[3],
+                "Otago" = microshades_palette("micro_cvd_green", 3, lightest = FALSE)[3],
+                "Oxford" = microshades_palette("micro_cvd_turquoise", 3, lightest = FALSE)[1],
+                "Tuebingen" = microshades_palette("micro_cvd_purple", 3, lightest = FALSE)[1],
+                "ACAD" = microshades_palette("micro_cvd_blue", 4, lightest = FALSE)[1],
+                "Vienna" = microshades_palette("micro_cvd_green", 3, lightest = FALSE)[1])
+
+
+Sample_type_colors <- c("Arch. Bone" = "#148F77", "blank" = "#8B8B8B", "Arch. calculus" = "black")
+
+Study_colors <- c("Pacific" = "#098BD9", 
+                  "Middenbeemster" = "#7472af", 
+                  "Radcliffe" = "#cc79a7", 
+                  "Kilteasheen" = "#f6865e", 
+                  "Iberia" = "#1ec1a7",
+                  "Eisenhoffer2020" = "#86c73a",
+                  "Ottoni2021" = "#616161",
+                  "FellowsYates2021" = "#e1f2fe",
+                  "Mann2018" = "#f5c710ff") # 7D3560
+
+
+Continent_colors <- c("Pacific" = "#098BD9", 
+                  "Europe" = "#7472af", 
+                  "Africa" = "#cc79a7", 
+                  "Caribbean" = "#f6865e", 
+                  "Asia" = "#86c73a",
+                  "North America" = "#1ec1a7")
+
+
+```
+
+```{r}
+Island_shapes = c("Tongatapu" = 21, 
+                  "Flores" = 21, 
+                  "Rapa Nui" = 21, 
+                  "Futuna" = 21, 
+                  "Efate" = 21, 
+                  "Vao" = 21,
+                  "Efate 3000 BP" = 21, 
+                  "Uripiv" = 21, 
+                  "Viti Levu" = 21, 
+                  "Raiatea" = 21, 
+                  "Taumako" = 21, 
+                  "Watom" = 21)
+
+Lab_shapes = c(21,21,21,21,21,21,21,21)
+Lab_size = c(4,4,4,4,4,4,4)
+
+Study_shapes = c(21,21,21,21,21,21,21,21,21,21,21)
+
+Type_shapes = c(21,21,21,21,21,21,21,21)
+Type_size = c(4,4,4,4,4,4,4,4)
+
+```
+
+
+```{r plot_pca_fxn}
+
+# add functions for:
+# making the input table for PCA?
+
+# plotting PCA with colored dots
+plot_pca <- function(df, pc1, pc2, color_group, shape_group) {
+    metadata_group_colors <- get(paste(color_group, "_colors", sep = ""))
+    metadata_group_shapes <- get(paste(shape_group, "_shapes", sep = ""))
+
+    exp_var <- paste0(round(df$prop_expl_var$X * 100, 2), "%")
+    df_X <- df$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(full_metadata, by = "Library_ID")
+    
+    color_group = df_X[[color_group]]
+    shape_group = df_X[[shape_group]]
+
+                       if (pc1 == 'PC1') {
+                           pc1 <- df_X$PC1
+                           exp_var_pc1 <- exp_var[1]
+                           xaxis <- c("PC1")
+                       }  else if (pc1 == 'PC2') {
+                           pc1 <- df_X$PC2
+                           exp_var_pc1 <- exp_var[2]
+                           xaxis <- c("PC2")
+                       } else if (pc1 == 'PC3') {
+                           pc1 <- df_X$PC3
+                           exp_var_pc1 <- exp_var[3]
+                           xaxis <- c("PC3")
+                       }
+
+                       if (pc2 == 'PC1') {
+                           pc2 <- df_X$PC1
+                           exp_var_pc2 <- exp_var[1]
+                           yaxis <- c("PC1")
+                       }  else if (pc2 == 'PC2') {
+                           pc2 <- df_X$PC2
+                           exp_var_pc2 <- exp_var[2]
+                           yaxis <- c("PC2")
+                       } else if (pc2 == 'PC3') {
+                           pc2 <- df_X$PC3
+                           exp_var_pc2 <- exp_var[3]
+                           yaxis <- c("PC3")
+                       }
+
+    pca_plot <- ggplot(df_X, aes(pc1, pc2)) +
+                        geom_point(aes(fill = color_group, shape = shape_group), size = 3, stroke = 0.3, shape = 21) +
+                        scale_fill_manual(values = metadata_group_colors) +
+                        xlab(paste(xaxis, " - ", exp_var_pc1)) +
+                        ylab(paste(yaxis, " - ", exp_var_pc2)) +
+                        theme_minimal(base_size = 14) +
+                        theme(legend.position = "right") +
+                        theme(legend.title = element_blank())
+
+    return(pca_plot)
+}
+
+```
+
+
+```{r pca_plot_cont_fxn}
+# for continuous data
+plot_pca_cont <- function(df_pca, pc1, pc2, color_group, ncomps, title_text) {
+
+    exp_var <- paste0(round(df_pca$prop_expl_var$X * 100, 2), "%")
+    df_X <- df_pca$variates$X %>%
+              as.data.frame() %>%
+              rownames_to_column("Library_ID") %>%
+              inner_join(full_metadata, by = "Library_ID") %>%
+              left_join(., h3_GF_counts, by = "Library_ID")
+
+    color_group = df_X[[color_group]]
+
+    if (pc1 == 'PC1') {
+        pc1 <- df_X$PC1
+        exp_var_pc1 <- exp_var[1]
+        xaxis <- c("PC1")
+    }  else if (pc1 == 'PC2') {
+        pc1 <- df_X$PC2
+        exp_var_pc1 <- exp_var[2]
+        xaxis <- c("PC2")
+    } else if (pc1 == 'PC3') {
+        pc1 <- df_X$PC3
+        exp_var_pc1 <- exp_var[3]
+        xaxis <- c("PC3")
+    }
+
+    if (pc2 == 'PC1') {
+        pc2 <- df_X$PC1
+        exp_var_pc2 <- exp_var[1]
+        yaxis <- c("PC1")
+    }  else if (pc2 == 'PC2') {
+        pc2 <- df_X$PC2
+        exp_var_pc2 <- exp_var[2]
+        yaxis <- c("PC2")
+    } else if (pc2 == 'PC3') {
+        pc2 <- df_X$PC3
+        exp_var_pc2 <- exp_var[3]
+        yaxis <- c("PC3")
+    }
+
+    pca_plot <- ggplot(df_X, aes(x = pc1, y = pc2)) +
+      geom_point(aes(fill = color_group), size = 3.5, stroke = 0.3, shape = 21) +
+     scale_fill_viridis_c(option = "C") +
+     # scale_shape_manual(values = c(16, 16, 16, 16, 16,16,16,16)) +
+     # scale_shape_manual(values = c(16, 17, 15, 18, 14,9,13,24)) +
+    # stat_ellipse() +
+     xlab(paste(xaxis, " - ", exp_var_pc1)) +
+     ylab(paste(yaxis, " - ", exp_var_pc2)) +
+     theme_minimal(base_size = 16) +
+     theme(text = element_text(size=16)) +
+     theme(legend.title = element_blank(),
+           legend.key.size = unit(2,"mm"),
+           legend.text = element_text(size = 10)) + 
+     theme(legend.position = "right") +
+     ggtitle(title_text) + theme(plot.title = element_text(size = 10))
+
+    return(pca_plot)
+}
+
+```
+
+```{r get_GF_totals}
+# how many pathways were identified per cluster?
+
+h3_GF_counts_prep <- humann3_KO_world %>%
+  select(-matches(nhp %>% str_c(collapse = "|"))) %>%
+  # remove poorly preserved samples
+  select(-matches(poor_samples %>% str_c(collapse = "|"))) %>%
+  select(-matches(blanks %>% str_c(collapse = "|"))) %>%
+  # and remove these 2 b/c they have no age data for the adonis test
+  select(-ERR5729638, -ERR5729643) %>%
+  # inner_join(., humann3_GF.decontam_noblanks_presence_more_30, by = "GeneFamily") %>%
+  adorn_totals(where = "col") %>%
+  mutate(Percent = Total / sum(Total) * 100) %>%
+  filter(Percent >= 0.005) %>%
+  select(-Total, -Percent) %>%
+  as_tibble()
+
+# list samples with less than 750 GeneFamilies identified (All samples with less fall into Cluster 2, which is probably biasing the comparison of the 2 clusters)
+under750 <- h3_GF_counts_prep %>%
+  pivot_longer(!GeneFamily, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = ifelse(Counts > 0,1,0)) %>%
+  group_by(Library_ID) %>%
+  summarize(total_GFs = sum(Counts)) %>%
+  ungroup() %>%
+  filter(total_GFs < 750) %>%
+  pull(Library_ID)
+
+```
+
+```{r}
+
+# also read in the number of species in the final cleaned species table for comparison between the # of species detected and the # of GFs in each sample
+
+sp_counts <- fread("./05-Documentation.backup/pe_all_table_species_counts.tsv")
+
+```
+
+```{r pca_GFs_filt_noblanks}
+humann3_gf_l1_noblanks_filt <- humann3_KO_world %>%
+  select(-matches(nhp %>% str_c(collapse = "|"))) %>%
+  # remove poorly preserved samples
+  select(-matches(poor_samples %>% str_c(collapse = "|"))) %>%
+  select(-matches(blanks %>% str_c(collapse = "|"))) %>%
+  select(-matches(under750 %>% str_c(collapse = "|"))) %>%
+  adorn_totals(where = "col") %>%
+  mutate(Percent = Total / sum(Total) * 100) %>%
+  filter(Percent >= 0.005) %>%
+  select(-Total, -Percent) %>%
+  pivot_longer(!GeneFamily, names_to = "Library_ID", values_to = "Counts") %>%
+  mutate(Counts = Counts + 1) %>%
+  spread(GeneFamily,Counts) %>%
+  column_to_rownames("Library_ID")
+
+# check the number of components to retain by tuning the PCA
+tune.humann3_gf_pca <- tune.pca(humann3_gf_l1_noblanks_filt, logratio = 'CLR')
+
+# perform a PCA to see how the data cluster
+humann3_gf_l1_noblanks_filt.pca <- pca(humann3_gf_l1_noblanks_filt, ncomp = 3, logratio = 'CLR')
+
+# plot the PCA
+h3_gf_pc12 <- plot_pca(humann3_gf_l1_noblanks_filt.pca, "PC1", "PC2", "Study", "Lab")
+h3_gf_pc12
+plot_pca(humann3_gf_l1_noblanks_filt.pca, "PC1", "PC2", "Continent", "Lab")
+
+
+```
+
+```{r}
+
+humann3_gf_l1_noblanks_filt.clr <- humann3_gf_l1_noblanks_filt.pca$X %>%
+  as.data.frame.matrix() %>%
+  rownames_to_column("Library_ID") %>%
+  pivot_longer(!Library_ID, names_to = "kegg", values_to = "counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "counts") %>%
+  separate(kegg, into = "KEGG", extra = "drop", sep = ":") %>%
+  column_to_rownames("KEGG")
+
+humann3_gf_l1_noblanks_filt.clr.mat <- as.matrix(humann3_gf_l1_noblanks_filt.clr)
+
+# humann3_gf_l1_noblanks_filt.euc.mat <- as.matrix(humann3_gf_l1_noblanks_filt.euc)
+
+selected_metadata <- world_metadata %>%
+  full_join(., pacific_metadata) %>%
+  select(Library_ID, Age_mean, Continent) %>%
+  inner_join(., humann3_gf_l1_noblanks_filt.pca$X %>%
+               as.data.frame.matrix(.) %>%
+               as.data.frame(.) %>%
+               rownames_to_column("Library_ID") %>%
+               select(Library_ID), by = "Library_ID") %>%
+  arrange(Library_ID) %>%
+  column_to_rownames("Library_ID")
+
+col_age = circlize::colorRamp2(c(0, 3000), c("#098BD9", "#7D3560"))
+col_fun = circlize::colorRamp2(c(-5, 0, 5), c("#098BD9", "#ffffff", "#f5c710ff")) # 75, 130
+
+
+row_ha <- ComplexHeatmap::HeatmapAnnotation(df = selected_metadata, col = list(Age_mean = col_age,
+                                                                               Continent = Continent_colors))
+
+
+set.seed(377)
+ht1 = ComplexHeatmap::Heatmap(humann3_gf_l1_noblanks_filt.clr.mat, col = col_fun, name = "CPM", clustering_method_rows = "complete", clustering_method_columns = "complete",column_km = 2, row_km = 3, top_annotation = row_ha, border = TRUE, show_row_names = F, show_column_names = T, column_names_gp = grid::gpar(fontsize = 4))
+
+ht1 = ComplexHeatmap::draw(ht1)
+
+roworder <- ComplexHeatmap::row_order(ht1)
+colorder <- ComplexHeatmap::column_order(ht1)
+
+
+# and save the heatmap as an svg
+# svg(file = "./06-publication/main_figures/Figure_4/KEGG_KO_heatmap.svg", width = 16, height = 12)
+# 
+# set.seed(377)
+# ht1 = ComplexHeatmap::Heatmap(humann3_gf_l1_noblanks_filt.clr.mat, col = col_fun, name = "CPM", clustering_method_rows = "complete", clustering_method_columns = "complete",column_km = 2, row_km = 3, top_annotation = row_ha, border = TRUE, show_row_names = F, show_column_names = F)
+# 
+# ComplexHeatmap::draw(ht1)
+# 
+# dev.off()
+
+
+```
+
+
+```{r row_order}
+# turn the row numbers into a data table to combine with the matrix to get the KEGG entries
+row_clusters <- roworder$`3` %>%
+  as.data.frame(.) %>%
+  rename(line_number = 1) %>%
+  mutate(Cluster = 3) %>%
+  bind_rows(., roworder$`2` %>%
+            as.data.frame(.) %>%
+            rename(line_number = 1) %>%
+            mutate(Cluster = 2)) %>%
+  bind_rows(., roworder$`1` %>%
+            as.data.frame(.) %>%
+            rename(line_number = 1) %>%
+            mutate(Cluster = 1)) %>%
+  mutate(dendro_order = 1:n())
+  
+# add row numbers to the KEGG orthologs of the input matrix
+kegg_cluster_info <- humann3_gf_l1_noblanks_filt.clr.mat %>%
+  as.data.frame(.) %>%
+  rownames_to_column("KEGG")  %>%
+  select(KEGG) %>%
+  mutate(line_number = 1:n()) %>%
+  full_join(., row_clusters, by  = "line_number") %>%
+  # now get the full entry with description from the original table
+  full_join(., humann3_gf_l1_noblanks_filt %>%
+  rownames_to_column("Library_ID")  %>%
+  pivot_longer(!Library_ID, names_to = "pathway", values_to = "Counts") %>%
+  pivot_wider(names_from = "Library_ID", values_from = "Counts") %>%
+  select(pathway) %>%
+  mutate(double = pathway) %>%
+  separate(double, into = "KEGG", extra = "drop", sep = ":"), by = "KEGG") %>%
+  arrange(desc(Cluster), dendro_order)
+
+# fwrite(kegg_cluster_info, "./05-Documentation.backup/humann3_GFs_world_kegg_clustering.tsv", quote = F, sep = "\t")
+
+
+```
+
+
+```{r col_order}
+# turn the row numbers into a data table to combine with the matrix to get the KEGG entries
+column_clusters <- colorder$`2` %>%
+  as.data.frame(.) %>%
+  rename(line_number = 1) %>%
+  mutate(Cluster = 2) %>%
+  bind_rows(., colorder$`1` %>%
+            as.data.frame(.) %>%
+            rename(line_number = 1) %>%
+            mutate(Cluster = 1)) %>%
+  mutate(dendro_order = 1:n())
+  
+# add row numbers to the KEGG orthologs of the input matrix
+sample_cluster_info <- humann3_gf_l1_noblanks_filt.clr.mat %>%
+  as.data.frame(.) %>%
+  rownames_to_column("KEGG")  %>%
+  pivot_longer(!KEGG, names_to = "Library_ID", values_to = "counts") %>%
+  pivot_wider(names_from = "KEGG", values_from = "counts") %>%
+  select(Library_ID) %>%
+  mutate(line_number = 1:n()) %>%
+  full_join(., column_clusters, by  = "line_number") %>%
+  arrange(desc(Cluster), dendro_order)
+
+# fwrite(sample_cluster_info, "./05-Documentation.backup/humann3_GFs_world_sample_clustering.tsv", quote = F, sep = "\t")
+
+
+```
+
+```{r}
+# read in the json file with all KOs per pathway
+
+result <- jsonlite::fromJSON("./05-Documentation.backup/ko00001.json", flatten = T)
+
+json_data_frame <- tibble(as.data.frame(result))
+
+json_df <- unnest(json_data_frame)
+json_df <- json_df %>%
+  rename(nextone = children)
+
+json_df2 <- unnest(json_df)
+json_df2 <- json_df2 %>%
+  rename(nowone = children)
+
+json_df3 <- unnest(json_df2)
+
+json_df3 <- json_df3 %>%
+  separate(name3, into = c("kegg","name"), sep = "; ", extra = "merge") %>%
+  separate(kegg, into = c("KO","gene"), sep = "  ", extra = "merge")
+
+
+json_df3 %>%
+  select(name1) %>%
+  unique()
+  
+```
+
+```{r}
+# now combine the json file and the kegg_cluster_info table to get the pathways for each KO in each cluster
+# # remove pathways that are eukaryote or human-specific
+# # from 09140 Cellular Processes
+# 09141 Transport and catabolism
+# 09143 Cell growth and death
+# 09144 Cellular community - eukaryotes
+# # from 09150 Organismal Systems - all
+# # from 09160 Human Diseases 
+# 09161 Cancer: overview
+# 09162 Cancer: specific types
+# 09172 Infectious disease: viral
+# 09171 Infectious disease: bacterial
+# 09163 Immune disease
+# 09164 Neurodegenerative disease
+# 09166 Cardiovascular disease
+# 09167 Endocrine and metabolic disease
+# 09176 Drug resistance: antineoplastic
+
+cluster_ko_paths <- kegg_cluster_info %>%
+  rename(KO = KEGG) %>%
+  select(-line_number, -dendro_order) %>%
+  left_join(., json_df3 %>%
+              filter(!str_detect(`children.name`,"09150")) %>%
+              select(name1, name2, KO), by = "KO") %>%
+  # remove the unwanted pathways
+  filter(!str_detect(name1, "09141|09143|09144|09161|09162|09171|09172|09163|09164|09166|09167|09176"))
+
+
+
+# order the pathways by decreasing % in Cluster3
+cl1_order_n1 <- cluster_ko_paths %>%
+  group_by(Cluster, name1) %>%
+  count() %>%
+  arrange(Cluster, desc(n)) %>%
+  ungroup() %>%
+  mutate(Cluster = as.character(Cluster)) %>%
+  pivot_wider(names_from = "Cluster", values_from = "n", values_fill = 0) %>%
+  pivot_longer(!name1, names_to = "Cluster", values_to = "n") %>%
+  group_by(Cluster) %>%
+  mutate(Percent = n / sum(n) * 100) %>%
+  ungroup() %>%
+  arrange(Cluster, Percent) %>%
+  filter(Cluster == 1) %>%
+  separate(name1, into = c("number","path"), sep = " ", extra = "merge") %>%
+  pull(path)
+
+  
+fig <- cluster_ko_paths %>%
+  group_by(Cluster, name1) %>%
+  count() %>%
+  arrange(Cluster, desc(n)) %>%
+  ungroup() %>%
+  mutate(Cluster = as.character(Cluster)) %>%
+  pivot_wider(names_from = "Cluster", values_from = "n", values_fill = 0) %>%
+  pivot_longer(!name1, names_to = "Cluster", values_to = "n") %>%
+  group_by(Cluster) %>%
+  mutate(Percent = n / sum(n) * 100) %>%
+  ungroup() %>%
+  filter(Cluster != 2) %>%
+  mutate(Cluster = as.character(Cluster)) %>%
+  separate(name1, into = c("number","name1"), sep = " ", extra = "merge") %>%
+  select(-number) %>%
+  mutate(name1 = fct_relevel(name1, cl1_order_n1)) %>%
+  ggplot(., aes(x = name1, y = Percent, fill = Cluster)) +
+         geom_bar(stat = "identity", position = position_dodge2(width = 0.9, preserve = "single"), color = "black") +
+         theme_minimal(base_size = 11) +
+         theme(axis.text.x = element_text(angle = 0, hjust = 1.0, vjust = 0.5),
+               # axis.text.y = element_text(vjust = -0.1),
+               axis.text = element_text(size = 10)) +
+         scale_y_continuous(breaks=scales::pretty_breaks(n=8)) +
+         scale_fill_manual(values = c("#f5c710ff","#098BD9")) +
+         coord_flip() +
+         ylab("% of KOs per cluster") +
+         xlab("Pathway")
+fig
+
+# ggsave("./06-publication/main_figures/Figure_4/KOs_diffs_clusters.pdf", plot = fig, device = "pdf",
+#        scale = 1, width = 7, height = 7, units = c("in"), dpi = 300)
+      
+```
+
+```{r stats}
+
+# significant differences between clusters for any of the pathways?
+pathlist <- cluster_ko_paths %>%
+  group_by(Cluster, name1) %>%
+  count() %>%
+  ungroup() %>%
+  filter(Cluster != 2) %>%
+  mutate(Cluster = as.character(Cluster),
+         Cluster = ifelse(Cluster == "1","cluster1","cluster2")) %>%
+  pivot_wider(names_from = "Cluster", values_from = "n") %>%
+  separate(name1, into = c("map","pathway"), sep = " ", extra = "merge") %>%
+  pull(pathway) 
+
+cl1list <- cluster_ko_paths %>%
+  group_by(Cluster, name1) %>%
+  count() %>%
+  ungroup() %>%
+  filter(Cluster != 2) %>%
+  mutate(Cluster = as.character(Cluster),
+         Cluster = ifelse(Cluster == "1","cluster1","cluster3")) %>%
+  pivot_wider(names_from = "Cluster", values_from = "n") %>%
+  replace(is.na(.), 0) %>%
+  pull(cluster1) 
+
+cl3list <- cluster_ko_paths %>%
+  group_by(Cluster, name1) %>%
+  count() %>%
+  ungroup() %>%
+  filter(Cluster != 2) %>%
+  mutate(Cluster = as.character(Cluster),
+         Cluster = ifelse(Cluster == "1","cluster1","cluster3")) %>%
+  pivot_wider(names_from = "Cluster", values_from = "n") %>%
+  replace(is.na(.), 0) %>%
+  pull(cluster3) 
+
+intab <- as.table(cbind(
+  cl1list, cl3list
+))
+
+dimnames(intab) <- list(
+  pathway = pathlist,
+  Cluster = c("Cluster1","Cluster3")
+)
+
+intab %>%
+  row_wise_prop_test(., alternative = "greater", p.adjust.method = "fdr")
+
+intab %>%
+  row_wise_fisher_test(., alternative = "greater", p.adjust.method = "fdr")
+
+
+
+```
+
+```{r}
+
+# enriched paths in the major enriched pathway (Protein families: genetic information processing)
+
+# list of KOs in the enriched pathway 
+pfgip_kos <- kegg_cluster_info %>%
+  filter(Cluster == 1) %>%
+  rename(KO = KEGG) %>%
+  inner_join(., json_df3, by = "KO") %>%
+  filter(str_detect(name1, "09182")) %>% # protein families...
+  select(KO) %>%
+  distinct() %>%
+  pull(KO)
+
+# list of subpathways in the enriched pathway
+pfgip_sp <- kegg_cluster_info %>%
+  filter(Cluster == 1) %>%
+  rename(KO = KEGG) %>%
+  inner_join(., json_df3, by = "KO") %>%
+  filter(str_detect(name1, "09182")) %>% # protein families...
+  select(name2, KO) %>%
+  distinct() %>%
+  arrange(name2, KO)
+
+pfgip_sp_l <- pfgip_sp %>%
+  select(-KO) %>%
+  # remove Brite hierarchy code
+  separate(name2, into = "subpath", sep = "\\[", extra = "drop") %>%
+  # remove trailing white space
+  mutate(subpath = str_trim(subpath, side = "both")) %>%
+  distinct() %>%
+  pull(subpath)
+  
+```
+
+```{r}
+# now pull the KOs in the enriched pathway out of the full KEGG table, and see if there are differences in the subpathway enrichement based on KOs
+
+sub_kos <- humann3_KO_worldo %>%
+  full_join(., humann3_GFs, by = "GeneFamily") %>%
+  replace(is.na(.), 0) %>%
+  # remove non-human primates and modern samples
+  select(-matches(nhp %>% str_c(collapse = "|"))) %>%
+  # remove poorly preserved samples
+  select(-matches(poor_samples %>% str_c(collapse = "|"))) %>%
+  select(-matches(blanks %>% str_c(collapse = "|"))) %>%
+  select(-matches(under750 %>% str_c(collapse = "|"))) %>%
+  # get only the selected KOs
+  filter(str_detect(GeneFamily, pfgip_kos %>% str_c(collapse = "|"))) %>%
+  # only total lines, not species lines
+  filter(!str_detect(GeneFamily, "\\|")) %>%
+  # then add the subcluster info
+  mutate(KO = GeneFamily,
+         KO = str_trunc(KO, width = 6, side = "right", ellipsis = "")) %>%
+  left_join(., pfgip_sp, by = "KO") %>%
+  select(KO, name2, everything()) %>%
+  # remove Brite hierarchy code
+  separate(name2, into = "subpath", sep = "\\[", extra = "drop") %>%
+  # remove trailing white space
+  mutate(subpath = str_trim(subpath, side = "both")) %>%
+  # now combine CPM values by the subpath
+  pivot_longer(!KO:GeneFamily, names_to = "Library_ID", values_to = "CPM") %>%
+  left_join(., sample_cluster_info  %>%
+              select(Library_ID, Cluster), by = "Library_ID") %>%
+  select(KO, subpath, Cluster, Library_ID, CPM)
+
+# list the 13 subpathways
+# select each one individually
+# run the test on each and combine the tables into 1 final one
+  
+wilcox_out <- sub_kos %>%
+  select(subpath, Cluster, CPM) %>% # KO subpath
+  distinct() %>%
+  group_by(subpath) %>% # KO subpath
+  wilcox_test(., CPM ~ Cluster) %>%
+  adjust_pvalue(method = "fdr") %>%
+  add_significance("p.adj") %>%
+  mutate(cluster1_high = n1 > n2) 
+# %>%
+#   # add back the subgroups
+#   left_join(., pfgip_sp, by = "KO")
+
+
+```
+
+
+
+```{r}
+
+enriched_groups <- kegg_cluster_info %>%
+  filter(Cluster == 1) %>%
+  rename(KO = KEGG) %>%
+  inner_join(., json_df3, by = "KO") %>%
+  filter(str_detect(name1, "09182"),
+         # !str_detect(name2, "03011|03012|04131")
+         ) %>% # protein families...; 09132 signal transduction
+  select(KO) %>%
+  distinct() %>%
+  # select(-pathway, -line_number, -Cluster, -dendro_order, -children.name) 
+  pull(KO)
+
+kegg_cluster_info %>%
+  filter(Cluster == 1) %>%
+  rename(KO = KEGG) %>%
+  inner_join(., json_df3, by = "KO") %>%
+  filter(str_detect(name1, "09182")) %>% # protein families...; 09132 signal transduction
+  select(name2) %>%
+  distinct() %>%
+  arrange(name2)
+
+
+
+```
+
+
+```{r}
+# now get the species of these KOs from the original table
+plot_table <- humann3_KO_worldo %>%
+  full_join(., humann3_GFs, by = "GeneFamily") %>%
+  replace(is.na(.), 0) %>%
+  # remove non-human primates and modern samples
+  select(-matches(nhp %>% str_c(collapse = "|"))) %>%
+  # remove poorly preserved samples
+  select(-matches(poor_samples %>% str_c(collapse = "|"))) %>%
+  select(-matches(blanks %>% str_c(collapse = "|"))) %>%
+  select(-matches(under750 %>% str_c(collapse = "|"))) %>%
+  # get only the selected KOs
+  filter(str_detect(GeneFamily, enriched_groups %>% str_c(collapse = "|"))) %>%
+  # select only the levels with species
+  filter(str_detect(GeneFamily, "\\|")) %>%
+  # remove any GeneFamily species with a total of 0 counts
+  adorn_totals(where = "col")  %>% 
+  filter(Total > 0) %>%
+  select(-Total) %>%
+  # now break up the GeneFamily long name
+  separate(GeneFamily, into = c("KO","other"), sep = ": ") %>%
+  separate(other, into = c("Gene_name","Species"), sep = "\\|") %>%
+  separate(Species, into = c("Genus","Species"), sep = "\\.s__") %>%
+  mutate(Genus = str_replace_all(Genus, "g__","")) %>%
+  # convert to long table to add clusters
+  pivot_longer(!KO:Species, names_to = "Library_ID", values_to = "CPM") %>%
+  # now take only the samples that are in sample cluster 2
+  inner_join(., sample_cluster_info %>% 
+              select(Library_ID, Cluster) %>%
+              # take only sample cluster 2
+              filter(Cluster == 2), by = "Library_ID") %>%
+  rename(Sample_cluster = Cluster) %>%
+  distinct()  %>%
+  # now add the pathway information for those KOs
+  left_join(., cluster_ko_paths %>%
+              filter(Cluster == 1) %>%
+              select(KO, name1, name2), by = "KO") %>%
+  drop_na(Sample_cluster) %>%
+  # make sure to have only the pathways of interest
+  filter(str_detect(name1, "09182"))
+
+plot_table %>%
+  select(name2) %>%
+  unique()
+
+```
+
+```{r}
+# calculate the % for each ortholog contributed by each genus         
+sample_cluster2_stats <- plot_table %>%
+  select(-Gene_name, -Species) %>%
+  distinct() %>%
+  group_by(KO, Genus) %>%
+  summarize(Sum = sum(CPM)) %>%
+  mutate(Percent = Sum/sum(Sum)*100) %>%
+  ungroup(.)
+
+so_subpaths <- plot_table %>%
+  select(KO) %>%
+  unique() %>%
+  pull()
+
+# calculate the total % of all genera that contribute < X% to each ortholog
+humann3_path_pc1pws_stats_extra <- lapply(so_subpaths, function(eclass) {
+ high_percent <- sample_cluster2_stats %>%
+   filter(KO == eclass) %>%
+   filter(Percent < 10) %>%
+   summarise(Remaining = sum(Percent)) %>%
+   mutate(KO = eclass,
+          Genus = "Other")
+}) %>%
+ bind_rows(.)
+
+# add this additional % to the main table
+humann3_path_pcbi_bar_df <- humann3_path_pc1pws_stats_extra %>%
+  rename(Percent = Remaining) %>%
+  bind_rows(., sample_cluster2_stats %>%
+              select(-Sum)) %>% 
+  select(KO, Genus, Percent) %>%
+  distinct() %>%
+  left_join(., cluster_ko_paths %>%
+              filter(str_detect(KO, so_subpaths  %>% str_c(collapse = "|"))) %>%
+              select(KO, name1, name2), by = "KO") %>%
+  filter(str_detect(name1, "09182")) %>%
+  separate(name2, into = "pathway", sep = "\\[", extra = "drop") %>%
+  arrange(KO)
+
+```
+
+```{r}
+# order the KOs by the heatmap dendrogram
+ko_cl1_tcs <- kegg_cluster_info %>%
+  filter(str_detect(KEGG, so_subpaths %>% str_c(collapse = "|"))) %>%
+  filter(Cluster == 1) %>%
+  arrange(dendro_order) %>%
+  pull(KEGG)
+
+kegg_cluster_info %>%
+  filter(str_detect(KEGG, so_subpaths %>% str_c(collapse = "|"))) %>%
+  filter(Cluster == 1) %>%
+  arrange(dendro_order)
+
+path_order <- humann3_path_pcbi_bar_df %>%
+  mutate(KO = fct_relevel(KO, ko_cl1_tcs)) %>%
+  group_by(name1, pathway, KO) %>%
+  arrange(name1, pathway, KO) %>%
+  ungroup() %>%
+  select(pathway) %>%
+  unique() %>%
+  pull()
+
+fig3 <- humann3_path_pcbi_bar_df %>%
+  # filter for only the KOs in KO cluster 1
+  filter(str_detect(KO, ko_cl1_tcs %>% str_c(collapse = "|"))) %>%
+  filter(Percent >= 10 | (Percent <= 10 & Genus == "Other")) %>% # filter out the genera with % < 5, but keep Other < 5
+  mutate(Genus = fct_relevel(Genus, "Other","unclassified"),
+         KO = fct_relevel(KO, ko_cl1_tcs),
+         pathway = fct_relevel(pathway, path_order)) %>%
+  arrange(pathway, KO) %>%
+  # mutate(Genus = fct_relevel(Genus, "Other","unclassified","Aggregatibacter","Capnocytophaga","Cardiobacterium","Eikenella","Haemophilus","Kingella","Lautropia","Neisseria","Ottowia","Streptococcus"),
+  #        Path = fct_relevel(Path, humann3_pathway_biplot_list %>%
+  #                             filter(Direction == "PC1+") %>%
+  #                             pull(Path))) %>%
+  ggplot(., aes(x=KO, y=Percent, fill = Genus)) +
+    geom_bar(stat = "identity") +
+    theme_minimal() +
+    scale_fill_manual(values = c("#B7B7B7","#616161", # "#F5F5F5" microshades_cvd_palette
+                                 "#DDFFA0","#97CE2F","#4E7705","#365303", # "#BDEC6F"
+                                 "#EFB6D6","#CC79A7","#7D3560","#572543", # "#A1527F",
+                                 "#A3E4D7","#48C9B0","#148F77","#0e6453",# "#56B4E9", "#43BA8F"
+                                 "#E7F4FF","#BCE1FF","#098BD9","#066197",
+                                 "#D8C7BE","#B78560","#7D3200","#572300")) + #. "#009E73", "#7DCCFF", "#9D654C", "#CAA995" "#9E5C00" 
+     theme(axis.text.y = element_text(size=16),
+          axis.text.x = element_text(size=8, angle = 90, vjust = 0.5, hjust = 1)) +
+    ylab("Percent") +
+    xlab("KEGG Ortholog") +
+    theme(title = element_text(size=12)) +
+    facet_grid(~pathway, scales = "free_x", space = 'free')
+fig3
+
+humann3_path_pcbi_bar_df %>%
+  filter(KO == "K03781")
+
+# ggsave("./06-publication/main_figures/Figure_4/KOs_clusters_species.pdf", plot = fig3, device = "pdf",
+#        scale = 1, width = 20, height = 3, units = c("in"), dpi = 300)
+
+humann3_path_pcbi_bar_df %>%
+  select(pathway) %>%
+  unique() %>%
+  mutate(pathway = fct_relevel(pathway, path_order)) %>%
+  arrange(pathway)
+  
+```
+
+```{r}
+
+ottowia_sp <- fread("./05-Documentation.backup/ottowia_sp_counts.tsv")
+
+# make the Library_ID dendrogram order a vector to factorize by
+sample_den_order <- sample_cluster_info %>%
+  arrange(Cluster, dendro_order) %>%
+  pull(Library_ID)
+
+# add missing information from the species table, adding +1 like the others have for log-transformation
+# Somehow GOY006.A0101 and LIS002.A0101 are missing from the species tables
+missing_ot <- rbind(c("FUM003.A0101",1314), c("GOY006.A0102",1),c("ZAF001.A0101",1), c("LIS002.A0101",1)) %>%
+  as_tibble() %>%
+  rename(Library_ID = 1,
+         Counts = 2) %>%
+  mutate(Counts = as.numeric(Counts),
+       log_counts = log10(Counts)) %>%
+  mutate(log_counts = ifelse(str_detect(Library_ID, "GOY"),NA,log_counts)) %>%
+  mutate(log_counts = ifelse(str_detect(Library_ID, "LIS"),NA,log_counts))
+
+ott_abund <- ottowia_sp %>%
+  full_join(., missing_ot) %>%
+  mutate(Counts = Counts / 100000) %>%
+  inner_join(., selected_metadata %>%
+               rownames_to_column("Library_ID") %>%
+               select(Library_ID)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, sample_den_order)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x=Library_ID, y=Counts)) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    # theme(text = element_text(size=9),
+    #       axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+    theme(axis.text.x = element_blank()) +
+    # geom_hline(yintercept = 25000, linetype = "dotted") +
+    theme(panel.grid.major.y = element_line()) +
+    # scale_y_log10() +
+    # ylim(NA,500000) +
+    ylab("Ottowia counts. (x10^5)") +
+    xlab("Library") +
+    theme(title = element_text(size=10))
+ott_abund
+
+# ggsave("./06-publication/main_figures/Figure_4/ottowia_abund.pdf", plot = ott_abund, device = "pdf",
+#        scale = 1, width = 17, height = 2, units = c("in"), dpi = 300)
+
+
+# which continents have > 25000 reads per sample?
+ottowia_sp %>%
+  full_join(., missing_ot) %>%
+  left_join(., metadata %>%
+              select(Library_ID, Continent)) %>%
+  left_join(., sample_cluster_info, by = "Library_ID") %>%
+  mutate(Continent = ifelse(is.na(Continent),"Pacific",Continent)) %>%
+  mutate(Cluster = as.character(Cluster)) %>%
+  filter(Counts >= 25000) %>%
+  arrange(Cluster, desc(Counts))
+  # arrange(Cluster,  Continent, Library_ID)
+  
+  
+```
+
+```{r, eval = F}
+
+desulfobulbus_sp <- fread("./05-Documentation.backup/desulfobulbus_sp_counts.tsv")
+
+missing_de <- rbind(c("FUM003.A0101",686084), c("GOY006.A0102",1),c("ZAF001.A0101",1), c("LIS002.A0101",1)) %>%
+  as_tibble() %>%
+  rename(Library_ID = 1,
+         Counts = 2) %>%
+  mutate(Counts = as.numeric(Counts),
+       log_counts = log10(Counts)) %>%
+  mutate(log_counts = ifelse(str_detect(Library_ID, "GOY"),NA,log_counts)) %>%
+  mutate(log_counts = ifelse(str_detect(Library_ID, "LIS"),NA,log_counts))
+
+des_abund <- desulfobulbus_sp %>%
+  full_join(., missing_de) %>%
+  mutate(Counts = Counts / 100000) %>%
+  inner_join(., selected_metadata %>%
+               rownames_to_column("Library_ID") %>%
+               select(Library_ID)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, sample_den_order)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x=Library_ID, y=Counts)) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    theme(text = element_text(size=9),
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+    # theme(axis.text.x = element_blank()) +
+    # geom_hline(yintercept = 25000, linetype = "dotted") +
+    theme(panel.grid.major.y = element_line()) +
+    # scale_y_log10() +
+    # ylim(NA,500000) +
+    ylab("Desulfobulbus counts. (x10^5)") +
+    xlab("Library") +
+    theme(title = element_text(size=10))
+des_abund
+
+
+```
+
+```{r, eval = F}
+
+strep_sp <- fread("./05-Documentation.backup/streptococcus_sp_counts.tsv")
+
+missing_st <- rbind(c("FUM003.A0101",365047), c("GOY006.A0102",1),c("ZAF001.A0101",1), c("LIS002.A0101",1)) %>%
+  as_tibble() %>%
+  rename(Library_ID = 1,
+         Counts = 2) %>%
+  mutate(Counts = as.numeric(Counts),
+       log_counts = log10(Counts)) %>%
+  mutate(log_counts = ifelse(str_detect(Library_ID, "GOY"),NA,log_counts)) %>%
+  mutate(log_counts = ifelse(str_detect(Library_ID, "LIS"),NA,log_counts))
+
+str_abund <- strep_sp %>%
+  full_join(., missing_st) %>%
+  mutate(Counts = Counts / 100000) %>%
+  inner_join(., selected_metadata %>%
+               rownames_to_column("Library_ID") %>%
+               select(Library_ID)) %>%
+  mutate(Library_ID = fct_relevel(Library_ID, sample_den_order)) %>%
+  arrange(Library_ID) %>%
+  ggplot(., aes(x=Library_ID, y=Counts)) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    theme(text = element_text(size=9),
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+    # theme(axis.text.x = element_blank()) +
+    # geom_hline(yintercept = 25000, linetype = "dotted") +
+    theme(panel.grid.major.y = element_line()) +
+    # scale_y_log10() +
+    # ylim(NA,500000) +
+    ylab("Streptococcus counts. (x10^5)") +
+    xlab("Library") +
+    theme(title = element_text(size=10))
+str_abund
+
+
+```
+
